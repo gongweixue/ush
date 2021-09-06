@@ -1,0 +1,14 @@
+
+set(EXE_TEST_PIPE_CREATE test_pipe_create)
+
+set(SRC_TEST_PIPE_CREATE    test_pipe_create.c)
+
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+add_executable(${EXE_TEST_PIPE_CREATE} ${SRC_TEST_PIPE_CREATE})
+
+target_link_libraries(${EXE_TEST_PIPE_CREATE} ush rt)
+
+
+set_target_properties(${EXE_TEST_PIPE_CREATE}
+                      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
