@@ -10,7 +10,6 @@
 #include "ush_impl_protocol.h"
 #include "ush_impl_log.h"
 
-#include <stdio.h>
 
 static ush_ret_t impl_create_hello(
     const ush_char_t *pName,
@@ -24,7 +23,7 @@ static ush_ret_t impl_create_hello(
     // msg queue desc
     mqd_t mq = mq_open(USH_IMPL_TOUCH_Q_PATH, O_WRONLY);
     if (-1 == mq) {
-        ush_log(0, "open failed\n");
+        ush_log(USH_LOG_LVL_ERR, "open failed\n");
         return USH_RET_FAILED;
     }
 
@@ -40,11 +39,11 @@ static ush_ret_t impl_create_hello(
                                      pDeadline);
         if (-1 == res) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
-                ush_log(0, "mq_timedsend timeout\n");
+                ush_log(USH_LOG_LVL_ERR, "mq_timedsend timeout\n");
                 mq_close(mq);
                 return USH_RET_TIMEOUT;
             } else {
-                ush_log(0, "mq_timedsend failed.\n");
+                ush_log(USH_LOG_LVL_ERR, "mq_timedsend failed.\n");
                 mq_close(mq);
                 return USH_RET_FAILED;
             }
@@ -53,7 +52,7 @@ static ush_ret_t impl_create_hello(
         ush_s32_t res = mq_send(mq, pBuf, sizeof(touch),
                                 USH_IMPL_TOUCH_Q_MSG_ID_HELLO_PROI);
         if (-1 == res) {
-            ush_log(0, "mq_send failed.\n");
+            ush_log(USH_LOG_LVL_ERR, "mq_send failed.\n");
             mq_close(mq);
             return USH_RET_FAILED;
         }
@@ -61,7 +60,7 @@ static ush_ret_t impl_create_hello(
 
     // only close the desc, do @@NOT unlink it
     if (mq_close(mq) == -1) {
-        ush_log(0, "client close touch queue failed\n");
+        ush_log(USH_LOG_LVL_ERR, "client close touch queue failed\n");
         return USH_RET_FAILED;
     }
     return USH_RET_OK;
@@ -78,7 +77,7 @@ ush_ret_t ush_pipe_create(
 {
     // params valid
     if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
-        ush_log(0, "wrong params for pipe create.\n");
+        ush_log(USH_LOG_LVL_ERR, "wrong params for pipe create.\n");
         return USH_RET_WRONG_PARAM;
     }
     assert(strlen(pName) <= USH_IMPL_TOUCH_Q_PIPENAME_LEN);
