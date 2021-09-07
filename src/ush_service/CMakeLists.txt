@@ -2,7 +2,8 @@ set(EXE_USH_SRV ush_srv)
 
 set(SRC_USH_SRV    ush_srv_main.c
                    ush_srv_thread.c
-                   ush_srv_touch.c)
+                   ush_srv_touch.c
+                   ush_srv_sw.c)
 
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${PROJECT_SOURCE_DIR}/src/common)

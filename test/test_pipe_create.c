@@ -13,7 +13,9 @@ ush_ret_t ush_pipe_create(
 
 int main () {
     ush_pp_hdl_t hdl;
-    ush_ret_t ret = ush_pipe_create("aaa", 0, 0, 0, NULL, 0, &hdl);
+    ush_ret_t ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
     printf("create return %d\n", ret);
+
+    while(1) ;
     return 0;
 }

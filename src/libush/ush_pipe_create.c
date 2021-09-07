@@ -9,6 +9,7 @@
 #include "ush_impl_touch.h"
 #include "ush_impl_protocol.h"
 #include "ush_impl_log.h"
+#include "ush_pipe_cr.h"
 
 
 static ush_ret_t impl_create_hello(
@@ -17,7 +18,9 @@ static ush_ret_t impl_create_hello(
     ush_u32_t         flag,
     const struct timespec   *pDeadline)
 {
-    if (!pName || USH_PP_MODE_MAX_GUARD <= mode) {
+    if (!pName
+        || strlen(pName) >= USH_IMPL_TOUCH_Q_NAME_LEN // buffer overflow
+        || USH_PP_MODE_MAX_GUARD <= mode) {
         return USH_RET_WRONG_PARAM;
     }
     // msg queue desc
@@ -28,14 +31,14 @@ static ush_ret_t impl_create_hello(
     }
 
     ush_impl_touch_msg_t touch;
-    touch.id = USH_IMPL_TOUCH_Q_MSG_ID_HELLO;
+    touch.id = USH_IMPL_PROTOCOL_TOUCH_ID_PING;
     strcpy(touch.name, pName);
 
     // send with or without timeout
     const ush_char_t *pBuf = (const ush_char_t *)&touch;
     if (pDeadline) {
         ush_s32_t res = mq_timedsend(mq, pBuf, sizeof(touch),
-                                     USH_IMPL_TOUCH_Q_MSG_ID_HELLO_PROI,
+                                     USH_IMPL_PROTOCOL_TOUCH_ID_PING_PROI,
                                      pDeadline);
         if (-1 == res) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
@@ -50,7 +53,7 @@ static ush_ret_t impl_create_hello(
         }
     } else {
         ush_s32_t res = mq_send(mq, pBuf, sizeof(touch),
-                                USH_IMPL_TOUCH_Q_MSG_ID_HELLO_PROI);
+                                USH_IMPL_PROTOCOL_TOUCH_ID_PING_PROI);
         if (-1 == res) {
             ush_log(USH_LOG_LVL_ERR, "mq_send failed.\n");
             mq_close(mq);
@@ -80,7 +83,7 @@ ush_ret_t ush_pipe_create(
         ush_log(USH_LOG_LVL_ERR, "wrong params for pipe create.\n");
         return USH_RET_WRONG_PARAM;
     }
-    assert(strlen(pName) <= USH_IMPL_TOUCH_Q_PIPENAME_LEN);
+    assert(strlen(pName) <= USH_IMPL_TOUCH_Q_NAME_LEN);
 
     // in case of timeout
     struct timespec deadline;
@@ -91,8 +94,14 @@ ush_ret_t ush_pipe_create(
         pDeadline->tv_sec += timeout + 1; // extra 1s for poor perf.
     }
 
+    ush_ret_t cr_ret = ush_pipe_cr_open(pName);
+    if (USH_RET_OK != cr_ret) {
+        return cr_ret;
+    }
+
     ush_ret_t hello_ret = impl_create_hello(pName, mode, flag, pDeadline);
     if (USH_RET_OK != hello_ret) {
+        ush_pipe_cr_close();
         return hello_ret;
     }
 

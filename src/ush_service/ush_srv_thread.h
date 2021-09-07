@@ -7,7 +7,6 @@
 typedef enum ush_srv_thread_tid_idx_t {
     USH_SRV_THREAD_TID_IDX_TOUCH      = 0,
     USH_SRV_THREAD_TID_IDX_SWCR       = 1,
-    USH_SRV_THREAD_TID_IDX_SRCW       = 2,
     USH_SRV_THREAD_TID_IDX_PUBLISHER  = 3,
     USH_SRV_THREAD_TID_IDX_MAX
 } ush_srv_thread_tid_idx_t;

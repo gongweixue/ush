@@ -1,0 +1,46 @@
+#include "unistd.h"
+
+#include "ush_srv_sw.h"
+#include "pthread.h"
+#include "string.h"
+#include "mqueue.h"
+#include "ush_impl_log.h"
+#include "ush_type.h"
+#include "ush_impl_swcr.h"
+#include "ush_impl_protocol.h"
+
+static void *sw_entry(void *arg);
+
+ush_ret_t ush_srv_sw_open(const char *pName) {
+    if (!pName) {
+        return USH_RET_WRONG_PARAM;
+    }
+
+    pthread_t tid;
+    if (0 != pthread_create(&tid, NULL, sw_entry, (void*)pName)) {
+        ush_log(USH_LOG_LVL_ERR, "create sw thread: failed.\n");
+        return USH_RET_FAILED;
+    }
+
+    if (0 != pthread_detach(tid)) {
+        ush_log(USH_LOG_LVL_ERR, "detach sw thread: failed.\n");
+        return USH_RET_FAILED;
+    }
+
+    return USH_RET_OK;
+}
+static void *sw_entry(void *arg) {
+
+    char buf[64] = USH_IMPL_PIPE_SWCR_PATH_PREFIX;
+    strcat(buf, (char *)arg);
+    ush_log(USH_LOG_LVL_INFO, "pong back\n");
+    mqd_t mq = mq_open(buf, O_WRONLY);
+    ush_s32_t res = mq_send(mq, "pong", 3, USH_IMPL_PROTOCOL_TOUCH_ID_PONG_PROI);
+
+    while (1) {
+        printf("sw thread running, waiting sending request...\n");
+        sleep(2);
+    }
+
+    return 0;
+}
