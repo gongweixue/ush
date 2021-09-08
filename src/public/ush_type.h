@@ -35,7 +35,7 @@ typedef enum ush_ret_t {
     USH_RET_FAILED      = 0x01,
     USH_RET_WRONG_PARAM = 0x10, // 8 bits, the low 4 bits for details extention.
     USH_RET_WRONG_SEQ   = 0x20, // wrong sequence on the pipe state-changing
-    USH_RET_NO_DATA     = 0x30,
+    USH_RET_OUT_OF_MEM  = 0x30,
     USH_RET_NOT_SUPPORT = 0x40,
     USH_RET_TIMEOUT     = 0x50,
 } ush_ret_t;
