@@ -17,11 +17,10 @@ typedef enum ush_srv_thread_state_t {
     USH_SRV_THREAD_STATE_STOP
 } ush_srv_thread_state_t;
 
-// only running state should be valid
 ush_ret_t ush_srv_thread_set_tid(ush_srv_thread_tid_idx_t idx, pthread_t tid);
-ush_ret_t ush_srv_thread_get_tid(ush_srv_thread_tid_idx_t idx, pthread_t *ptr);
-ush_ret_t ush_srv_thread_stop(ush_srv_thread_tid_idx_t idx);
-ush_ret_t ush_srv_thread_state(ush_srv_thread_tid_idx_t idx,
-                               ush_srv_thread_state_t *ptr);
+// ush_ret_t ush_srv_thread_get_tid(ush_srv_thread_tid_idx_t idx, pthread_t *ptr);
+// ush_ret_t ush_srv_thread_stop(ush_srv_thread_tid_idx_t idx);
+// ush_ret_t ush_srv_thread_state(ush_srv_thread_tid_idx_t idx,
+//                                ush_srv_thread_state_t *ptr);
 
 #endif // USH_SRV_THREAD_H

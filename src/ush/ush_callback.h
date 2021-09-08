@@ -1,5 +1,5 @@
-#ifndef _USH_CALLBACK_H_
-#define _USH_CALLBACK_H_
+#ifndef USH_CALLBACK_H
+#define USH_CALLBACK_H
 
 
 #ifdef __cplusplus
@@ -28,4 +28,4 @@ typedef ush_u32_t (*ush_id_convert_func_t)(ush_u32_t  *pId,
 }
 #endif
 
-#endif // _USH_CALLBACK_H_
+#endif // USH_CALLBACK_H

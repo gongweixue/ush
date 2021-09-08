@@ -1,3 +1,5 @@
+#include "unistd.h"
+#include "stdio.h"
 #include "ush_srv_touch.h"
 
 
@@ -9,6 +11,7 @@ int main () {
 
     while (1) {
         sleep(2);
+        printf(".\n");
     }
 
     return 0;

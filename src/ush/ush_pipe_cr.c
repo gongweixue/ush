@@ -3,8 +3,8 @@
 #include "ush_pipe_cr.h"
 #include "pthread.h"
 #include "string.h"
-#include "ush_impl_log.h"
-#include "ush_impl_swcr.h"
+#include "ush_log.h"
+#include "ush_comm_swcr.h"
 
 static void *cr_entry(void *arg) {
     // TODO:register the thread state??
@@ -12,8 +12,8 @@ static void *cr_entry(void *arg) {
     // param valid
     const char *pCrName = (const char *)arg;
     assert(pCrName);
-    int lenFullName = strlen(USH_IMPL_PIPE_SWCR_PATH_PREFIX) + strlen(pCrName);
-    if (USH_IMPL_PIPE_SWCR_NAME_LEN <= lenFullName) {
+    int lenFullName = strlen(USH_COMM_PIPE_SWCR_PATH_PREFIX) + strlen(pCrName);
+    if (USH_COMM_PIPE_SWCR_NAME_LEN <= lenFullName) {
         ush_log(USH_LOG_LVL_ERR, "CR name too long!!!\n");
         pthread_exit(NULL);
     }
@@ -21,9 +21,9 @@ static void *cr_entry(void *arg) {
     //create the CR queue to the service
     struct mq_attr qAttr;
     memset(&qAttr, 0, sizeof(qAttr));
-    qAttr.mq_maxmsg  = USH_IMPL_PIPE_SWCR_MSG_MAX_CNT;
-    qAttr.mq_msgsize = USH_IMPL_PIPE_SWCR_MSG_MAX_LEN;
-    char name[USH_IMPL_PIPE_SWCR_NAME_LEN] = USH_IMPL_PIPE_SWCR_PATH_PREFIX;
+    qAttr.mq_maxmsg  = USH_COMM_PIPE_SWCR_MSG_MAX_CNT;
+    qAttr.mq_msgsize = USH_COMM_PIPE_SWCR_MSG_MAX_LEN;
+    char name[USH_COMM_PIPE_SWCR_NAME_LEN] = USH_COMM_PIPE_SWCR_PATH_PREFIX;
     strcat(name, pCrName);
     mqd_t mq = mq_open(name,
                        O_RDONLY | O_CREAT, // read end
@@ -36,7 +36,7 @@ static void *cr_entry(void *arg) {
 
     while (1) {
 
-        char  buff[USH_IMPL_PIPE_SWCR_MSG_MAX_LEN];
+        char  buff[USH_COMM_PIPE_SWCR_MSG_MAX_LEN];
         ush_log(USH_LOG_LVL_INFO, "CR queue receiving \n");
         ush_ssize_t rcv_sz = mq_receive(mq, buff, sizeof(buff), NULL);
 
@@ -45,7 +45,7 @@ static void *cr_entry(void *arg) {
             continue;
         }
 
-        cr_dispatch();
+        // cr_dispatch();
 
         // {// process msg
         //     printf("%ld received\n", rcv_sz);

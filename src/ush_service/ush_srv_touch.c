@@ -1,16 +1,38 @@
-#include "mqueue.h"
-#include "unistd.h"
-#include "string.h"
-#include "fcntl.h"
-#include "pthread.h"
-#include "ush_impl_touch.h"
-#include "ush_impl_log.h"
-#include "ush_impl_protocol.h"
 
-#include "ush_type.h"
-#include "ush_srv_touch.h"
-#include "ush_srv_thread.h"
+#include "fcntl.h"
+#include "mqueue.h"
+#include "pthread.h"
+#include "string.h"
+#include "unistd.h"
+
+#include "ush_comm_protocol.h"
+#include "ush_comm_touch.h"
+#include "ush_log.h"
 #include "ush_srv_sw.h"
+#include "ush_srv_touch.h"
+#include "ush_type.h"
+
+// thread entry
+static void *touch_entry(void *arg);
+
+// dispatch into the internal queues for dealling with.
+static void touch_dispatch(const void *pBuf);
+
+ush_ret_t ush_srv_touch_start() {
+    pthread_t tid;
+    if (0 != pthread_create(&tid, NULL, touch_entry, NULL)) {
+        ush_log(USH_LOG_LVL_ERR, "create touch daemon thread: failed.\n");
+        return USH_RET_FAILED;
+    }
+
+    if (0 != pthread_detach(tid)) {
+        ush_log(USH_LOG_LVL_ERR, "detach touch daemon thread: failed.\n");
+        return USH_RET_FAILED;
+    }
+
+    return USH_RET_OK;
+}
+
 
 static void *touch_daemon_entry(void *arg) {
 
@@ -39,31 +61,19 @@ static void *touch_daemon_entry(void *arg) {
             continue;
         }
         touch_dispatch(buff);
-
-        // // process msg
-        // printf("receive %ld bytes\n", rcv_sz);
-        // ush_impl_touch_msg_t *pTouch = (ush_impl_touch_msg_t *)buff;
-        // printf("%d %s\n", pTouch->id, pTouch->name);
-
-        // if (USH_IMPL_PROTOCOL_TOUCH_ID_PING == pTouch->id) {
-        //     ush_srv_sw_open(pTouch->name);
-        // }
     }
 
     return 0;
 }
 
-ush_ret_t ush_srv_thread_start_touch_daemon() {
-    pthread_t tid;
-    if (0 != pthread_create(&tid, NULL, touch_daemon_entry, NULL)) {
-        ush_log(USH_LOG_LVL_ERR, "create touch daemon thread: failed.\n");
-        return USH_RET_FAILED;
-    }
+static void touch_dispatch(const void *pBuf) {
+    const ush_comm_touch_msg_t *pMsg = (const ush_comm_touch_msg_t *)pBuf;
+    // // process msg
+        // printf("receive %ld bytes\n", rcv_sz);
+        // ush_impl_touch_msg_t *pTouch = (ush_impl_touch_msg_t *)buff;
+        // printf("%d %s\n", pTouch->id, pTouch->name);
 
-    if (0 != pthread_detach(tid)) {
-        ush_log(USH_LOG_LVL_ERR, "detach touch daemon thread: failed.\n");
-        return USH_RET_FAILED;
-    }
-
-    return USH_RET_OK;
+        // if (USH_COMM_PROTOCOL_TOUCH_ID_PING == pTouch->id) {
+        //     ush_srv_sw_open(pTouch->name);
+        // }
 }

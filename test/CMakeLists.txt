@@ -3,7 +3,8 @@ set(EXE_TEST_PIPE_CREATE test_pipe_create)
 
 set(SRC_TEST_PIPE_CREATE    test_pipe_create.c)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src/ush/
+                    ${PROJECT_SOURCE_DIR}/src/public/)
 
 add_executable(${EXE_TEST_PIPE_CREATE} ${SRC_TEST_PIPE_CREATE})
 

@@ -1,5 +1,5 @@
-#ifndef _USH_TYPE_H_
-#define _USH_TYPE_H_
+#ifndef USH_TYPE_H
+#define USH_TYPE_H
 
 #include <stddef.h>
 
@@ -48,4 +48,4 @@ typedef ush_s32_t          ush_pp_hdl_t;
 }
 #endif
 
-#endif // _USH_TYPE_H_
+#endif // USH_TYPE_H

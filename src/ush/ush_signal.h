@@ -1,5 +1,5 @@
-#ifndef _USH_SIGNAL_H_
-#define _USH_SIGNAL_H_
+#ifndef USH_SIGNAL_H
+#define USH_SIGNAL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -119,4 +119,4 @@ ush_ret_t ush_bind_convert_func(ush_id_convert_func_t pFunc);
 }
 #endif
 
-#endif // _USH_SIGNAL_H_
+#endif // USH_SIGNAL_H

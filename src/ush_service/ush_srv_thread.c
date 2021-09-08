@@ -1,6 +1,6 @@
 #include "assert.h"
 #include "pthread.h"
-#include "ush_impl_log.h"
+#include "ush_log.h"
 #include "ush_srv_thread.h"
 #include "ush_type.h"
 

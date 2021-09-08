@@ -4,10 +4,10 @@
 #include "pthread.h"
 #include "string.h"
 #include "mqueue.h"
-#include "ush_impl_log.h"
+#include "ush_log.h"
 #include "ush_type.h"
-#include "ush_impl_swcr.h"
-#include "ush_impl_protocol.h"
+#include "ush_comm_swcr.h"
+#include "ush_comm_protocol.h"
 
 static void *sw_entry(void *arg);
 
@@ -31,11 +31,11 @@ ush_ret_t ush_srv_sw_open(const char *pName) {
 }
 static void *sw_entry(void *arg) {
 
-    char buf[64] = USH_IMPL_PIPE_SWCR_PATH_PREFIX;
+    char buf[64] = USH_COMM_PIPE_SWCR_PATH_PREFIX;
     strcat(buf, (char *)arg);
     ush_log(USH_LOG_LVL_INFO, "pong back\n");
     mqd_t mq = mq_open(buf, O_WRONLY);
-    ush_s32_t res = mq_send(mq, "pong", 3, USH_IMPL_PROTOCOL_TOUCH_ID_PONG_PROI);
+    ush_s32_t res = mq_send(mq, "pong", 3, USH_COMM_PROTOCOL_TOUCH_ID_PONG_PROI);
 
     while (1) {
         printf("sw thread running, waiting sending request...\n");

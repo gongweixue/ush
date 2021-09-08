@@ -3,6 +3,6 @@
 
 #include "ush_type.h"
 
-ush_ret_t ush_srv_thread_start_touch_daemon();
+ush_ret_t ush_srv_touch_start();
 
 #endif //USH_SRV_THREAD_H

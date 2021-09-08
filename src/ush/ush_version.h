@@ -1,5 +1,5 @@
-#ifndef _USH_H_
-#define _USH_H_
+#ifndef USH_VERSION_H
+#define USH_VERSION_H
 
 #include "ush_type.h"
 
@@ -36,4 +36,4 @@ ush_ret_t ush_version_get(ush_u32_t *pVerInfo, ush_u16_t msTimeout);
 }
 #endif
 
-#endif // _USH_H_
+#endif // USH_VERSION_H
