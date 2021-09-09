@@ -1,5 +1,5 @@
-#ifndef USH_TYPE_H
-#define USH_TYPE_H
+#ifndef USH_TYPE_PUB_H
+#define USH_TYPE_PUB_H
 
 #include <stddef.h>
 
@@ -41,11 +41,11 @@ typedef enum ush_ret_t {
 } ush_ret_t;
 
 // handle type for pipe, just a number, no meaning on client.
-typedef ush_s32_t          ush_pp_hdl_t;
+typedef ush_s64_t          ush_pp_hdl_t;
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // USH_TYPE_H
+#endif // USH_TYPE_PUB_H

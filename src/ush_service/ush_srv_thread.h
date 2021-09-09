@@ -2,7 +2,7 @@
 #define USH_SRV_THREAD_H
 
 #include "pthread.h"
-#include "ush_type.h"
+#include "ush_type_pub.h"
 
 typedef enum ush_srv_thread_tid_idx_t {
     USH_SRV_THREAD_TID_IDX_TOUCH      = 0,

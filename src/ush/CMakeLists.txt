@@ -1,8 +1,14 @@
 set(LIB_USH ush)
 
-set(SRC_USH    ush_pipe_create.c
-               ush_version.c
-               ush_pipe_cr.c)
+set(SRC_USH
+    ush_connect.c
+    ush_pipe_cr.c
+    ush_pipe_create.c
+    ush_pipe_hello.c
+    ush_pipe_sync.c
+    ush_pipe_touch.c
+    ush_version.c
+)
 
 include_directories(${PROJECT_SOURCE_DIR}/src/ush/
                     ${PROJECT_SOURCE_DIR}/src/log/

@@ -2,7 +2,7 @@
 #include "pthread.h"
 #include "ush_log.h"
 #include "ush_srv_thread.h"
-#include "ush_type.h"
+#include "ush_type_pub.h"
 
 
 typedef struct ush_srv_thread_entity_t {

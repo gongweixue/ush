@@ -10,7 +10,7 @@
 #include "ush_log.h"
 #include "ush_srv_sw.h"
 #include "ush_srv_touch.h"
-#include "ush_type.h"
+#include "ush_type_pub.h"
 
 // thread entry
 static void *touch_entry(void *arg);

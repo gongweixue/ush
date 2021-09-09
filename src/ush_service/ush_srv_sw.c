@@ -5,7 +5,7 @@
 #include "string.h"
 #include "mqueue.h"
 #include "ush_log.h"
-#include "ush_type.h"
+#include "ush_type_pub.h"
 #include "ush_comm_swcr.h"
 #include "ush_comm_protocol.h"
 

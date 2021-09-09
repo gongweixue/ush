@@ -1,7 +1,7 @@
 #ifndef USH_VERSION_H
 #define USH_VERSION_H
 
-#include "ush_type.h"
+#include "ush_type_pub.h"
 
 #ifdef __cplusplus
 extern "C" {

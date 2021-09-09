@@ -3,7 +3,7 @@
 
 // header file for Service-Write-Client-Read pipe
 
-#include "ush_type.h"
+#include "ush_type_pub.h"
 
 #define USH_COMM_SWCR_PATH_PREFIX "/FAW-HQ-COS-USH-SWCR-"
 #define USH_COMM_SWCR_MSG_MAX_CNT  (10)

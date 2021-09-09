@@ -1,15 +1,15 @@
-#ifndef _USH_PIPE_H_
-#define _USH_PIPE_H_
+#ifndef USH_PIPE_PUB_H
+#define USH_PIPE_PUB_H
 
 /*******************************************************************************
  * Header file of the lib for the feature of signal router -- Uni-Signal-Hub
  *
- * **Sync call: wait until the real reslt returns.
+ * **Sync call: wait until the real result returns.
  * **Thread safe: it can not be ensure that the call return the correct
  * **result if you use the same context in other thread at the same time.
  * **Keep smart when use CB function if you use C++ as the client language.
 *******************************************************************************/
-#include "ush_type.h"
+#include "ush_type_pub.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,13 +39,14 @@ typedef enum ush_pp_mode_t {
     USH_PP_MODE_MAX_GUARD,
 } ush_pp_mode_t;
 
-/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Life-time of the pipe:
-// -(create)->NEW -(start)->OPENED -(query/update)->JAM -(stop)->CLOSED -(delete)-> NOT_EXIST
-//                           |  ^                                   |                 ^
-//                           |  |_________________(start again)_____|                 |
-//                           |__________________________(delete)______________________|
-/////////////////////////////////////////////////////////////////////////////////////////////
+// NEW -(start)->OPENED -(query/update)->JAM --(stop)->CLOSED ------
+//  ^               ^                                   |          |
+//  |(@create)      |_________________(start again)_____|          |
+//  |                                                              |
+// NOT_EXIST <------------------(delete)---------------------------|
+////////////////////////////////////////////////////////////////////////////////
 
 /*
  * Create a pipe with hub service
@@ -145,4 +146,4 @@ ush_ret_t ush_pipe_find(const ush_char_t *pName, ush_pp_hdl_t *pHdl);
 } // extern "C"
 #endif
 
-#endif // _USH_PIPE_H_
+#endif // USH_PIPE_PUB_H
