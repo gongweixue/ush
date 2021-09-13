@@ -35,7 +35,7 @@ ush_ret_t ush_srv_thread_set_tid(ush_srv_thread_tid_idx_t idx, pthread_t tid) {
         }
         pthread_mutex_unlock(&sMutex4Threads);
     } else {
-        ush_log(USH_LOG_LVL_ERR, "set tid failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "set tid failed.\n");
         ret = USH_RET_FAILED;
     }
 
@@ -58,7 +58,7 @@ ush_ret_t ush_srv_thread_get_tid(ush_srv_thread_tid_idx_t idx, pthread_t *ptr) {
         }
         pthread_mutex_unlock(&sMutex4Threads);
     } else {
-        ush_log(USH_LOG_LVL_ERR, "get tid failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "get tid failed.\n");
         ret = USH_RET_FAILED;
     }
 
@@ -96,7 +96,7 @@ ush_ret_t ush_srv_thread_state(ush_srv_thread_tid_idx_t idx,
         *ptr = sThreads[idx].state;
         pthread_mutex_unlock(&sMutex4Threads);
     } else {
-        ush_log(USH_LOG_LVL_ERR, "get thread state failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "get thread state failed.\n");
         ret = USH_RET_FAILED;
     }
 

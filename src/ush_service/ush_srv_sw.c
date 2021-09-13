@@ -18,12 +18,12 @@ ush_ret_t ush_srv_sw_open(const char *pName) {
 
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, sw_entry, (void*)pName)) {
-        ush_log(USH_LOG_LVL_ERR, "create sw thread: failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "create sw thread: failed.\n");
         return USH_RET_FAILED;
     }
 
     if (0 != pthread_detach(tid)) {
-        ush_log(USH_LOG_LVL_ERR, "detach sw thread: failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "detach sw thread: failed.\n");
         return USH_RET_FAILED;
     }
 
