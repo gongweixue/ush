@@ -1,14 +1,14 @@
 #ifndef USH_CONNECT_H
 #define USH_CONNECT_H
 
+typedef struct connect*    ush_connect_t;
+
 #include "ush_listener.h"
 #include "ush_touch.h"
 #include "ush_type_pub.h"
 
 typedef ush_u64_t ush_connect_ident;
 #define CONNECT_IDENT_VALUE_DEFAULT (0xFFFFFFFFFFFFFFFF)
-
-typedef struct connect_t*    ush_connect_t;
 
 
 ush_ret_t ush_connect_alloc(ush_connect_t *pConn);

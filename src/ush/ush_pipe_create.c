@@ -26,6 +26,8 @@ static ush_ret_t hello_and_wait(const ush_char_t      *pName,
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
+static ush_ret_t get_info_from_hello_ack(ush_sync_hello_ack_t ack);
+
 ush_ret_t
 ush_pipe_create(
     const ush_char_t *pName,
@@ -89,28 +91,29 @@ static ush_ret_t hello_and_wait(const char *pName, const timespec *pDL, ush_conn
     }
 
     // use ack to wait feedback
-    ush_sync_hello_ack_t *pAck = NULL;
-    ush_ret_t ret = ush_sync_hello_ack_create(pAck);
+    ush_sync_hello_ack_t ack = NULL;
+    ush_ret_t ret = ush_sync_hello_ack_create(&ack, conn);
     if (USH_RET_OK != ret) {
         return ret;
     }
 
     // prepare hello msg
-    ush_hello_msg_t hello_msg;
-    ush_hello_composite(&hello_msg, pName, pAck);
+    ush_hello_msg_t hello;
+    ush_hello_create(hello, pName, ack);
 
     // send with or without timeout
     ush_touch_t touch = NULL;
     ush_connect_get_touch(conn, &touch);
-    ret = ush_touch_send_hello(touch, &hello_msg, pDL);
+    ret = ush_touch_send_hello(touch, hello, pDL);
     if (USH_RET_OK != ret) {
         ush_log(USH_LOG_LVL_ERROR, "hello failed\n");
     } else {
-        ret = ush_sync_hello_ack_wait(pAck, pDL);
+        ret = ush_sync_hello_ack_wait(ack, pDL, get_info_from_hello_ack);
     }
 
 
-    ush_sync_hello_ack_destroy(pAck); // not needed any more.
+    ush_sync_hello_ack_destroy(ack); // not needed any more.
+    ush_hello_destroy(hello);
     if (USH_RET_OK != ret) {
         return ret;
     }
@@ -128,5 +131,20 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout) {
 
     ptr->tv_sec += timeout + 1;
 
+    return USH_RET_OK;
+}
+
+static ush_ret_t get_info_from_hello_ack(ush_sync_hello_ack_t ack) {
+
+    ush_log(USH_LOG_LVL_INFO, "ack callback should be implemetented!!!");
+    // ush_connect_ident   connIdentOnServer;
+    // ush_pp_state_t      connState;
+    // ush_connect_t connHdlOnClient;
+    // // check ack valic
+    // assert (connHdlOnClient->ident's random feild == connIdentOnServer's random
+    //     && connIdentOnServer's idx feild is not 0xFFFFFFFF
+    //     && state is USH_PP_STATE_NEW);
+    // then ack is valid
+    // and connHdlOnClient->ident = connIdentOnServer;
     return USH_RET_OK;
 }

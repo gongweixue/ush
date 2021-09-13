@@ -1,11 +1,12 @@
 #ifndef USH_LISTENER_H
 #define USH_LISTENER_H
 
+
+typedef struct listener_t*    ush_listener_t;
+
 #include "mqueue.h"
 
 #include "ush_type_pub.h"
-
-typedef struct listener_t*    ush_listener_t;
 
 
 ush_ret_t ush_listener_alloc(ush_listener_t *listener);

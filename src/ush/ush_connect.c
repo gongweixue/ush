@@ -12,7 +12,7 @@
 #include "ush_listener.h"
 
 
-typedef struct connect_t {
+typedef struct connect {
     ush_connect_ident    ident;
     ush_touch_t          touch;
     ush_listener_t       listener;
@@ -41,7 +41,7 @@ ush_connect_ident_valid(const ush_connect_t conn) {
 
 ush_ret_t
 ush_connect_alloc(ush_connect_t *pConn) {
-    ush_connect_t tmp = (ush_connect_t)malloc(sizeof(struct connect_t));
+    ush_connect_t tmp = (ush_connect_t)malloc(sizeof(struct connect));
 
     if (!tmp) {
         ush_log(USH_LOG_LVL_ERROR, "connect memory allocation failed\n");

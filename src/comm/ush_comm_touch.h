@@ -8,14 +8,14 @@
 #define USH_COMM_TOUCH_Q_MSG_MAX_LEN (128)
 
 
-typedef enum ush_comm_touch_msg_catalog_t {
+typedef enum touch_msg_catalog_type {
     USH_COMM_TOUCH_MSG_CATALOG_HELLO = 0
-} touch_msg_catalog_t;
+} touch_msg_catalog_type;
 
 
-typedef struct touch_msg_desc_t {
-    touch_msg_catalog_t  catalog;
-} touch_msg_desc_t;
+typedef struct touch_msg_desc {
+    touch_msg_catalog_type  catalog;
+} ush_touch_msg_desc;
 
 
 
