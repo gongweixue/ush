@@ -1,17 +1,18 @@
-#include "unistd.h"
 
-#include "ush_srv_sw.h"
+#include "mqueue.h"
 #include "pthread.h"
 #include "string.h"
-#include "mqueue.h"
+#include "unistd.h"
+
+#include "ush_comm_listener.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
-#include "ush_comm_swcr.h"
-#include "ush_comm_protocol.h"
+
+#include "ushd_sw.h"
 
 static void *sw_entry(void *arg);
 
-ush_ret_t ush_srv_sw_open(const char *pName) {
+ush_ret_t ushd_sw_open(const char *pName) {
     if (!pName) {
         return USH_RET_WRONG_PARAM;
     }

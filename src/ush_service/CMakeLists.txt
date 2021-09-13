@@ -1,20 +1,23 @@
-set(EXE_USH_SRV ush_srv)
+set(EXE_USHD ushd)
 
-set(SRC_USH_SRV    ush_srv_main.c
-                   ush_srv_thread.c
-                   ush_srv_touch.c
-                   ush_srv_sw.c)
+set(SRC_USHD
+        ushd_main.c
+        # ushd_thread.c
+        ushd_touch.c
+        # ushd_sw.c
+)
 
-include_directories(${PROJECT_SOURCE_DIR}/src/ush/
-                    ${PROJECT_SOURCE_DIR}/src/log/
-                    ${PROJECT_SOURCE_DIR}/src/public/
-                    ${PROJECT_SOURCE_DIR}/src/comm/)
-
-
-add_executable(${EXE_USH_SRV} ${SRC_USH_SRV})
-
-target_link_libraries(${EXE_USH_SRV} rt pthread)
+include_directories(
+    ${PROJECT_SOURCE_DIR}/src/log/
+    ${PROJECT_SOURCE_DIR}/src/public/
+    ${PROJECT_SOURCE_DIR}/src/comm/
+)
 
 
-set_target_properties(${EXE_USH_SRV}
+add_executable(${EXE_USHD} ${SRC_USHD})
+
+target_link_libraries(${EXE_USHD} rt pthread)
+
+
+set_target_properties(${EXE_USHD}
                       PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
