@@ -1,31 +1,33 @@
-#include "pthread.h"
 #include "assert.h"
-#include "stdlib.h"
 #include "errno.h"
+#include "pthread.h"
+#include "stdlib.h"
+
+
 #include "ush_connect.h"
-#include "ush_pipe_pub.h"
-#include "ush_pipe_sync.h"
 #include "ush_log.h"
+#include "ush_pipe_pub.h"
+#include "ush_sync.h"
 
 
-typedef struct ush_pipe_sync_hello_ack_t {
+typedef struct ush_sync_hello_ack_t {
     pthread_cond_t     cond;
     pthread_condattr_t condattr;
     pthread_mutex_t    mutex;
-    connect_ident      connIdent;
+    ush_connect_ident  connIdent;
     ush_pp_state_t     connState;
-} sync_hello_ack_t;
+} ush_sync_hello_ack_t;
 
 
 ush_ret_t
-ush_sync_hello_ack_create(sync_hello_ack_t *pAck) {
-    void *pMem = malloc(sizeof(sync_hello_ack_t));
+ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck) {
+    void *pMem = malloc(sizeof(ush_sync_hello_ack_t));
     if (!pMem) {
         ush_log(ERR, "hello ack init:out of mem failed\n");
         return USH_RET_OUT_OF_MEM;
     }
 
-    pAck = (sync_hello_ack_t *)pMem;
+    pAck = (ush_sync_hello_ack_t *)pMem;
 
     if (0 != pthread_mutex_init(&pAck->mutex, NULL)) {
         free(pMem);
@@ -52,7 +54,7 @@ ush_sync_hello_ack_create(sync_hello_ack_t *pAck) {
 }
 
 ush_ret_t
-ush_sync_hello_ack_wait(sync_hello_ack_t *pAck, const struct timespec *pDL) {
+ush_sync_hello_ack_wait(ush_sync_hello_ack_t *pAck, const struct timespec *pDL) {
     assert(pAck);
 
     pthread_mutex_lock(&pAck->mutex);
@@ -79,7 +81,7 @@ ush_sync_hello_ack_wait(sync_hello_ack_t *pAck, const struct timespec *pDL) {
 }
 
 ush_ret_t
-ush_sync_hello_ack_destroy(sync_hello_ack_t *pAck) {
+ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
     pthread_mutex_destroy(&pAck->mutex);
     pthread_condattr_destroy(&pAck->condattr);
     pthread_cond_destroy(&pAck->cond);

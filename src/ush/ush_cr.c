@@ -1,10 +1,11 @@
 #include "assert.h"
 #include "mqueue.h"
-#include "ush_pipe_cr.h"
 #include "pthread.h"
 #include "string.h"
+
+#include "ush_comm_listener.h"
+#include "ush_cr.h"
 #include "ush_log.h"
-#include "ush_comm_swcr.h"
 
 static void *cr_entry(void *arg) {
     // // TODO:register the thread state??
@@ -57,7 +58,7 @@ static void *cr_entry(void *arg) {
     return 0;
 }
 
-ush_ret_t ush_pipe_cr_open(const char *pName) {
+ush_ret_t ush_cr_open(const ush_char_t *pName) {
     if (!pName) {
         return USH_RET_WRONG_PARAM;
     }
@@ -78,6 +79,6 @@ ush_ret_t ush_pipe_cr_open(const char *pName) {
     return USH_RET_OK;
 }
 
-ush_ret_t ush_pipe_cr_close() {
+ush_ret_t ush_cr_close() {
     return USH_RET_OK;
 }

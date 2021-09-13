@@ -8,21 +8,20 @@
 #include "time.h"
 
 #include "ush_comm_touch.h"
-#include "ush_comm_protocol.h"
 #include "ush_connect.h"
 #include "ush_log.h"
-#include "ush_pipe_hello.h"
+#include "ush_hello.h"
 #include "ush_pipe_pub.h"
-#include "ush_pipe_sync.h"
-#include "ush_pipe_touch.h"
-
+#include "ush_sync.h"
+#include "ush_touch.h"
+#include "ush_type_pub.h"
 
 
 typedef struct timespec timespec;
 
-static ush_ret_t hello_and_wait(const ush_char_t *pName,
-                                const struct timespec *pDL,
-                                connect_t *pConn);
+static ush_ret_t hello_and_wait(const ush_char_t      *pName,
+                                const timespec        *pDL,
+                                ush_connect_t         conn);
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
@@ -41,8 +40,8 @@ ush_pipe_create(
         ush_log(USH_LOG_LVL_ERR, "wrong params for pipe create.\n");
         return USH_RET_WRONG_PARAM;
     }
-    assert(strlen(pName) < USH_COMM_TOUCH_Q_HELLO_NAME_LEN_MAX);
-    assert(strlen(pName) >= USH_COMM_TOUCH_Q_HELLO_NAME_LEN_MIN);
+    assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
+    assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
 
     ush_ret_t ret = USH_RET_OK;
     // for timeout
@@ -52,57 +51,57 @@ ush_pipe_create(
         pDL = &deadline;
         ret = realize_timeout(pDL, timeout);
         if(USH_RET_OK != ret) {
+            ush_log(ERR, "realize timeout failed");
             goto RET;
         }
     }
 
-    connect_t *pConn = NULL;
-    ret = connect_alloc(pConn);
+    ush_connect_t conn = NULL;
+    ret = ush_connect_alloc(&conn);
     if (USH_RET_OK != ret) {
         goto RET;
     }
-    ret = connect_init(pConn);
+    ret = ush_connect_init(conn);
     if (USH_RET_OK != ret) {
         ush_log(ERR, "connection init failed\n");
-        goto DESTROY_CONN;
+        ush_connect_destroy(conn);
+        return ret;
     }
 
-    ret = hello_and_wait(pName, pDL, pConn);
+    ret = hello_and_wait(pName, pDL, conn);
 
     if (USH_RET_OK == ret) {
-        *pHdl = (ush_s64_t)pConn;
+        *pHdl = (ush_s64_t)conn;
     } else {
         *pHdl = -1;
+        ush_connect_destroy(conn);
     }
-
-DESTROY_CONN:
-    connect_destroy(pConn);
 
 RET:
     return ret;
 }
 
-static ush_ret_t hello_and_wait(const char *pName, const timespec *pDL, connect_t *pConn) {
+static ush_ret_t hello_and_wait(const char *pName, const timespec *pDL, ush_connect_t conn) {
     // param valid
-    if (pName || pDL || pConn) {
+    if (pName || pDL || conn) {
         return USH_RET_WRONG_PARAM;
     }
 
     // use ack to wait feedback
-    sync_hello_ack_t *pAck = NULL;
+    ush_sync_hello_ack_t *pAck = NULL;
     ush_ret_t ret = ush_sync_hello_ack_create(pAck);
     if (USH_RET_OK != ret) {
         return ret;
     }
 
     // prepare hello msg
-    ush_pipe_msg_hello_t hello_msg;
-    ush_pipe_hello_load(&hello_msg, pName, pAck);
+    ush_hello_msg_t hello_msg;
+    ush_hello_composite(&hello_msg, pName, pAck);
 
     // send with or without timeout
-    ush_pipe_touch_t * pTouch = NULL;
-    connect_get_touch(pConn, pTouch);
-    ret = ush_pipe_touch_send_hello(pTouch, &hello_msg, pDL);
+    ush_touch_t touch = NULL;
+    ush_connect_get_touch(conn, &touch);
+    ret = ush_touch_send_hello(touch, &hello_msg, pDL);
     if (USH_RET_OK != ret) {
         ush_log(USH_LOG_LVL_ERR, "hello failed\n");
     } else {
@@ -124,9 +123,9 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout) {
     if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
         ush_log(USH_LOG_LVL_ERROR, "clock_gettime failed\n");
         return USH_RET_FAILED;
-    } else {
-        ptr->tv_sec += timeout + 1;
     }
+
+    ptr->tv_sec += timeout + 1;
 
     return USH_RET_OK;
 }

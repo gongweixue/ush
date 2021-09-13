@@ -1,6 +1,7 @@
-#include "ush_pipe.h"
+#include "ush_pipe_pub.h"
 
 #include "stdio.h"
+#include "unistd.h"
 
 ush_ret_t ush_pipe_create(
     const ush_char_t *pName,         // pipe name
@@ -13,9 +14,10 @@ ush_ret_t ush_pipe_create(
 
 int main () {
     ush_pp_hdl_t hdl;
-    ush_ret_t ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
+    ush_ret_t ret = ush_pipe_create("ping", 0, 0, 2, NULL, 0, &hdl);
     printf("create return %d\n", ret);
 
-    while(1) ;
+    while(1) {
+    }
     return 0;
 }

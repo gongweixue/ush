@@ -2,11 +2,12 @@ set(LIB_USH ush)
 
 set(SRC_USH
     ush_connect.c
-    ush_pipe_cr.c
+    ush_cr.c
+    ush_hello.c
+    ush_listener.c
     ush_pipe_create.c
-    ush_pipe_hello.c
-    ush_pipe_sync.c
-    ush_pipe_touch.c
+    ush_sync.c
+    ush_touch.c
     ush_version.c
 )
 
