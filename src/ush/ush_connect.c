@@ -108,24 +108,12 @@ ush_connect_destroy(ush_connect_t conn) {
     }
 
     // touch destroy with closing
-    ush_touch_t touch = NULL;
-    ush_connect_get_touch(conn, &touch);
-    if (touch) {
-        ush_touch_destroy_with_closing(touch);
-        conn->touch = NULL;
-    } else {
-        ush_log(INFO, "destroy NULL pointer of touch failed\n");
-    }
+    ush_touch_t touch = conn->touch;
+    ush_touch_destroy_with_closing(touch);
 
     // listener destroy with closing
-    ush_touch_t listener = NULL;
-    ush_connect_get_touch(conn, &listener);
-    if (listener) {
-        ush_touch_destroy_with_closing(listener);
-        conn->listener = NULL;
-    } else {
-        ush_log(INFO, "destroy NULL pointer of listener failed\n");
-    }
+    ush_listener_t listener = conn->listener;
+    ush_listener_destroy_with_closing(listener);
 
     pthread_mutex_destroy(&conn->mutex);
 

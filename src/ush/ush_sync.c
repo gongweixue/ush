@@ -82,8 +82,15 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t *pAck, const struct timespec *pDL) 
 
 ush_ret_t
 ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
+    assert(pAck);
+    if (!pAck) {
+        return USH_RET_OK;
+    }
     pthread_mutex_destroy(&pAck->mutex);
     pthread_condattr_destroy(&pAck->condattr);
     pthread_cond_destroy(&pAck->cond);
+
+    free(pAck);
+
     return USH_RET_OK;
 }

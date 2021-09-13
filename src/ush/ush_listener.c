@@ -68,7 +68,7 @@ ush_listener_close(ush_listener_t listener) {
 }
 
 ush_ret_t
-ush_listener_destroy(ush_listener_t listener) {
+ush_touch_destroy_with_closing(ush_listener_t listener) {
     if (!listener) {
         return USH_RET_WRONG_PARAM;
     }

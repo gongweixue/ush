@@ -92,6 +92,7 @@ ush_ret_t ush_touch_destroy_with_closing(ush_touch_t touch) {
     ush_touch_close(touch);
 
     free(touch);
+    touch = NULL;
 
     return USH_RET_OK;
 }
