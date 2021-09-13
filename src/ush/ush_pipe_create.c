@@ -37,7 +37,7 @@ ush_pipe_create(
 {
     // params valid
     if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
-        ush_log(USH_LOG_LVL_ERR, "wrong params for pipe create.\n");
+        ush_log(USH_LOG_LVL_ERROR, "wrong params for pipe create.\n");
         return USH_RET_WRONG_PARAM;
     }
     assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
@@ -51,7 +51,7 @@ ush_pipe_create(
         pDL = &deadline;
         ret = realize_timeout(pDL, timeout);
         if(USH_RET_OK != ret) {
-            ush_log(ERR, "realize timeout failed");
+            ush_log(USH_LOG_LVL_ERROR, "realize timeout failed");
             goto RET;
         }
     }
@@ -63,7 +63,7 @@ ush_pipe_create(
     }
     ret = ush_connect_init(conn);
     if (USH_RET_OK != ret) {
-        ush_log(ERR, "connection init failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "connection init failed\n");
         ush_connect_destroy(conn);
         return ret;
     }
@@ -103,7 +103,7 @@ static ush_ret_t hello_and_wait(const char *pName, const timespec *pDL, ush_conn
     ush_connect_get_touch(conn, &touch);
     ret = ush_touch_send_hello(touch, &hello_msg, pDL);
     if (USH_RET_OK != ret) {
-        ush_log(USH_LOG_LVL_ERR, "hello failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "hello failed\n");
     } else {
         ret = ush_sync_hello_ack_wait(pAck, pDL);
     }

@@ -43,7 +43,7 @@ ush_connect_alloc(ush_connect_t *pConn) {
     ush_connect_t tmp = (ush_connect_t)malloc(sizeof(struct connect_t));
 
     if (!tmp) {
-        ush_log(ERR, "connect memory allocation failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "connect memory allocation failed\n");
         return USH_RET_OUT_OF_MEM;
     }
 
@@ -52,7 +52,7 @@ ush_connect_alloc(ush_connect_t *pConn) {
     // pConn->touch = (ush_touch_t *)malloc(sizeof(ush_touch_t));
     ush_ret_t ret = ush_touch_alloc(&tmp->touch);
     if (USH_RET_OK != ret) {
-        ush_log(ERR, "touch alloc failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "touch alloc failed\n");
         free(tmp);
         return ret;
     }
@@ -60,7 +60,7 @@ ush_connect_alloc(ush_connect_t *pConn) {
     // pConn->pListener = (ush_listener_t *)malloc(sizeof(ush_listener_t));
     ret = ush_listener_alloc(&tmp->listener);
     if (USH_RET_OK != ret) {
-        ush_log(ERR, "listener alloc failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "listener alloc failed\n");
         free(tmp->touch);
         free(tmp);
         return ret;
@@ -79,7 +79,7 @@ ush_connect_init(ush_connect_t conn) {
     }
 
     if (0 != pthread_mutex_init(&conn->mutex, NULL)) { // init failed
-        ush_log(ERR, "mutex init of connect failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "mutex init of connect failed\n");
         free(conn);
         return USH_RET_FAILED;
     }
@@ -88,12 +88,12 @@ ush_connect_init(ush_connect_t conn) {
     ush_touch_t touch = NULL;
     ush_ret_t ret = ush_connect_get_touch(conn, &touch);
     if ((USH_RET_OK != ret) || (!touch)) {
-        ush_log(ERR, "get touch failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "get touch failed\n");
         return ret;
     }
     ret = ush_touch_open(touch);
     if (USH_RET_OK != ret) {
-        ush_log(ERR, "open touch failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "open touch failed\n");
         return ret;
     }
 
@@ -103,7 +103,7 @@ ush_connect_init(ush_connect_t conn) {
 ush_ret_t
 ush_connect_destroy(ush_connect_t conn) {
     if (!conn) {
-        ush_log(MSG, "connect NULL to be destroy\n");
+        ush_log(USH_LOG_LVL_INFO, "connect NULL to be destroy\n");
         return USH_RET_OK;
     }
 

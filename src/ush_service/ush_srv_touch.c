@@ -12,7 +12,7 @@
 #include "ush_srv_touch.h"
 #include "ush_type_pub.h"
 
-// thread entry
+// touch thread entry
 static void *touch_entry(void *arg);
 
 // dispatch into the internal queues for dealling with.
@@ -21,12 +21,12 @@ static void touch_dispatch(const void *pBuf);
 ush_ret_t ush_srv_touch_start() {
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, touch_entry, NULL)) {
-        ush_log(USH_LOG_LVL_ERR, "create touch daemon thread: failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "create touch daemon thread: failed.\n");
         return USH_RET_FAILED;
     }
 
     if (0 != pthread_detach(tid)) {
-        ush_log(USH_LOG_LVL_ERR, "detach touch daemon thread: failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "detach touch daemon thread: failed.\n");
         return USH_RET_FAILED;
     }
 
@@ -34,7 +34,7 @@ ush_ret_t ush_srv_touch_start() {
 }
 
 
-static void *touch_daemon_entry(void *arg) {
+static void *touch_entry(void *arg) {
 
     ush_srv_thread_set_tid(USH_SRV_THREAD_TID_IDX_TOUCH, pthread_self());
 
@@ -48,7 +48,7 @@ static void *touch_daemon_entry(void *arg) {
                        &qAttr);
 
     if (-1 == mq) {
-        ush_log(USH_LOG_LVL_ERR, "open failed\n");
+        ush_log(USH_LOG_LVL_ERROR, "open failed\n");
     }
 
     while (1) {
@@ -57,7 +57,7 @@ static void *touch_daemon_entry(void *arg) {
         ush_ssize_t rcv_sz = mq_receive(mq, buff, sizeof(buff), NULL);
 
         if (-1 == rcv_sz) {
-            ush_log(USH_LOG_LVL_ERR, "ERROR rcv_sz\n");
+            ush_log(USH_LOG_LVL_ERROR, "ERROR rcv_sz\n");
             continue;
         }
         touch_dispatch(buff);

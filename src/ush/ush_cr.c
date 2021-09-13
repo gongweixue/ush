@@ -65,14 +65,14 @@ ush_ret_t ush_cr_open(const ush_char_t *pName) {
 
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, cr_entry, (void*)pName)) {
-        ush_log(USH_LOG_LVL_ERR, "create cr thread: failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "create cr thread: failed.\n");
         return USH_RET_FAILED;
     }
 
     // pthread_cond_wait()
 
     if (0 != pthread_detach(tid)) {
-        ush_log(USH_LOG_LVL_ERR, "detach cr thread: failed.\n");
+        ush_log(USH_LOG_LVL_ERROR, "detach cr thread: failed.\n");
         return USH_RET_FAILED;
     }
 

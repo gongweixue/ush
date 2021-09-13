@@ -23,7 +23,7 @@ ush_hello_composite(ush_hello_msg_t      *pHello,
 
     srand((unsigned int)pName[0] + pName[1] + pName[2]); // first 3 bytes
     pHello->cert = rand();
-    ush_log(INFO, "random cert %d\n", pHello->cert);
+    ush_log(USH_LOG_LVL_INFO, "random cert %d\n", pHello->cert);
 
     return USH_RET_OK;
 }

@@ -3,6 +3,14 @@
 
 #include "stdio.h"
 
+typedef enum USH_LOG_LVL {
+    USH_LOG_LVL_FATAL,
+    USH_LOG_LVL_ERROR,
+    USH_LOG_LVL_INFO,
+    USH_LOG_LVL_DETAIL,
+    USH_LOG_LVL_VERBOSE
+} USH_LOG_LVL;
+
 #define ush_log(lvl, ...)   {            \
     printf("\n***** USH "#lvl": \n\t");  \
     printf("File:%s\n\t", __FILE__);     \
