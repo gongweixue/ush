@@ -1,7 +1,8 @@
-#include "assert.h"
+
 #include "stdlib.h"
 #include "string.h"
 
+#include "ush_assert.h"
 #include "ush_hello.h"
 #include "ush_log.h"
 

@@ -1,8 +1,9 @@
-#include "assert.h"
+
 #include "mqueue.h"
 #include "pthread.h"
 #include "stdlib.h"
 
+#include "ush_assert.h"
 #include "ush_comm_touch.h"
 #include "ush_connect.h"
 #include "ush_log.h"
@@ -73,7 +74,7 @@ ush_connect_alloc(ush_connect_t *pConn) {
 
 ush_ret_t
 ush_connect_init(ush_connect_t conn) {
-    assert(conn);
+    ush_assert(conn);
     if (CONNECT_IDENT_VALUE_DEFAULT != conn->ident) { // already been initialed
         return USH_RET_WRONG_SEQ;
     }

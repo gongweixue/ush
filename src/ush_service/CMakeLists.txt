@@ -8,7 +8,7 @@ set(SRC_USHD
 )
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src/log/
+    ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/src/public/
     ${PROJECT_SOURCE_DIR}/src/comm/
 )

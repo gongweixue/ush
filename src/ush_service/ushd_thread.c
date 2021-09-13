@@ -1,6 +1,7 @@
-#include "assert.h"
+
 #include "pthread.h"
 
+#include "ush_assert.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
 

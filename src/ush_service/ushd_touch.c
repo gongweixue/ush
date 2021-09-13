@@ -1,10 +1,11 @@
-#include "assert.h"
+
 #include "fcntl.h"
 #include "mqueue.h"
 #include "pthread.h"
 #include "string.h"
 #include "unistd.h"
 
+#include "ush_assert.h"
 #include "ush_comm_touch.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"

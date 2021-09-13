@@ -1,9 +1,9 @@
 
-#include "assert.h"
 #include "errno.h"
 #include "mqueue.h"
 #include "stdlib.h"
 
+#include "ush_assert.h"
 #include "ush_log.h"
 #include "ush_touch.h"
 

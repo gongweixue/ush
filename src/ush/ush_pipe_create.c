@@ -1,4 +1,4 @@
-#include "assert.h"
+
 #include "errno.h"
 #include "fcntl.h"
 #include "mqueue.h"
@@ -7,6 +7,7 @@
 #include "string.h"
 #include "time.h"
 
+#include "ush_assert.h"
 #include "ush_comm_touch.h"
 #include "ush_connect.h"
 #include "ush_log.h"

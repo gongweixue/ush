@@ -1,10 +1,10 @@
 
-#include "assert.h"
 #include "errno.h"
 #include "mqueue.h"
 #include "stdlib.h"
 #include "string.h"
 
+#include "ush_assert.h"
 #include "ush_comm_listener.h"
 #include "ush_listener.h"
 #include "ush_log.h"

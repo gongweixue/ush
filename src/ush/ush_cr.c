@@ -1,8 +1,9 @@
-#include "assert.h"
+
 #include "mqueue.h"
 #include "pthread.h"
 #include "string.h"
 
+#include "ush_assert.h"
 #include "ush_comm_listener.h"
 #include "ush_cr.h"
 #include "ush_log.h"

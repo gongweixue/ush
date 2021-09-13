@@ -1,7 +1,6 @@
 #ifndef USHD_THREAD_H
 #define USHD_THREAD_H
 
-#include "pthread.h"
 
 #include "ush_type_pub.h"
 
