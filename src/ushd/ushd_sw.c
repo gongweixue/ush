@@ -13,6 +13,7 @@
 static void *sw_entry(void *arg);
 
 ush_ret_t ushd_sw_open(const char *pName) {
+    ush_assert(pName);
     if (!pName) {
         return USH_RET_WRONG_PARAM;
     }

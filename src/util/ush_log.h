@@ -4,11 +4,10 @@
 #include "stdio.h"
 
 typedef enum USH_LOG_LVL {
-    LOG_LVL_FATAL,
-    LOG_LVL_ERROR,
-    LOG_LVL_INFO,
-    LOG_LVL_DETAIL,
-    LOG_LVL_VERBOSE
+    LOG_LVL_FATAL,  // routine exit
+    LOG_LVL_ERROR,  // function return
+    LOG_LVL_INFO,   // code block finished
+    LOG_LVL_DETAIL  // every step of the routine
 } USH_LOG_LVL;
 
 

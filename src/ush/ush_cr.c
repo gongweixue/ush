@@ -62,6 +62,7 @@ cr_entry(void *arg) {
 
 ush_ret_t
 ush_cr_open(const ush_char_t *pName) {
+    ush_assert(pName);
     if (!pName) {
         return USH_RET_WRONG_PARAM;
     }

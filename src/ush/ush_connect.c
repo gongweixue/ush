@@ -141,6 +141,7 @@ ush_connect_make_ident(ush_u32_t idx, ush_u32_t certify) {
 
 ush_ret_t
 ush_connect_set_ident(ush_connect_t conn, ush_connect_ident ident) {
+    ush_assert(conn);
     ush_ret_t ret = USH_RET_FAILED;
 
     if (!ush_connect_ident_valid(conn)) { // assign twice is not allow

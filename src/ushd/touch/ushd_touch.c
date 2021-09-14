@@ -58,7 +58,7 @@ ushd_touch_open(ushd_touch_t touch) {
 
 ush_ret_t
 ushd_touch_close(ushd_touch_t touch) {
-    assert(touch);
+    ush_assert(touch);
     if (!touch || -1 == touch->mq) {
         return USH_RET_OK;
     }

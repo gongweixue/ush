@@ -39,8 +39,8 @@ ush_listener_open(ush_listener_t listener, const ush_char_t *path) {
         return USH_RET_OK;
     }
 
-    assert(strlen(USH_COMM_LISTENER_PATH_PREFIX) + strlen(path)
-           < USH_COMM_LISTENER_NAME_LEN_MAX);
+    ush_assert(strlen(USH_COMM_LISTENER_PATH_PREFIX) + strlen(path)
+               < USH_COMM_LISTENER_NAME_LEN_MAX);
     char name[USH_COMM_LISTENER_NAME_LEN_MAX];
     strcpy(name, USH_COMM_LISTENER_PATH_PREFIX);
     strcat(name, path);

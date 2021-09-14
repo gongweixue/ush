@@ -41,7 +41,7 @@ ush_touch_send_hello(const ush_touch_t     touch,
 
 ush_ret_t
 ush_touch_close(ush_touch_t touch) {
-    assert(touch);
+    ush_assert(touch);
     if (-1 == touch->mq) {
         return USH_RET_OK;
     }
