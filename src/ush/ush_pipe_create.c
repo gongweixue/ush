@@ -22,7 +22,7 @@ typedef struct timespec timespec;
 
 static ush_ret_t hello_and_wait(const ush_char_t      *pName,
                                 const timespec        *pDL,
-                                ush_connect_t         conn);
+                                ush_connect_t          conn);
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
