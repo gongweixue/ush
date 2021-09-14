@@ -22,16 +22,16 @@ ush_touch_send_hello(const ush_touch_t     touch,
     if (pDL) { // with timeout
         if (-1 == mq_timedsend(touch->mq, pMsg, ush_hello_msg_size(), 0, pDL)) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
-                ush_log(LOG_LVL_ERROR, "send hello timeout");
+                ush_log(LOG_LVL_FATAL, "send hello timeout");
                 ret = USH_RET_TIMEOUT;
             } else {
-                ush_log(LOG_LVL_ERROR, "send hello failed.");
+                ush_log(LOG_LVL_FATAL, "send hello failed.");
                 ret = USH_RET_FAILED;
             }
         }
     } else {
         if (-1 == mq_send(touch->mq, pMsg, ush_hello_msg_size(), 0)) {
-            ush_log(LOG_LVL_ERROR, "send hello failed.");
+            ush_log(LOG_LVL_FATAL, "send hello failed.");
             ret = USH_RET_FAILED;
         }
     }
@@ -43,10 +43,12 @@ ush_ret_t
 ush_touch_close(ush_touch_t touch) {
     ush_assert(touch);
     if (-1 == touch->mq) {
+        ush_log(LOG_LVL_INFO, "touch already closed");
         return USH_RET_OK;
     }
 
     if (0 != mq_close(touch->mq)) {
+        ush_log(LOG_LVL_ERROR, "touch closed failed");
         return USH_RET_FAILED;
     }
 
@@ -59,6 +61,7 @@ ush_ret_t
 ush_touch_open(ush_touch_t touch) {
     ush_assert(touch);
     if (-1 != touch->mq) { // maybe already opened
+        ush_log(LOG_LVL_INFO, "touch already open");
         return USH_RET_OK;
     }
 
@@ -78,7 +81,7 @@ ush_touch_alloc(ush_touch_t *pTouch) {
 
     ush_touch_t tmp = (ush_touch_t)malloc(sizeof(struct ush_touch));
     if (!tmp) {
-        ush_log(LOG_LVL_ERROR, "touch alloc failed");
+        ush_log(LOG_LVL_FATAL, "touch alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
 

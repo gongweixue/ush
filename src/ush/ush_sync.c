@@ -28,13 +28,13 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
         (ush_sync_hello_ack_t)malloc(sizeof(struct ush_hello_ack));
 
     if (!pMem) {
-        ush_log(LOG_LVL_ERROR, "hello ack init:out of mem failed");
+        ush_log(LOG_LVL_FATAL, "hello ack init:out of mem failed");
         return USH_RET_OUT_OF_MEM;
     }
 
     if (0 != pthread_mutex_init(&pMem->mutex, NULL)) {
         free(pMem);
-        ush_log(LOG_LVL_ERROR, "hello ack sync handle mutex create failed");
+        ush_log(LOG_LVL_FATAL, "hello ack sync handle mutex create failed");
         return USH_RET_FAILED;
     }
 
@@ -46,7 +46,7 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
         pthread_mutex_destroy(&pMem->mutex);
         pthread_condattr_destroy(&pMem->condattr);
         free(pMem);
-        ush_log(LOG_LVL_ERROR, "hello ack sync handle cond create failed");
+        ush_log(LOG_LVL_FATAL, "hello ack sync handle cond create failed");
         return USH_RET_FAILED;
     }
 
@@ -73,7 +73,7 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
     case 0:
         break;
     case ETIMEDOUT:
-        ush_log(LOG_LVL_INFO, "cond wait timeout");
+        ush_log(LOG_LVL_ERROR, "cond wait timeout");
         ret = USH_RET_TIMEOUT;
         break;
     default :
@@ -84,6 +84,7 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
 
     // DO anythings you want once the ack arrived..
     if (USH_RET_OK == ret && pCallback) {
+        ush_log(LOG_LVL_INFO, "ack-callback be called");
         ret = pCallback(ack);
     }
 

@@ -13,36 +13,36 @@
 static void *sw_entry(void *arg);
 
 ush_ret_t ushd_sw_open(const char *pName) {
-    ush_assert(pName);
-    if (!pName) {
-        return USH_RET_WRONG_PARAM;
-    }
+    // ush_assert(pName);
+    // if (!pName) {
+    //     return USH_RET_WRONG_PARAM;
+    // }
 
-    pthread_t tid;
-    if (0 != pthread_create(&tid, NULL, sw_entry, (void*)pName)) {
-        ushd_log(LOG_LVL_ERROR, "create sw thread: failed.");
-        return USH_RET_FAILED;
-    }
+    // pthread_t tid;
+    // if (0 != pthread_create(&tid, NULL, sw_entry, (void*)pName)) {
+    //     ushd_log(LOG_LVL_ERROR, "create sw thread: failed.");
+    //     return USH_RET_FAILED;
+    // }
 
-    if (0 != pthread_detach(tid)) {
-        ushd_log(LOG_LVL_ERROR, "detach sw thread: failed.");
-        return USH_RET_FAILED;
-    }
+    // if (0 != pthread_detach(tid)) {
+    //     ushd_log(LOG_LVL_ERROR, "detach sw thread: failed.");
+    //     return USH_RET_FAILED;
+    // }
 
     return USH_RET_OK;
 }
 static void *sw_entry(void *arg) {
 
-    char buf[64] = USH_COMM_PIPE_SWCR_PATH_PREFIX;
-    strcat(buf, (char *)arg);
-    ushd_log(LOG_LVL_INFO, "pong back");
-    mqd_t mq = mq_open(buf, O_WRONLY);
-    ush_s32_t res = mq_send(mq, "pong", 3, USH_COMM_PROTOCOL_TOUCH_ID_PONG_PROI);
+    // char buf[64] = USH_COMM_PIPE_SWCR_PATH_PREFIX;
+    // strcat(buf, (char *)arg);
+    // ushd_log(LOG_LVL_INFO, "pong back");
+    // mqd_t mq = mq_open(buf, O_WRONLY);
+    // ush_s32_t res = mq_send(mq, "pong", 3, USH_COMM_PROTOCOL_TOUCH_ID_PONG_PROI);
 
-    while (1) {
-        printf("sw thread running, waiting sending request...");
-        sleep(2);
-    }
+    // while (1) {
+    //     printf("sw thread running, waiting sending request...");
+    //     sleep(2);
+    // }
 
     return 0;
 }

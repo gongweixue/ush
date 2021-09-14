@@ -21,7 +21,7 @@ ushd_touch_alloc(ushd_touch_t *pTouch) {
 
     ushd_touch_t tmp = (ushd_touch_t)malloc(sizeof(struct ushd_touch));
     if (!tmp) {
-        ushd_log(LOG_LVL_ERROR, "ushd touch alloc failed");
+        ushd_log(LOG_LVL_FATAL, "ushd touch alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
 
@@ -35,7 +35,7 @@ ush_ret_t
 ushd_touch_open(ushd_touch_t touch) {
     ush_assert(touch);
     if (-1 != touch->mq) { // maybe already opened
-    ushd_log(LOG_LVL_INFO, "touch already opened");
+        ushd_log(LOG_LVL_INFO, "touch already opened");
         return USH_RET_OK;
     }
 
@@ -60,10 +60,12 @@ ush_ret_t
 ushd_touch_close(ushd_touch_t touch) {
     ush_assert(touch);
     if (!touch || -1 == touch->mq) {
+        ushd_log(LOG_LVL_INFO, "ushd touch already closed");
         return USH_RET_OK;
     }
 
     if (0 != mq_close(touch->mq)) {
+        ushd_log(LOG_LVL_ERROR, "ushd touch closed failed");
         return USH_RET_FAILED;
     }
 

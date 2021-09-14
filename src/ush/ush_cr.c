@@ -64,12 +64,13 @@ ush_ret_t
 ush_cr_open(const ush_char_t *pName) {
     ush_assert(pName);
     if (!pName) {
+        ush_log(LOG_LVL_FATAL, "path name is NULL");
         return USH_RET_WRONG_PARAM;
     }
 
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, cr_entry, (void*)pName)) {
-        ush_log(LOG_LVL_ERROR, "create cr thread: failed.");
+        ush_log(LOG_LVL_FATAL, "create cr thread: failed.");
         return USH_RET_FAILED;
     }
 

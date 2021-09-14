@@ -109,7 +109,7 @@ ush_ret_t
 ushd_touch_thread_start() {
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, ushd_touch_thread_entry, NULL)) {
-        ushd_log(LOG_LVL_ERROR, "create touch daemon thread: failed.");
+        ushd_log(LOG_LVL_FATAL, "create touch daemon thread: failed.");
         return USH_RET_FAILED;
     }
 
@@ -120,7 +120,7 @@ ushd_touch_thread_start() {
 
 
     if (USH_RET_OK != ushd_touch_thread_set_id(tid)) {
-        ushd_log(LOG_LVL_ERROR, "touch thread set id failed");
+        ushd_log(LOG_LVL_FATAL, "touch thread set id failed");
         pthread_cancel(tid);
         return USH_RET_FAILED;
     }

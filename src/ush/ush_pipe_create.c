@@ -40,7 +40,7 @@ ush_pipe_create(
 {
     // params valid
     if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
-        ush_log(LOG_LVL_ERROR, "wrong params for pipe create.");
+        ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
         return USH_RET_WRONG_PARAM;
     }
     ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
@@ -51,17 +51,20 @@ ush_pipe_create(
     timespec deadline;
     timespec *pDL = NULL;
     if (0 != timeout) {
+        ush_log(LOG_LVL_INFO, "need timeout operation");
         pDL = &deadline;
         ret = realize_timeout(pDL, timeout);
         if(USH_RET_OK != ret) {
             ush_log(LOG_LVL_ERROR, "realize timeout failed");
-            goto RET;
+            ush_log(LOG_LVL_INFO, "ptr of deadline rollback to NULL");
+            pDL = NULL;
         }
     }
 
     ush_connect_t conn = NULL;
     ret = ush_connect_create(&conn);
     if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_FATAL, "connect create failed");
         goto RET;
     }
 
@@ -69,8 +72,10 @@ ush_pipe_create(
 
     if (USH_RET_OK == ret) {
         *pHdl = (ush_s64_t)conn;
+        ush_log(LOG_LVL_INFO, "set conn's ptr to handle returned");
     } else {
         *pHdl = -1;
+        ush_log(LOG_LVL_FATAL, "hello and howareyou failed");
         ush_connect_destroy(&conn);
     }
 
@@ -85,6 +90,7 @@ send_hello_and_wait(const ush_char_t *pName,
     ush_assert(pName && conn);
     // param valid
     if (!pName || !conn) {
+        ush_log(LOG_LVL_ERROR, "params NULL");
         return USH_RET_WRONG_PARAM;
     }
 
@@ -92,6 +98,7 @@ send_hello_and_wait(const ush_char_t *pName,
     ush_sync_hello_ack_t ack = NULL;
     ush_ret_t ret = ush_sync_hello_ack_create(&ack, conn);
     if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "hello ack create failed");
         return ret;
     }
 
@@ -104,17 +111,16 @@ send_hello_and_wait(const ush_char_t *pName,
     ush_connect_get_touch(conn, &touch);
     ret = ush_touch_send_hello(touch, hello, pDL);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "hello failed");
+        ush_log(LOG_LVL_FATAL, "sending hello failed");
     } else {
         ret = ush_sync_hello_ack_wait(ack, pDL, get_info_from_hello_ack_cb);
+        if (USH_RET_OK != ret) {
+            ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
+        }
     }
-
 
     ush_sync_hello_ack_destroy(&ack); // ack not needed any more.
     ush_hello_destroy(&hello);
-    if (USH_RET_OK != ret) {
-        return ret;
-    }
 
     return ret;
 }

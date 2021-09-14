@@ -51,31 +51,31 @@ ush_connect_create(ush_connect_t *pConn) {
     ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct ush_connect));
 
     if (!newMem) {
-        ush_log(LOG_LVL_ERROR, "connect memory allocation failed");
+        ush_log(LOG_LVL_FATAL, "connect memory allocation failed");
         return USH_RET_OUT_OF_MEM;
     }
 
     ush_ret_t ret = ush_touch_alloc(&(newMem->touch));
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "touch alloc failed");
+        ush_log(LOG_LVL_FATAL, "touch alloc failed");
         goto BAILED_CONN;
     }
 
     ret = ush_listener_alloc(&(newMem->listener));
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "listener alloc failed");
+        ush_log(LOG_LVL_FATAL, "listener alloc failed");
         goto BAILED_TOUCH;
     }
 
     if (0 != pthread_mutex_init(&(newMem->mutex), NULL)) { // init failed
-        ush_log(LOG_LVL_ERROR, "mutex init of connect failed");
+        ush_log(LOG_LVL_FATAL, "mutex init of connect failed");
         ret = USH_RET_FAILED;
         goto BAILED_LISTENER;
     }
 
     ret = ush_touch_open(newMem->touch);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "open touch failed");
+        ush_log(LOG_LVL_FATAL, "open touch failed");
         goto BAILED_MUTEX;
     }
 
@@ -147,6 +147,8 @@ ush_connect_set_ident(ush_connect_t conn, ush_connect_ident ident) {
     if (!ush_connect_ident_valid(conn)) { // assign twice is not allow
         conn->ident = ident;
         ret          = USH_RET_OK;
+    } else {
+        ush_log(LOG_LVL_ERROR, "valid ident is already exist.");
     }
 
     return ret;
@@ -161,6 +163,8 @@ ush_connect_get_ident(ush_connect_t conn, ush_connect_ident *pIdent) {
         *pIdent = conn->ident;
 
         ret = USH_RET_OK;
+    } else {
+        ush_log(LOG_LVL_ERROR, "no valid ident here.");
     }
     return ret;
 }
@@ -168,6 +172,7 @@ ush_connect_get_ident(ush_connect_t conn, ush_connect_ident *pIdent) {
 ush_ret_t
 ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr) {
     if (!conn || !ptr) {
+        ush_log(LOG_LVL_FATAL, "connect or touch ptr NULL");
         return USH_RET_WRONG_PARAM;
     }
 

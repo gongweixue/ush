@@ -31,7 +31,7 @@ ush_hello_create(ush_hello_msg_t    *pHello,
     ush_hello_msg_t tmp = (ush_hello_msg_t)malloc(sizeof(struct ush_hello_msg));
     if (!tmp) {
         *pHello = NULL;
-        ush_log(LOG_LVL_ERROR, "no mem for hello ack");
+        ush_log(LOG_LVL_FATAL, "no mem for hello ack");
         return USH_RET_OUT_OF_MEM;
     }
 
