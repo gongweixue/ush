@@ -95,7 +95,7 @@ ushd_touch_thread_entry(void *arg) {
         // ush_ssize_t rcv_sz = mq_receive(mq, buff, sizeof(buff), NULL);
 
     //     if (-1 == rcv_sz) {
-    //         ushd_log(LOG_LVL_ERROR, "ERROR rcv_sz\n");
+    //         ushd_log(LOG_LVL_ERROR, "ERROR rcv_sz");
     //         continue;
     //     }
     //     touch_dispatch(buff);
@@ -109,12 +109,12 @@ ush_ret_t
 ushd_touch_thread_start() {
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, ushd_touch_thread_entry, NULL)) {
-        ushd_log(LOG_LVL_ERROR, "create touch daemon thread: failed.\n");
+        ushd_log(LOG_LVL_ERROR, "create touch daemon thread: failed.");
         return USH_RET_FAILED;
     }
 
     if (0 != pthread_detach(tid)) {
-        ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.\n");
+        ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.");
         return USH_RET_FAILED;
     }
 

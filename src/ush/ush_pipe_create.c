@@ -40,7 +40,7 @@ ush_pipe_create(
 {
     // params valid
     if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
-        ush_log(LOG_LVL_ERROR, "wrong params for pipe create.\n");
+        ush_log(LOG_LVL_ERROR, "wrong params for pipe create.");
         return USH_RET_WRONG_PARAM;
     }
     ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
@@ -104,7 +104,7 @@ send_hello_and_wait(const ush_char_t *pName,
     ush_connect_get_touch(conn, &touch);
     ret = ush_touch_send_hello(touch, hello, pDL);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "hello failed\n");
+        ush_log(LOG_LVL_ERROR, "hello failed");
     } else {
         ret = ush_sync_hello_ack_wait(ack, pDL, get_info_from_hello_ack_cb);
     }
@@ -127,7 +127,7 @@ realize_timeout(timespec *ptr, ush_u16_t timeout) {
         return USH_RET_OK;
     }
     if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
-        ush_log(LOG_LVL_ERROR, "clock_gettime failed\n");
+        ush_log(LOG_LVL_ERROR, "clock_gettime failed");
         return USH_RET_FAILED;
     }
 

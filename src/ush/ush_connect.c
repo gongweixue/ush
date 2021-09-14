@@ -51,31 +51,31 @@ ush_connect_create(ush_connect_t *pConn) {
     ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct ush_connect));
 
     if (!newMem) {
-        ush_log(LOG_LVL_ERROR, "connect memory allocation failed\n");
+        ush_log(LOG_LVL_ERROR, "connect memory allocation failed");
         return USH_RET_OUT_OF_MEM;
     }
 
     ush_ret_t ret = ush_touch_alloc(&(newMem->touch));
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "touch alloc failed\n");
+        ush_log(LOG_LVL_ERROR, "touch alloc failed");
         goto BAILED_CONN;
     }
 
     ret = ush_listener_alloc(&(newMem->listener));
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "listener alloc failed\n");
+        ush_log(LOG_LVL_ERROR, "listener alloc failed");
         goto BAILED_TOUCH;
     }
 
     if (0 != pthread_mutex_init(&(newMem->mutex), NULL)) { // init failed
-        ush_log(LOG_LVL_ERROR, "mutex init of connect failed\n");
+        ush_log(LOG_LVL_ERROR, "mutex init of connect failed");
         ret = USH_RET_FAILED;
         goto BAILED_LISTENER;
     }
 
     ret = ush_touch_open(newMem->touch);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "open touch failed\n");
+        ush_log(LOG_LVL_ERROR, "open touch failed");
         goto BAILED_MUTEX;
     }
 
@@ -103,7 +103,7 @@ ush_ret_t
 ush_connect_destroy(ush_connect_t *pConn) {
     ush_assert(pConn);
     if (!(*pConn)) {
-        ush_log(LOG_LVL_INFO, "connect_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "connect_t NULL to be destroy");
         return USH_RET_OK;
     }
 

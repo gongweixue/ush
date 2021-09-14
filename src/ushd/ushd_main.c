@@ -23,7 +23,7 @@ int main () {
     }
 
 
-    ushd_log(LOG_LVL_INFO, "ushd main thread running...\n");
+    ushd_log(LOG_LVL_INFO, "ushd main thread running...");
     while (1) {
     }
 

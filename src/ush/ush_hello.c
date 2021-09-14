@@ -51,7 +51,7 @@ ush_ret_t
 ush_hello_destroy(ush_hello_msg_t *pHello) {
     ush_assert(pHello);
     if (!(*pHello)) {
-        ush_log(LOG_LVL_INFO, "hello_msg_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "hello_msg_t NULL to be destroy");
         return USH_RET_OK;
     }
 

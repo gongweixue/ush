@@ -22,7 +22,7 @@ ush_listener_alloc(ush_listener_t *pListener) {
 
     ush_listener_t tmp = (ush_listener_t)malloc(sizeof(struct ush_listener));
     if (!tmp) {
-        ush_log(LOG_LVL_ERROR, "listener alloc failed\n");
+        ush_log(LOG_LVL_ERROR, "listener alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
 
@@ -47,7 +47,7 @@ ush_listener_open(ush_listener_t listener, const ush_char_t *path) {
 
     listener->mq = mq_open(name, O_WRONLY);
     if (-1 == listener->mq) {
-        ush_log(LOG_LVL_ERROR, "listener open returns failed\n");
+        ush_log(LOG_LVL_ERROR, "listener open returns failed");
         return USH_RET_FAILED;
     }
 
@@ -74,7 +74,7 @@ ush_ret_t
 ush_listener_destroy_with_closing(ush_listener_t *pListener) {
     assert(pListener);
     if (!(*pListener)) {
-        ush_log(LOG_LVL_INFO, "ush_listener_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "ush_listener_t NULL to be destroy");
         return USH_RET_OK;
     }
 
