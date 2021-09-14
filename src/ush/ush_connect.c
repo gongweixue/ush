@@ -34,6 +34,7 @@ getIdentCertify(const ush_connect_ident ident) {
 
 ush_bool_t
 ush_connect_ident_valid(const ush_connect_t conn) {
+    ush_assert(conn);
     ush_u32_t idxRemote = getIdentIdx(conn->ident);
 
     ush_u32_t certify   = getIdentCertify(conn->ident);
@@ -84,10 +85,10 @@ BAILED_MUTEX:
     pthread_mutex_destroy(&(newMem->mutex));
 
 BAILED_LISTENER:
-    ush_listener_destroy_with_closing(newMem->listener);
+    ush_listener_destroy_with_closing(&(newMem->listener));
 
 BAILED_TOUCH:
-    ush_touch_destroy_with_closing(newMem->touch);
+    ush_touch_destroy_with_closing(&(newMem->touch));
 
 BAILED_CONN:
     free(newMem);
@@ -96,30 +97,28 @@ BAILED_CONN:
 }
 
 ush_ret_t
-ush_connect_destroy(ush_connect_t conn) {
-    if (!conn) {
-        ush_log(USH_LOG_LVL_INFO, "connect NULL to be destroy\n");
+ush_connect_destroy(ush_connect_t *pConn) {
+    ush_assert(pConn);
+    if (!(*pConn)) {
+        ush_log(USH_LOG_LVL_INFO, "connect_t NULL to be destroy\n");
         return USH_RET_OK;
     }
 
-    // touch destroy with closing
-    ush_touch_t touch = conn->touch;
-    ush_touch_destroy_with_closing(touch);
+    ush_touch_destroy_with_closing(&((*pConn)->touch));
+    ush_listener_destroy_with_closing(&((*pConn)->listener));
 
-    // listener destroy with closing
-    ush_listener_t listener = conn->listener;
-    ush_listener_destroy_with_closing(listener);
+    pthread_mutex_destroy(&((*pConn)->mutex));
 
-    pthread_mutex_destroy(&conn->mutex);
+    free(*pConn);
 
-    free(conn);
-
-    conn = NULL;
+    *pConn = NULL;
 
     return USH_RET_OK;
 }
 
-ush_u32_t ush_connect_generate_cert(const ush_char_t *seed) {
+ush_u32_t
+ush_connect_generate_cert(const ush_char_t *seed) {
+    ush_assert(seed);
     static ush_u32_t real_seed = 0;
 
     real_seed += *seed;
@@ -151,6 +150,7 @@ ush_connect_set_ident(ush_connect_t conn, ush_connect_ident ident) {
 
 ush_ret_t
 ush_connect_get_ident(ush_connect_t conn, ush_connect_ident *pIdent) {
+    ush_assert(conn && pIdent);
     ush_ret_t ret = USH_RET_FAILED;
     if (ush_connect_ident_valid(conn)) {
 
@@ -161,7 +161,8 @@ ush_connect_get_ident(ush_connect_t conn, ush_connect_ident *pIdent) {
     return ret;
 }
 
-ush_ret_t ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr) {
+ush_ret_t
+ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr) {
     if (!conn || !ptr) {
         return USH_RET_WRONG_PARAM;
     }
@@ -171,17 +172,21 @@ ush_ret_t ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr) {
     return USH_RET_OK;
 }
 
-ush_ret_t ush_connect_critical_enter(ush_connect_t conn) {
+ush_ret_t
+ush_connect_critical_enter(ush_connect_t conn) {
     ush_assert(conn);
     // 0 for locked, others for not
     return !pthread_mutex_lock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }
 
-ush_ret_t ush_connect_critical_exit(ush_connect_t conn) {
+ush_ret_t
+ush_connect_critical_exit(ush_connect_t conn) {
     ush_assert(conn);
     return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }
 
-ush_ret_t ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path) {
+ush_ret_t
+ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path) {
+    ush_assert(conn && path);
     return USH_RET_OK;
 }

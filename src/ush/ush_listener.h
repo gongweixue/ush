@@ -15,7 +15,7 @@ ush_ret_t ush_listener_open(ush_listener_t listener, const ush_char_t *path);
 
 ush_ret_t ush_listener_close(ush_listener_t listener);
 
-ush_ret_t ush_listener_destroy_with_closing(ush_listener_t listener);
+ush_ret_t ush_listener_destroy_with_closing(ush_listener_t *pListener);
 
 
 #endif // USH_LISTENER_H

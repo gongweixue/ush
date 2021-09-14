@@ -17,7 +17,7 @@ ush_ret_t ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
                                   const struct timespec *pDL,
                                   ush_sync_hello_ack_wait_cb_t cb);
 
-ush_ret_t ush_sync_hello_ack_destroy(ush_sync_hello_ack_t ack);
+ush_ret_t ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck);
 
 
 

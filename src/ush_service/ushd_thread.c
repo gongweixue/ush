@@ -23,7 +23,7 @@ static ushd_thread_entity_t sThreads[USHD_THREAD_TID_IDX_MAX] = {
 
 ush_ret_t ushd_thread_set_tid(ushd_thread_tid_idx_t idx, pthread_t tid) {
     // param valid
-    assert(idx < USHD_THREAD_TID_IDX_MAX);
+    ush_assert(idx < USHD_THREAD_TID_IDX_MAX);
     if (idx >= USHD_THREAD_TID_IDX_MAX) {
         return USH_RET_WRONG_PARAM;
     }
@@ -47,7 +47,7 @@ ush_ret_t ushd_thread_set_tid(ushd_thread_tid_idx_t idx, pthread_t tid) {
 
 ush_ret_t ushd_thread_get_tid(ushd_thread_tid_idx_t idx, pthread_t *ptr) {
     // param valid
-    assert(idx < USHd_THREAD_TID_IDX_MAX && ptr);
+    ush_assert(idx < USHd_THREAD_TID_IDX_MAX && ptr);
     if (idx >= USHd_THREAD_TID_IDX_MAX || !ptr) {
         return USH_RET_WRONG_PARAM;
     }
@@ -69,7 +69,7 @@ ush_ret_t ushd_thread_get_tid(ushd_thread_tid_idx_t idx, pthread_t *ptr) {
 }
 
 ush_ret_t ushd_thread_stop(ushd_thread_tid_idx_t idx) {
-    assert(idx < USHd_THREAD_TID_IDX_MAX);
+    ush_assert(idx < USHd_THREAD_TID_IDX_MAX);
     ush_ret_t ret = USH_RET_OK;
     // if (0 == pthread_mutex_lock(&sMutex4Threads)) {
     //     if (USHd_THREAD_STATE_RUNNING == sThreads[idx].state) {
@@ -89,7 +89,7 @@ ush_ret_t ushd_thread_stop(ushd_thread_tid_idx_t idx) {
 ush_ret_t ushd_thread_state(ushd_thread_tid_idx_t idx,
                                ushd_thread_state_t *ptr) {
     // param valid
-    assert(idx < USHd_THREAD_TID_IDX_MAX && ptr);
+    ush_assert(idx < USHd_THREAD_TID_IDX_MAX && ptr);
     if (idx >= USHd_THREAD_TID_IDX_MAX || !ptr) {
         return USH_RET_WRONG_PARAM;
     }

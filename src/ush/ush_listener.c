@@ -16,7 +16,7 @@ typedef struct listener_t {
 
 ush_ret_t
 ush_listener_alloc(ush_listener_t *listener) {
-    assert(listener);
+    ush_assert(listener);
     ush_listener_t tmp = (ush_listener_t)malloc(sizeof(struct listener_t));
     if (!tmp) {
         ush_log(USH_LOG_LVL_ERROR, "listener alloc failed\n");
@@ -31,7 +31,7 @@ ush_listener_alloc(ush_listener_t *listener) {
 
 ush_ret_t
 ush_listener_open(ush_listener_t listener, const ush_char_t *path) {
-    assert(listener && path);
+    ush_assert(listener && path);
     if (-1 != listener->mq) { // maybe already opened
         return USH_RET_OK;
     }
@@ -53,7 +53,7 @@ ush_listener_open(ush_listener_t listener, const ush_char_t *path) {
 
 ush_ret_t
 ush_listener_close(ush_listener_t listener) {
-    assert(listener);
+    ush_assert(listener);
     if (-1 == listener->mq) {
         return USH_RET_OK;
     }
@@ -68,16 +68,18 @@ ush_listener_close(ush_listener_t listener) {
 }
 
 ush_ret_t
-ush_listener_destroy_with_closing(ush_listener_t listener) {
-    if (!listener) {
-        return USH_RET_WRONG_PARAM;
+ush_listener_destroy_with_closing(ush_listener_t *pListener) {
+    assert(pListener);
+    if (!(*pListener)) {
+        ush_log(USH_LOG_LVL_INFO, "ush_listener_t NULL to be destroy\n");
+        return USH_RET_OK;
     }
 
     // close it anyway, no matter if it has been opened.
-    ush_listener_close(listener);
+    ush_listener_close(*pListener);
 
-    free(listener);
-    listener = NULL;
+    free(*pListener);
+    *pListener = NULL;
 
     return USH_RET_OK;
 }

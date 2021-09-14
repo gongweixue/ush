@@ -43,8 +43,8 @@ ush_pipe_create(
         ush_log(USH_LOG_LVL_ERROR, "wrong params for pipe create.\n");
         return USH_RET_WRONG_PARAM;
     }
-    assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
-    assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
+    ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
+    ush_assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
 
     ush_ret_t ret = USH_RET_OK;
     // for timeout
@@ -77,7 +77,7 @@ ush_pipe_create(
         *pHdl = (ush_s64_t)conn;
     } else {
         *pHdl = -1;
-        ush_connect_destroy(conn);
+        ush_connect_destroy(&conn);
     }
 
 RET:
@@ -101,7 +101,7 @@ static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
 
     // prepare hello msg
     ush_hello_msg_t hello;
-    ush_hello_create(hello, pName, ack, ush_connect_generate_cert(pName));
+    ush_hello_create(&hello, pName, ack, ush_connect_generate_cert(pName));
 
     // send with or without timeout
     ush_touch_t touch = NULL;
@@ -114,8 +114,8 @@ static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
     }
 
 
-    ush_sync_hello_ack_destroy(ack); // not needed any more.
-    ush_hello_destroy(hello);
+    ush_sync_hello_ack_destroy(&ack); // ack not needed any more.
+    ush_hello_destroy(&hello);
     if (USH_RET_OK != ret) {
         return ret;
     }
@@ -125,7 +125,10 @@ static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
 
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout) {
-    assert(ptr);
+    if (!ptr) {
+        ush_log(USH_LOG_LVL_INFO, "timespec os null, just return OK.");
+        return USH_RET_OK;
+    }
     if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
         ush_log(USH_LOG_LVL_ERROR, "clock_gettime failed\n");
         return USH_RET_FAILED;
@@ -137,7 +140,7 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout) {
 }
 
 static ush_ret_t get_info_from_hello_ack(ush_sync_hello_ack_t ack) {
-
+    ush_assert(ack);
     ush_log(USH_LOG_LVL_INFO, "ack callback should be implemetented!!!");
     // ush_connect_ident   connIdentOnServer;
     // ush_pp_state_t      connState;

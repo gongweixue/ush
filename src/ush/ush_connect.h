@@ -17,7 +17,7 @@ typedef ush_u64_t ush_connect_ident;
 
 ush_ret_t ush_connect_create(ush_connect_t *pConn);
 
-ush_ret_t ush_connect_destroy(ush_connect_t conn);
+ush_ret_t ush_connect_destroy(ush_connect_t *pConn);
 
 ush_u32_t ush_connect_generate_cert(const ush_char_t *seed);
 

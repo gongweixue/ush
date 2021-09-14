@@ -15,7 +15,7 @@ ush_ret_t
 ush_touch_send_hello(const ush_touch_t     touch,
                      const ush_hello_msg_t hello,
                      const struct timespec *pDL) {
-    assert(touch && hello);
+    ush_assert(touch && hello);
     ush_ret_t ret = USH_RET_OK;
     const ush_char_t *pMsg = (const ush_char_t *)hello;
 
@@ -55,7 +55,7 @@ ush_ret_t ush_touch_close(ush_touch_t touch) {
 }
 
 ush_ret_t ush_touch_open(ush_touch_t touch) {
-    assert(touch);
+    ush_assert(touch);
     if (-1 != touch->mq) { // maybe already opened
         return USH_RET_OK;
     }
@@ -70,7 +70,6 @@ ush_ret_t ush_touch_open(ush_touch_t touch) {
 }
 
 ush_ret_t ush_touch_alloc(ush_touch_t *pTouch) {
-    assert(pTouch);
     ush_touch_t tmp = (ush_touch_t)malloc(sizeof(struct touch_t));
     if (!tmp) {
         ush_log(USH_LOG_LVL_ERROR, "touch alloc failed\n");
@@ -83,16 +82,18 @@ ush_ret_t ush_touch_alloc(ush_touch_t *pTouch) {
     return USH_RET_OK;
 }
 
-ush_ret_t ush_touch_destroy_with_closing(ush_touch_t touch) {
-    if (!touch) {
-        return USH_RET_WRONG_PARAM;
+ush_ret_t ush_touch_destroy_with_closing(ush_touch_t *pTouch) {
+    ush_assert(pTouch);
+    if (!(*pTouch)) {
+        ush_log(USH_LOG_LVL_INFO, "touch_t NULL to be destroy\n");
+        return USH_RET_OK;
     }
 
     // close it anyway, no matter if it has been opened.
-    ush_touch_close(touch);
+    ush_touch_close(*pTouch);
 
-    free(touch);
-    touch = NULL;
+    free(*pTouch);
+    pTouch = NULL;
 
     return USH_RET_OK;
 }

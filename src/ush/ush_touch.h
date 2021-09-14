@@ -18,7 +18,7 @@ ush_ret_t ush_touch_open(ush_touch_t touch);
 
 ush_ret_t ush_touch_close(ush_touch_t touch);
 
-ush_ret_t ush_touch_destroy_with_closing(ush_touch_t touch);
+ush_ret_t ush_touch_destroy_with_closing(ush_touch_t *pTouch);
 
 
 #endif // USH_PIPE_TOUCH_H

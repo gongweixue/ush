@@ -9,7 +9,6 @@
 #include "ush_pipe_pub.h"
 #include "ush_sync.h"
 
-
 typedef struct hello_ack_t {
     pthread_cond_t      cond;
     pthread_condattr_t  condattr;
@@ -63,7 +62,7 @@ ush_ret_t
 ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
                         const struct timespec *pDL,
                         ush_sync_hello_ack_wait_cb_t pCallback) {
-    assert(ack);
+    ush_assert(ack);
 
     pthread_mutex_lock(&ack->mutex);
 
@@ -91,16 +90,18 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
 }
 
 ush_ret_t
-ush_sync_hello_ack_destroy(ush_sync_hello_ack_t ack) {
-    assert(ack);
-    if (!ack) {
+ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
+    ush_assert(pAck);
+    if (!(*pAck)) {
+        ush_log(USH_LOG_LVL_INFO, "hello_ack_t NULL to be destroy\n");
         return USH_RET_OK;
     }
-    pthread_mutex_destroy(&ack->mutex);
-    pthread_condattr_destroy(&ack->condattr);
-    pthread_cond_destroy(&ack->cond);
+    pthread_mutex_destroy(&(*pAck)->mutex);
+    pthread_condattr_destroy(&(*pAck)->condattr);
+    pthread_cond_destroy(&(*pAck)->cond);
 
-    free(ack);
+    free(*pAck);
+    *pAck = NULL;
 
     return USH_RET_OK;
 }
