@@ -9,7 +9,7 @@
 #include "ush_listener.h"
 #include "ush_log.h"
 
-typedef struct listener_t {
+typedef struct ush_listener {
     mqd_t mq;
 } * ush_listener_t;
 
@@ -20,9 +20,9 @@ ush_listener_alloc(ush_listener_t *pListener) {
 
     *pListener = NULL;
 
-    ush_listener_t tmp = (ush_listener_t)malloc(sizeof(struct listener_t));
+    ush_listener_t tmp = (ush_listener_t)malloc(sizeof(struct ush_listener));
     if (!tmp) {
-        ush_log(USH_LOG_LVL_ERROR, "listener alloc failed\n");
+        ush_log(LOG_LVL_ERROR, "listener alloc failed\n");
         return USH_RET_OUT_OF_MEM;
     }
 
@@ -47,7 +47,7 @@ ush_listener_open(ush_listener_t listener, const ush_char_t *path) {
 
     listener->mq = mq_open(name, O_WRONLY);
     if (-1 == listener->mq) {
-        ush_log(USH_LOG_LVL_ERROR, "listener open returns failed\n");
+        ush_log(LOG_LVL_ERROR, "listener open returns failed\n");
         return USH_RET_FAILED;
     }
 
@@ -74,7 +74,7 @@ ush_ret_t
 ush_listener_destroy_with_closing(ush_listener_t *pListener) {
     assert(pListener);
     if (!(*pListener)) {
-        ush_log(USH_LOG_LVL_INFO, "ush_listener_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "ush_listener_t NULL to be destroy\n");
         return USH_RET_OK;
     }
 

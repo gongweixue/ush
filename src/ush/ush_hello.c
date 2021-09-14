@@ -8,7 +8,7 @@
 
 // ack contains the pointers should not be free at destroy function
 // be carefulto to manipulate the ack, maybe free already.
-typedef struct hello_msg {
+typedef struct ush_hello_msg {
     ush_touch_msg_desc desc;
     ush_s8_t           name[USH_HELLO_NAME_LEN_MAX];
     void              *ackSync;
@@ -28,29 +28,30 @@ ush_hello_create(ush_hello_msg_t    *pHello,
 
     *pHello = NULL;
 
-    ush_hello_msg_t hello = (ush_hello_msg_t)malloc(sizeof(struct hello_msg));
-    if (!hello) {
+    ush_hello_msg_t tmp = (ush_hello_msg_t)malloc(sizeof(struct ush_hello_msg));
+    if (!tmp) {
         *pHello = NULL;
-        ush_log(USH_LOG_LVL_ERROR, "no mem for hello ack");
+        ush_log(LOG_LVL_ERROR, "no mem for hello ack");
         return USH_RET_OUT_OF_MEM;
     }
 
-    hello->desc.catalog = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
+    tmp->desc.catalog = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
 
-    strcpy(hello->name, pName);
+    strcpy(tmp->name, pName);
 
-    hello->ackSync = ack;
-    hello->cert = cert;
+    tmp->ackSync = ack;
+    tmp->cert = cert;
 
-    *pHello = hello;
+    *pHello = tmp;
 
     return USH_RET_OK;
 }
 
-ush_ret_t ush_hello_destroy(ush_hello_msg_t *pHello) {
+ush_ret_t
+ush_hello_destroy(ush_hello_msg_t *pHello) {
     ush_assert(pHello);
     if (!(*pHello)) {
-        ush_log(USH_LOG_LVL_INFO, "hello_msg_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "hello_msg_t NULL to be destroy\n");
         return USH_RET_OK;
     }
 
@@ -60,6 +61,7 @@ ush_ret_t ush_hello_destroy(ush_hello_msg_t *pHello) {
     return USH_RET_OK;
 }
 
-size_t ush_hello_msg_size() {
-    return sizeof(struct hello_msg);
+size_t
+ush_hello_msg_size() {
+    return sizeof(struct ush_hello_msg);
 }

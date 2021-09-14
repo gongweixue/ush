@@ -2,7 +2,7 @@
 #define USH_LISTENER_H
 
 
-typedef struct listener_t*    ush_listener_t;
+typedef struct ush_listener * ush_listener_t;
 
 #include "mqueue.h"
 

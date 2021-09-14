@@ -1,7 +1,7 @@
 #ifndef USH_HELLO_H
 #define USH_HELLO_H
 
-typedef struct hello_msg * ush_hello_msg_t;
+typedef struct ush_hello_msg * ush_hello_msg_t;
 
 #include "ush_comm_touch.h"
 #include "ush_sync.h"

@@ -3,6 +3,15 @@
 
 #include "ush_type_pub.h"
 
-ush_ret_t ushd_touch_start();
+typedef struct ushd_touch  * ushd_touch_t;
 
-#endif //USHD_THREAD_H
+ush_ret_t ushd_touch_alloc(ushd_touch_t *pTouch);
+
+ush_ret_t ushd_touch_open(ushd_touch_t touch);
+
+ush_ret_t ushd_touch_close(ushd_touch_t touch);
+
+ush_ret_t ushd_touch_destroy_with_closing(ushd_touch_t *pTouch);
+
+
+#endif // USHD_TOUCH_H

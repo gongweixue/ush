@@ -8,7 +8,8 @@
 #include "ush_cr.h"
 #include "ush_log.h"
 
-static void *cr_entry(void *arg) {
+static void *
+cr_entry(void *arg) {
     // // TODO:register the thread state??
 
     // // param valid
@@ -39,7 +40,7 @@ static void *cr_entry(void *arg) {
     // while (1) {
 
     //     char  buff[USH_COMM_PIPE_SWCR_MSG_MAX_LEN];
-    //     ush_log(USH_LOG_LVL_INFO, "CR queue receiving \n");
+    //     ush_log(LOG_LVL_INFO, "CR queue receiving \n");
     //     ush_ssize_t rcv_sz = mq_receive(mq, buff, sizeof(buff), NULL);
 
     //     if (-1 == rcv_sz) {
@@ -59,27 +60,29 @@ static void *cr_entry(void *arg) {
     return 0;
 }
 
-ush_ret_t ush_cr_open(const ush_char_t *pName) {
+ush_ret_t
+ush_cr_open(const ush_char_t *pName) {
     if (!pName) {
         return USH_RET_WRONG_PARAM;
     }
 
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, cr_entry, (void*)pName)) {
-        ush_log(USH_LOG_LVL_ERROR, "create cr thread: failed.\n");
+        ush_log(LOG_LVL_ERROR, "create cr thread: failed.\n");
         return USH_RET_FAILED;
     }
 
     // pthread_cond_wait()
 
     if (0 != pthread_detach(tid)) {
-        ush_log(USH_LOG_LVL_ERROR, "detach cr thread: failed.\n");
+        ush_log(LOG_LVL_ERROR, "detach cr thread: failed.\n");
         return USH_RET_FAILED;
     }
 
     return USH_RET_OK;
 }
 
-ush_ret_t ush_cr_close() {
+ush_ret_t
+ush_cr_close() {
     return USH_RET_OK;
 }

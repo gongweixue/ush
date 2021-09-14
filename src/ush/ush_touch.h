@@ -1,7 +1,7 @@
-#ifndef USH_PIPE_TOUCH_H
-#define USH_PIPE_TOUCH_H
+#ifndef USH_TOUCH_H
+#define USH_TOUCH_H
 
-typedef struct touch_t*    ush_touch_t;
+typedef struct ush_touch *  ush_touch_t;
 
 #include "time.h"
 
@@ -21,4 +21,4 @@ ush_ret_t ush_touch_close(ush_touch_t touch);
 ush_ret_t ush_touch_destroy_with_closing(ush_touch_t *pTouch);
 
 
-#endif // USH_PIPE_TOUCH_H
+#endif // USH_TOUCH_H

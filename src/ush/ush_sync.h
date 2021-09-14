@@ -1,7 +1,7 @@
 #ifndef USH_SYNC_H
 #define USH_SYNC_H
 
-typedef struct hello_ack_t * ush_sync_hello_ack_t;
+typedef struct ush_hello_ack * ush_sync_hello_ack_t;
 
 #include "time.h"
 

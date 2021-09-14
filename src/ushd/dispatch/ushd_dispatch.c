@@ -1,6 +1,7 @@
 #include "ushd_dispatch.h"
 
-ush_ret_t ushd_dispatch_start() {
+ush_ret_t
+ushd_dispatch_start() {
     return 0;
 }
 

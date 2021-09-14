@@ -1,7 +1,7 @@
 #ifndef USH_CONNECT_H
 #define USH_CONNECT_H
 
-typedef struct connect*    ush_connect_t;
+typedef struct ush_connect * ush_connect_t;
 
 #include "ush_listener.h"
 #include "ush_touch.h"
@@ -33,9 +33,9 @@ ush_ret_t ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr);
 
 ush_ret_t ush_connect_get_listener(ush_connect_t conn, ush_listener_t *ptr);
 
-ush_ret_t ush_connect_critical_enter(ush_connect_t conn);
+ush_ret_t ush_connect_cs_enter(ush_connect_t conn);
 
-ush_ret_t ush_connect_critical_exit(ush_connect_t conn);
+ush_ret_t ush_connect_cs_exit(ush_connect_t conn);
 
 ush_ret_t ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path);
 

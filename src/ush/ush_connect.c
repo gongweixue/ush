@@ -12,7 +12,7 @@
 #include "ush_listener.h"
 
 
-typedef struct connect {
+typedef struct ush_connect {
     ush_connect_ident    ident;
     ush_touch_t          touch;
     ush_listener_t       listener;
@@ -48,34 +48,34 @@ ush_connect_create(ush_connect_t *pConn) {
 
     *pConn = NULL;
 
-    ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct connect));
+    ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct ush_connect));
 
     if (!newMem) {
-        ush_log(USH_LOG_LVL_ERROR, "connect memory allocation failed\n");
+        ush_log(LOG_LVL_ERROR, "connect memory allocation failed\n");
         return USH_RET_OUT_OF_MEM;
     }
 
     ush_ret_t ret = ush_touch_alloc(&(newMem->touch));
     if (USH_RET_OK != ret) {
-        ush_log(USH_LOG_LVL_ERROR, "touch alloc failed\n");
+        ush_log(LOG_LVL_ERROR, "touch alloc failed\n");
         goto BAILED_CONN;
     }
 
     ret = ush_listener_alloc(&(newMem->listener));
     if (USH_RET_OK != ret) {
-        ush_log(USH_LOG_LVL_ERROR, "listener alloc failed\n");
+        ush_log(LOG_LVL_ERROR, "listener alloc failed\n");
         goto BAILED_TOUCH;
     }
 
     if (0 != pthread_mutex_init(&(newMem->mutex), NULL)) { // init failed
-        ush_log(USH_LOG_LVL_ERROR, "mutex init of connect failed\n");
+        ush_log(LOG_LVL_ERROR, "mutex init of connect failed\n");
         ret = USH_RET_FAILED;
         goto BAILED_LISTENER;
     }
 
     ret = ush_touch_open(newMem->touch);
     if (USH_RET_OK != ret) {
-        ush_log(USH_LOG_LVL_ERROR, "open touch failed\n");
+        ush_log(LOG_LVL_ERROR, "open touch failed\n");
         goto BAILED_MUTEX;
     }
 
@@ -103,7 +103,7 @@ ush_ret_t
 ush_connect_destroy(ush_connect_t *pConn) {
     ush_assert(pConn);
     if (!(*pConn)) {
-        ush_log(USH_LOG_LVL_INFO, "connect_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "connect_t NULL to be destroy\n");
         return USH_RET_OK;
     }
 
@@ -129,7 +129,7 @@ ush_connect_generate_cert(const ush_char_t *seed) {
     srand(real_seed);
     ush_u32_t cert = rand();
 
-    ush_log(USH_LOG_LVL_INFO, "cert gen 0x%08d", cert);
+    ush_log(LOG_LVL_INFO, "cert gen 0x%08d", cert);
 
     return cert;
 }
@@ -176,14 +176,14 @@ ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr) {
 }
 
 ush_ret_t
-ush_connect_critical_enter(ush_connect_t conn) {
+ush_connect_cs_enter(ush_connect_t conn) {
     ush_assert(conn);
     // 0 for locked, others for not
     return !pthread_mutex_lock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }
 
 ush_ret_t
-ush_connect_critical_exit(ush_connect_t conn) {
+ush_connect_cs_exit(ush_connect_t conn) {
     ush_assert(conn);
     return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }

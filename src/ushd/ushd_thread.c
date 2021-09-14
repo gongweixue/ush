@@ -8,7 +8,7 @@
 #include "ushd_thread.h"
 
 
-typedef struct ushd_thread_entity_t {
+typedef struct ushd_thread_entity {
     ushd_thread_state_t state;
     pthread_t              tid;
 } ushd_thread_entity_t;
@@ -38,7 +38,7 @@ ush_ret_t ushd_thread_set_tid(ushd_thread_tid_idx_t idx, pthread_t tid) {
         }
         pthread_mutex_unlock(&sMutex4Threads);
     } else {
-        ush_log(USH_LOG_LVL_ERROR, "set tid failed.\n");
+        ushd_log(LOG_LVL_ERROR, "set tid failed.\n");
         ret = USH_RET_FAILED;
     }
 
@@ -61,7 +61,7 @@ ush_ret_t ushd_thread_get_tid(ushd_thread_tid_idx_t idx, pthread_t *ptr) {
         }
         pthread_mutex_unlock(&sMutex4Threads);
     } else {
-        ush_log(USH_LOG_LVL_ERROR, "get tid failed.\n");
+        ushd_log(LOG_LVL_ERROR, "get tid failed.\n");
         ret = USH_RET_FAILED;
     }
 
@@ -79,7 +79,7 @@ ush_ret_t ushd_thread_stop(ushd_thread_tid_idx_t idx) {
     //     }
     //     pthread_mutex_unlock(&sMutex4Threads);
     // } else {
-    //     ush_log(USH_LOG_LVL_ERR, "thread stop failed.\n");
+    //     ushd_log(ushd_log_LVL_ERR, "thread stop failed.\n");
     //     ret = USH_RET_FAILED;
     // }
 
@@ -99,7 +99,7 @@ ush_ret_t ushd_thread_state(ushd_thread_tid_idx_t idx,
         *ptr = sThreads[idx].state;
         pthread_mutex_unlock(&sMutex4Threads);
     } else {
-        ush_log(USH_LOG_LVL_ERROR, "get thread state failed.\n");
+        ushd_log(LOG_LVL_ERROR, "get thread state failed.\n");
         ret = USH_RET_FAILED;
     }
 

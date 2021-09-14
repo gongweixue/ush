@@ -26,7 +26,7 @@ static ush_ret_t send_hello_and_wait(const ush_char_t      *pName,
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
-static ush_ret_t get_info_from_hello_ack(ush_sync_hello_ack_t ack);
+static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 
 ush_ret_t
 ush_pipe_create(
@@ -40,7 +40,7 @@ ush_pipe_create(
 {
     // params valid
     if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
-        ush_log(USH_LOG_LVL_ERROR, "wrong params for pipe create.\n");
+        ush_log(LOG_LVL_ERROR, "wrong params for pipe create.\n");
         return USH_RET_WRONG_PARAM;
     }
     ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
@@ -54,7 +54,7 @@ ush_pipe_create(
         pDL = &deadline;
         ret = realize_timeout(pDL, timeout);
         if(USH_RET_OK != ret) {
-            ush_log(USH_LOG_LVL_ERROR, "realize timeout failed");
+            ush_log(LOG_LVL_ERROR, "realize timeout failed");
             goto RET;
         }
     }
@@ -78,9 +78,10 @@ RET:
     return ret;
 }
 
-static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
-                                     const timespec   *pDL,
-                                     ush_connect_t     conn) {
+static ush_ret_t
+send_hello_and_wait(const ush_char_t *pName,
+                    const timespec   *pDL,
+                    ush_connect_t     conn) {
     // param valid
     if (pName || pDL || conn) {
         return USH_RET_WRONG_PARAM;
@@ -102,9 +103,9 @@ static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
     ush_connect_get_touch(conn, &touch);
     ret = ush_touch_send_hello(touch, hello, pDL);
     if (USH_RET_OK != ret) {
-        ush_log(USH_LOG_LVL_ERROR, "hello failed\n");
+        ush_log(LOG_LVL_ERROR, "hello failed\n");
     } else {
-        ret = ush_sync_hello_ack_wait(ack, pDL, get_info_from_hello_ack);
+        ret = ush_sync_hello_ack_wait(ack, pDL, get_info_from_hello_ack_cb);
     }
 
 
@@ -118,13 +119,14 @@ static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
 }
 
 
-static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout) {
+static ush_ret_t
+realize_timeout(timespec *ptr, ush_u16_t timeout) {
     if (!ptr) {
-        ush_log(USH_LOG_LVL_INFO, "timespec os null, just return OK.");
+        ush_log(LOG_LVL_INFO, "timespec os null, just return OK.");
         return USH_RET_OK;
     }
     if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
-        ush_log(USH_LOG_LVL_ERROR, "clock_gettime failed\n");
+        ush_log(LOG_LVL_ERROR, "clock_gettime failed\n");
         return USH_RET_FAILED;
     }
 
@@ -133,9 +135,10 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout) {
     return USH_RET_OK;
 }
 
-static ush_ret_t get_info_from_hello_ack(ush_sync_hello_ack_t ack) {
+static ush_ret_t
+get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
     ush_assert(ack);
-    ush_log(USH_LOG_LVL_INFO, "ack callback should be implemetented!!!");
+    ush_log(LOG_LVL_INFO, "ack callback should be implemetented!!!");
     // ush_connect_ident   connIdentOnServer;
     // ush_pp_state_t      connState;
     // ush_connect_t connHdlOnClient;

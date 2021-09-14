@@ -9,7 +9,7 @@
 #include "ush_pipe_pub.h"
 #include "ush_sync.h"
 
-typedef struct hello_ack_t {
+typedef struct ush_hello_ack {
     pthread_cond_t      cond;
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
@@ -25,16 +25,16 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     *pAck = NULL;
 
     ush_sync_hello_ack_t pMem =
-        (ush_sync_hello_ack_t)malloc(sizeof(struct hello_ack_t));
+        (ush_sync_hello_ack_t)malloc(sizeof(struct ush_hello_ack));
 
     if (!pMem) {
-        ush_log(USH_LOG_LVL_ERROR, "hello ack init:out of mem failed\n");
+        ush_log(LOG_LVL_ERROR, "hello ack init:out of mem failed\n");
         return USH_RET_OUT_OF_MEM;
     }
 
     if (0 != pthread_mutex_init(&pMem->mutex, NULL)) {
         free(pMem);
-        ush_log(USH_LOG_LVL_ERROR, "hello ack sync handle mutex create failed\n");
+        ush_log(LOG_LVL_ERROR, "hello ack sync handle mutex create failed\n");
         return USH_RET_FAILED;
     }
 
@@ -46,7 +46,7 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
         pthread_mutex_destroy(&pMem->mutex);
         pthread_condattr_destroy(&pMem->condattr);
         free(pMem);
-        ush_log(USH_LOG_LVL_ERROR, "hello ack sync handle cond create failed\n");
+        ush_log(LOG_LVL_ERROR, "hello ack sync handle cond create failed\n");
         return USH_RET_FAILED;
     }
 
@@ -73,11 +73,11 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
     case 0:
         break;
     case ETIMEDOUT:
-        ush_log(USH_LOG_LVL_INFO, "cond wait timeout\n");
+        ush_log(LOG_LVL_INFO, "cond wait timeout\n");
         ret = USH_RET_TIMEOUT;
         break;
     default :
-        ush_log(USH_LOG_LVL_ERROR, "cond wait failed\n");
+        ush_log(LOG_LVL_ERROR, "cond wait failed\n");
         ret = USH_RET_FAILED;
         break;
     }
@@ -95,7 +95,7 @@ ush_ret_t
 ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
     ush_assert(pAck);
     if (!(*pAck)) {
-        ush_log(USH_LOG_LVL_INFO, "hello_ack_t NULL to be destroy\n");
+        ush_log(LOG_LVL_INFO, "ush_hello_ack NULL to be destroy\n");
         return USH_RET_OK;
     }
     pthread_mutex_destroy(&(*pAck)->mutex);

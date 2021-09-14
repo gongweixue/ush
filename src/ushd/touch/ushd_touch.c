@@ -1,66 +1,90 @@
-
-#include "fcntl.h"
 #include "mqueue.h"
 #include "pthread.h"
+#include "stdlib.h"
 #include "string.h"
-#include "unistd.h"
 
 #include "ush_assert.h"
 #include "ush_comm_touch.h"
 #include "ush_log.h"
-#include "ush_type_pub.h"
 
-// #include "ushd_sw.h"
 #include "ushd_touch.h"
 
-// *** touch thread entry
-static void *touch_entry(void *arg);
+typedef struct ushd_touch {
+    mqd_t mq;
+} * ushd_touch_t;
 
 
-ush_ret_t ushd_touch_start() {
-    // pthread_t tid;
-    // if (0 != pthread_create(&tid, NULL, touch_entry, NULL)) {
-    //     ush_log(USH_LOG_LVL_ERROR, "create touch daemon thread: failed.\n");
-    //     return USH_RET_FAILED;
-    // }
+ush_ret_t
+ushd_touch_alloc(ushd_touch_t *pTouch) {
+    ush_assert(pTouch);
+    *pTouch = NULL;
 
-    // if (0 != pthread_detach(tid)) {
-    //     ush_log(USH_LOG_LVL_ERROR, "detach touch daemon thread: failed.\n");
-    //     return USH_RET_FAILED;
-    // }
+    ushd_touch_t tmp = (ushd_touch_t)malloc(sizeof(struct ushd_touch));
+    if (!tmp) {
+        ushd_log(LOG_LVL_ERROR, "ushd touch alloc failed\n");
+        return USH_RET_OUT_OF_MEM;
+    }
+
+    tmp->mq = -1;
+    *pTouch = tmp;
 
     return USH_RET_OK;
 }
 
+ush_ret_t
+ushd_touch_open(ushd_touch_t touch) {
+    ush_assert(touch);
+    if (-1 != touch->mq) { // maybe already opened
+    ushd_log(LOG_LVL_INFO, "touch already opened");
+        return USH_RET_OK;
+    }
 
-static void *touch_entry(void *arg) {
+    struct mq_attr qAttr;
+    memset(&qAttr, 0, sizeof(qAttr));
+    qAttr.mq_maxmsg  = USH_COMM_TOUCH_Q_MSG_MAX_CNT;
+    qAttr.mq_msgsize = USH_COMM_TOUCH_Q_MSG_MAX_LEN;
+    touch->mq = mq_open(USH_COMM_TOUCH_Q_PATH,
+                        O_RDONLY | O_CREAT, // read end
+                        S_IRWXU  | S_IRWXG, // 0770
+                        &qAttr);
 
-    // ushd_thread_set_tid(USHD_THREAD_TID_IDX_TOUCH, pthread_self());
+    if (-1 == touch->mq) {
+        ushd_log(LOG_LVL_ERROR, "ushd touch open returns -1\n");
+        return USH_RET_FAILED;
+    }
 
-    // struct mq_attr qAttr;
-    // memset(&qAttr, 0, sizeof(qAttr));
-    // qAttr.mq_maxmsg  = USH_IMPL_TOUCH_Q_MSG_MAX_CNT;
-    // qAttr.mq_msgsize = USH_IMPL_TOUCH_Q_MSG_MAX_LEN;
-    // mqd_t mq = mq_open(USH_IMPL_TOUCH_Q_PATH,
-    //                    O_RDONLY | O_CREAT, // read end
-    //                    S_IRWXU | S_IRWXG, // 0770
-    //                    &qAttr);
+    return USH_RET_OK;
+}
 
-    // if (-1 == mq) {
-    //     ush_log(USH_LOG_LVL_ERROR, "open failed\n");
-    // }
+ush_ret_t
+ushd_touch_close(ushd_touch_t touch) {
+    assert(touch);
+    if (!touch || -1 == touch->mq) {
+        return USH_RET_OK;
+    }
 
-    // while (1) {
-    //     char  buff[USH_IMPL_TOUCH_Q_MSG_MAX_LEN];
-    //     ush_log(USH_LOG_LVL_INFO, "receiving touch\n");
-    //     ush_ssize_t rcv_sz = mq_receive(mq, buff, sizeof(buff), NULL);
+    if (0 != mq_close(touch->mq)) {
+        return USH_RET_FAILED;
+    }
 
-    //     if (-1 == rcv_sz) {
-    //         ush_log(USH_LOG_LVL_ERROR, "ERROR rcv_sz\n");
-    //         continue;
-    //     }
-    //     touch_dispatch(buff);
-    // }
+    touch->mq = -1;
 
-    return 0;
+    return USH_RET_OK;
+}
+
+ush_ret_t
+ushd_touch_destroy_with_closing(ushd_touch_t *pTouch) {
+    ush_assert(pTouch);
+    if (!(*pTouch)) {
+        ushd_log(LOG_LVL_INFO, "ushd_touch_t NULL to be destroy\n");
+        return USH_RET_OK;
+    }
+
+    // close it anyway, no matter if it has been opened.
+    ushd_touch_close(*pTouch);
+
+    free(*pTouch);
+    pTouch = NULL;
+
+    return USH_RET_OK;
 }
