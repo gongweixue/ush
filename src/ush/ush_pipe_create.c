@@ -64,12 +64,6 @@ ush_pipe_create(
     if (USH_RET_OK != ret) {
         goto RET;
     }
-    // ret = ush_connect_init(conn);
-    // if (USH_RET_OK != ret) {
-    //     ush_log(USH_LOG_LVL_ERROR, "connection init failed\n");
-    //     ush_connect_destroy(conn);
-    //     return ret;
-    // }
 
     ret = send_hello_and_wait(pName, pDL, conn);
 
