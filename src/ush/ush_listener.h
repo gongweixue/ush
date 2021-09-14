@@ -9,7 +9,7 @@ typedef struct listener_t*    ush_listener_t;
 #include "ush_type_pub.h"
 
 
-ush_ret_t ush_listener_alloc(ush_listener_t *listener);
+ush_ret_t ush_listener_alloc(ush_listener_t *Listener);
 
 ush_ret_t ush_listener_open(ush_listener_t listener, const ush_char_t *path);
 

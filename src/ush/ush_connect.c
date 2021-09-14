@@ -44,6 +44,9 @@ ush_connect_ident_valid(const ush_connect_t conn) {
 
 ush_ret_t
 ush_connect_create(ush_connect_t *pConn) {
+    ush_assert(pConn);
+
+    *pConn = NULL;
 
     ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct connect));
 

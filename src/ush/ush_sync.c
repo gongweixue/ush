@@ -22,6 +22,8 @@ typedef struct hello_ack_t {
 ush_ret_t
 ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     ush_assert(pAck && conn);
+    *pAck = NULL;
+
     ush_sync_hello_ack_t pMem =
         (ush_sync_hello_ack_t)malloc(sizeof(struct hello_ack_t));
 

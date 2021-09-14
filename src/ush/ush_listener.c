@@ -15,8 +15,11 @@ typedef struct listener_t {
 
 
 ush_ret_t
-ush_listener_alloc(ush_listener_t *listener) {
-    ush_assert(listener);
+ush_listener_alloc(ush_listener_t *pListener) {
+    ush_assert(pListener);
+
+    *pListener = NULL;
+
     ush_listener_t tmp = (ush_listener_t)malloc(sizeof(struct listener_t));
     if (!tmp) {
         ush_log(USH_LOG_LVL_ERROR, "listener alloc failed\n");
@@ -24,7 +27,7 @@ ush_listener_alloc(ush_listener_t *listener) {
     }
 
     tmp->mq = -1;
-    *listener = tmp;
+    *pListener = tmp;
 
     return USH_RET_OK;
 }

@@ -26,6 +26,8 @@ ush_hello_create(ush_hello_msg_t    *pHello,
     ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
     ush_assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
 
+    *pHello = NULL;
+
     ush_hello_msg_t hello = (ush_hello_msg_t)malloc(sizeof(struct hello_msg));
     if (!hello) {
         *pHello = NULL;

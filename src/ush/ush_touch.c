@@ -70,6 +70,9 @@ ush_ret_t ush_touch_open(ush_touch_t touch) {
 }
 
 ush_ret_t ush_touch_alloc(ush_touch_t *pTouch) {
+    ush_assert(pTouch);
+    *pTouch = NULL;
+
     ush_touch_t tmp = (ush_touch_t)malloc(sizeof(struct touch_t));
     if (!tmp) {
         ush_log(USH_LOG_LVL_ERROR, "touch alloc failed\n");
