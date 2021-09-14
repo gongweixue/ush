@@ -20,7 +20,7 @@
 
 typedef struct timespec timespec;
 
-static ush_ret_t hello_and_wait(const ush_char_t      *pName,
+static ush_ret_t send_hello_and_wait(const ush_char_t      *pName,
                                 const timespec        *pDL,
                                 ush_connect_t          conn);
 
@@ -60,18 +60,18 @@ ush_pipe_create(
     }
 
     ush_connect_t conn = NULL;
-    ret = ush_connect_alloc(&conn);
+    ret = ush_connect_create(&conn);
     if (USH_RET_OK != ret) {
         goto RET;
     }
-    ret = ush_connect_init(conn);
-    if (USH_RET_OK != ret) {
-        ush_log(USH_LOG_LVL_ERROR, "connection init failed\n");
-        ush_connect_destroy(conn);
-        return ret;
-    }
+    // ret = ush_connect_init(conn);
+    // if (USH_RET_OK != ret) {
+    //     ush_log(USH_LOG_LVL_ERROR, "connection init failed\n");
+    //     ush_connect_destroy(conn);
+    //     return ret;
+    // }
 
-    ret = hello_and_wait(pName, pDL, conn);
+    ret = send_hello_and_wait(pName, pDL, conn);
 
     if (USH_RET_OK == ret) {
         *pHdl = (ush_s64_t)conn;
@@ -84,7 +84,9 @@ RET:
     return ret;
 }
 
-static ush_ret_t hello_and_wait(const char *pName, const timespec *pDL, ush_connect_t conn) {
+static ush_ret_t send_hello_and_wait(const ush_char_t *pName,
+                                     const timespec   *pDL,
+                                     ush_connect_t     conn) {
     // param valid
     if (pName || pDL || conn) {
         return USH_RET_WRONG_PARAM;
@@ -99,7 +101,7 @@ static ush_ret_t hello_and_wait(const char *pName, const timespec *pDL, ush_conn
 
     // prepare hello msg
     ush_hello_msg_t hello;
-    ush_hello_create(hello, pName, ack);
+    ush_hello_create(hello, pName, ack, ush_connect_generate_cert(pName));
 
     // send with or without timeout
     ush_touch_t touch = NULL;

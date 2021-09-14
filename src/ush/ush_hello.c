@@ -1,4 +1,3 @@
-
 #include "stdlib.h"
 #include "string.h"
 
@@ -16,7 +15,8 @@ typedef struct hello_msg {
 ush_ret_t
 ush_hello_create(ush_hello_msg_t     hello,
                 const ush_char_t    *pName,
-                ush_sync_hello_ack_t ack) {
+                ush_sync_hello_ack_t ack,
+                ush_u32_t            cert) {
 
     assert(hello && pName && ack);
 
@@ -34,10 +34,7 @@ ush_hello_create(ush_hello_msg_t     hello,
     strcpy(hello->name, pName);
 
     hello->ackSync = ack;
-
-    srand((unsigned int)pName[0] + pName[1] + pName[2]); // first 3 bytes
-    hello->cert = rand();
-    ush_log(USH_LOG_LVL_INFO, "random cert %d\n", hello->cert);
+    hello->cert = cert; rand();
 
     return USH_RET_OK;
 }
