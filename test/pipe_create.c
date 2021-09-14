@@ -17,6 +17,10 @@ int main () {
     ush_ret_t ret = ush_pipe_create("ping", 0, 0, 2, NULL, 0, &hdl);
     printf("create return %d\n", ret);
 
+    printf("*** create pipe without timeout, blocking...\n");
+    ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
+    printf("create return %d\n", ret);
+
     while(1) {
     }
     return 0;

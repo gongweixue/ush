@@ -129,7 +129,7 @@ ush_connect_generate_cert(const ush_char_t *seed) {
     srand(real_seed);
     ush_u32_t cert = rand();
 
-    ush_log(LOG_LVL_INFO, "cert gen 0x%08d", cert);
+    ush_log(LOG_LVL_INFO, "cert gen 0x%08x", cert);
 
     return cert;
 }

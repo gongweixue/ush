@@ -82,8 +82,9 @@ static ush_ret_t
 send_hello_and_wait(const ush_char_t *pName,
                     const timespec   *pDL,
                     ush_connect_t     conn) {
+    ush_assert(pName && conn);
     // param valid
-    if (pName || pDL || conn) {
+    if (!pName || !conn) {
         return USH_RET_WRONG_PARAM;
     }
 

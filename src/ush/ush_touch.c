@@ -36,7 +36,7 @@ ush_touch_send_hello(const ush_touch_t     touch,
         }
     }
 
-    return USH_RET_OK;
+    return ret;
 }
 
 ush_ret_t
