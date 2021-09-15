@@ -11,7 +11,7 @@ typedef enum USH_LOG_LVL {
 } USH_LOG_LVL;
 
 
-#define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
+#define USH_LOG_LVL_SELECTOR    LOG_LVL_INFO
 
 #define log_def(owner, lvl, ...)   {                                           \
     if (lvl <= USH_LOG_LVL_SELECTOR) {                                         \

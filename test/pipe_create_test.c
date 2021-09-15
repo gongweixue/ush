@@ -19,7 +19,7 @@ int main () {
 
     printf("*** create pipe without timeout, blocking...\n");
     ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
-    printf("create return %d\n", ret);
+    printf("create return %d and back to main\n", ret);
 
     while(1) {
     }

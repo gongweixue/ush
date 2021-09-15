@@ -5,7 +5,11 @@
 
 #include "ush_assert.h"
 #include "ush_log.h"
+#include "ush_time.h"
 #include "ush_touch.h"
+
+#define USH_TOUCH_OPEN_RETRY_CNT    3
+#define USH_TOUCH_OPEN_INTERVAL_MS  500
 
 typedef struct ush_touch {
     mqd_t mq;
@@ -65,13 +69,24 @@ ush_touch_open(ush_touch_t touch) {
         return USH_RET_OK;
     }
 
-    touch->mq = mq_open(USH_COMM_TOUCH_Q_PATH, O_WRONLY);
-    if (-1 == touch->mq) {
-        ush_log(LOG_LVL_ERROR, "touch open returns failed");
-        return USH_RET_FAILED;
+    for (int counter = 0; counter < USH_TOUCH_OPEN_RETRY_CNT; ++counter) {
+        touch->mq = mq_open(USH_COMM_TOUCH_Q_PATH, O_WRONLY);
+        if (-1 != touch->mq) { // done
+            ush_log(LOG_LVL_INFO, "listener open done.");
+            return USH_RET_OK;
+        } else { // failed
+            if (ENOENT == errno) { // file has not been create
+                ush_log(LOG_LVL_ERROR, "touch not exist, retry after 500ms...");
+                ush_time_delay_ms(USH_TOUCH_OPEN_INTERVAL_MS);
+                continue;
+            } else {
+                ush_log(LOG_LVL_FATAL, "touch open failed");
+                break;
+            }
+        }
     }
 
-    return USH_RET_OK;
+    return USH_RET_FAILED;
 }
 
 ush_ret_t
