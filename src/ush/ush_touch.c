@@ -9,7 +9,7 @@
 #include "ush_touch.h"
 
 #define USH_TOUCH_OPEN_RETRY_CNT    3
-#define USH_TOUCH_OPEN_INTERVAL_MS  500
+#define USH_TOUCH_OPEN_INTERVAL_MS  10
 
 typedef struct ush_touch {
     mqd_t mq;
@@ -33,11 +33,13 @@ ush_touch_send_hello(const ush_touch_t     touch,
                 ret = USH_RET_FAILED;
             }
         }
+        ush_log(LOG_LVL_DETAIL, "timedsend return");
     } else {
         if (-1 == mq_send(touch->mq, pMsg, ush_hello_msg_size(), 0)) {
             ush_log(LOG_LVL_FATAL, "send hello failed.");
             ret = USH_RET_FAILED;
         }
+        ush_log(LOG_LVL_DETAIL, "send return");
     }
 
     return ret;
@@ -51,6 +53,7 @@ ush_touch_close(ush_touch_t touch) {
         return USH_RET_OK;
     }
 
+    ush_log(LOG_LVL_DETAIL, "close touch, addr %p", touch);
     if (0 != mq_close(touch->mq)) {
         ush_log(LOG_LVL_ERROR, "touch closed failed");
         return USH_RET_FAILED;
@@ -69,6 +72,7 @@ ush_touch_open(ush_touch_t touch) {
         return USH_RET_OK;
     }
 
+    ush_log(LOG_LVL_DETAIL, "try to open touch, addr %p", touch);
     for (int counter = 0; counter < USH_TOUCH_OPEN_RETRY_CNT; ++counter) {
         touch->mq = mq_open(USH_COMM_TOUCH_Q_PATH, O_WRONLY);
         if (-1 != touch->mq) { // done
@@ -99,6 +103,7 @@ ush_touch_alloc(ush_touch_t *pTouch) {
         ush_log(LOG_LVL_FATAL, "touch alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
+    ush_log(LOG_LVL_DETAIL, "touch mem allocate, addr %p", tmp);
 
     tmp->mq = -1;
     *pTouch = tmp;
@@ -117,6 +122,7 @@ ush_touch_destroy_with_closing(ush_touch_t *pTouch) {
     // close it anyway, no matter if it has been opened.
     ush_touch_close(*pTouch);
 
+    ush_log(LOG_LVL_DETAIL, "free mem of touch %p", *pTouch);
     free(*pTouch);
     pTouch = NULL;
 

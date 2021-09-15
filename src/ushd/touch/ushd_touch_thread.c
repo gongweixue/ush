@@ -15,25 +15,26 @@ typedef struct ushd_touch_thread {
 } * ushd_touch_thread_t;
 
 
-ushd_touch_thread_t touch_thread = NULL;
+ushd_touch_thread_t g_touch_thread = NULL;
 
 ushd_touch_thread_t
 ushd_touch_thread_singleton() {
-    if (!touch_thread) { // null test without lock
+    if (!g_touch_thread) { // null test without lock
         ushd_touch_thread_cs_enter();
+        ushd_touch_thread_t tmp;
+        if (!g_touch_thread) {
+            tmp = (ushd_touch_thread_t)malloc(sizeof(struct ushd_touch_thread));
 
-        if (!touch_thread) {
-            // malloc touch_thread to touch_thread
-            touch_thread =
-                (ushd_touch_thread_t)malloc(sizeof(struct ushd_touch_thread));
-
-            touch_thread->tidFlg = 0;
-            touch_thread->tid    = 0xFFFFFFFF; // maybe a valid value
+            if (tmp) {
+                ush_log(LOG_LVL_DETAIL, "touch thread singleton init, %p", tmp);
+                tmp->tidFlg = 0;
+                tmp->tid    = 0xFFFFFFFF; // maybe a valid value
+            }
+            g_touch_thread = tmp;
         }
-
         ushd_touch_thread_cs_exit();
     }
-    return touch_thread;
+    return g_touch_thread;
 }
 
 
@@ -41,16 +42,19 @@ pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 ush_ret_t
 ushd_touch_thread_cs_enter() {
+    ush_log(LOG_LVL_DETAIL, "enter cs of touch thread entity");
     return !pthread_mutex_lock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }
 ush_ret_t
 ushd_touch_thread_cs_exit() {
+    ush_log(LOG_LVL_DETAIL, "exit cs of touch thread entity");
     return !pthread_mutex_unlock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }
 
 ush_ret_t
 ushd_touch_thread_set_id(pthread_t tid) {
     ushd_touch_thread_t touch_thread = ushd_touch_thread_singleton();
+    ush_log(LOG_LVL_DETAIL, "get thread entity singleton %p", touch_thread);
     if (!touch_thread || touch_thread->tidFlg) {
         ushd_log(LOG_LVL_FATAL, "can not set tid to NULL or alreay set id");
         return USH_RET_FAILED;
@@ -58,6 +62,7 @@ ushd_touch_thread_set_id(pthread_t tid) {
 
     ushd_touch_thread_cs_enter();
 
+    ush_log(LOG_LVL_DETAIL, "set tid %lu and tid flag", tid);
     touch_thread->tid    = tid;
     touch_thread->tidFlg = 1;
 
@@ -69,6 +74,7 @@ ushd_touch_thread_set_id(pthread_t tid) {
 
 void *
 ushd_touch_thread_entry(void *arg) {
+    ush_log(LOG_LVL_DETAIL, "starting the touch thread entry");
     ushd_touch_thread_t touch_thread = ushd_touch_thread_singleton();
     if (!touch_thread) {
         ushd_log(LOG_LVL_FATAL, "singleton touch thread NULL");
@@ -112,6 +118,8 @@ ushd_touch_thread_start() {
         ushd_log(LOG_LVL_FATAL, "create touch daemon thread: failed.");
         return USH_RET_FAILED;
     }
+
+    ush_log(LOG_LVL_DETAIL, "ushd_touch_thread start with tid %lu", tid);
 
     if (0 != pthread_detach(tid)) {
         ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.");

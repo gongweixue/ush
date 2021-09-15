@@ -21,7 +21,7 @@ include_directories(
 
 add_executable(${EXE_USHD} ${SRC_USHD})
 
-target_link_libraries(${EXE_USHD} rt pthread ushd_touch ushd_dispatch)
+target_link_libraries(${EXE_USHD} rt pthread ushd_touch ushd_dispatch util)
 
 
 set_target_properties(${EXE_USHD}

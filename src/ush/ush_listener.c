@@ -25,6 +25,7 @@ ush_listener_alloc(ush_listener_t *pListener) {
         ush_log(LOG_LVL_FATAL, "listener alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
+    ush_log(LOG_LVL_DETAIL, "allocate memory for listener %p", tmp);
 
     tmp->mq = -1;
     *pListener = tmp;
@@ -52,6 +53,7 @@ ush_listener_open(ush_listener_t listener, const ush_char_t *path) {
         return USH_RET_FAILED;
     }
 
+    ush_log(LOG_LVL_DETAIL, "listener %p open ", listener);
     return USH_RET_OK;
 }
 
@@ -70,6 +72,8 @@ ush_listener_close(ush_listener_t listener) {
 
     listener->mq = -1;
 
+    ush_log(LOG_LVL_DETAIL, "listner %p closed", listener);
+
     return USH_RET_OK;
 }
 
@@ -85,6 +89,7 @@ ush_listener_destroy_with_closing(ush_listener_t *pListener) {
     ush_listener_close(*pListener);
 
     free(*pListener);
+    ush_log(LOG_LVL_DETAIL, "listener %p destoried", *pListener);
     *pListener = NULL;
 
     return USH_RET_OK;

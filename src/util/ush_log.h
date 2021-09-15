@@ -11,15 +11,20 @@ typedef enum USH_LOG_LVL {
 } USH_LOG_LVL;
 
 
-#define USH_LOG_LVL_SELECTOR    LOG_LVL_INFO
+#define USH_LOG_LVL_SELECTOR    LOG_LVL_DETAIL
+
+void ush_log_cs_enter();
+void ush_log_cs_exit();
 
 #define log_def(owner, lvl, ...)   {                                           \
+    ush_log_cs_enter();                                                        \
     if (lvl <= USH_LOG_LVL_SELECTOR) {                                         \
         printf("*****" #owner"-"#lvl":\n");                                    \
         printf("---- At :%s:%s:%d\n", __FILE__, __FUNCTION__, __LINE__);       \
         printf("---- "); printf(__VA_ARGS__);                                  \
         printf("\n\n");                                                        \
     }                                                                          \
+    ush_log_cs_exit();                                                         \
 }
 
 #define ush_log(lvl, ...) log_def(USH, lvl, __VA_ARGS__)

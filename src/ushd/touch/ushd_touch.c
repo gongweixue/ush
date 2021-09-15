@@ -24,6 +24,7 @@ ushd_touch_alloc(ushd_touch_t *pTouch) {
         ushd_log(LOG_LVL_FATAL, "ushd touch alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
+    ush_log(LOG_LVL_DETAIL, "alloc mem for touch, addr %p", tmp);
 
     tmp->mq = -1;
     *pTouch = tmp;
@@ -39,6 +40,7 @@ ushd_touch_open(ushd_touch_t touch) {
         return USH_RET_OK;
     }
 
+
     struct mq_attr qAttr;
     memset(&qAttr, 0, sizeof(qAttr));
     qAttr.mq_maxmsg  = USH_COMM_TOUCH_Q_MSG_MAX_CNT;
@@ -53,6 +55,8 @@ ushd_touch_open(ushd_touch_t touch) {
         return USH_RET_FAILED;
     }
 
+    ush_log(LOG_LVL_DETAIL, "the touch queue opened, %p", touch);
+
     return USH_RET_OK;
 }
 
@@ -64,6 +68,7 @@ ushd_touch_close(ushd_touch_t touch) {
         return USH_RET_OK;
     }
 
+    ush_log(LOG_LVL_DETAIL, "closing the touch queue %p", touch);
     if (0 != mq_close(touch->mq)) {
         ushd_log(LOG_LVL_ERROR, "ushd touch closed failed");
         return USH_RET_FAILED;
@@ -85,6 +90,7 @@ ushd_touch_destroy_with_closing(ushd_touch_t *pTouch) {
     // close it anyway, no matter if it has been opened.
     ushd_touch_close(*pTouch);
 
+    ush_log(LOG_LVL_DETAIL, "free the mem of touch %p", *pTouch);
     free(*pTouch);
     pTouch = NULL;
 

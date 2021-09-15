@@ -47,6 +47,8 @@ ush_pipe_create(
     ush_assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
 
     ush_ret_t ret = USH_RET_OK;
+
+
     // for timeout
     timespec deadline;
     timespec *pDL = NULL;
@@ -60,6 +62,7 @@ ush_pipe_create(
             pDL = NULL;
         }
     }
+    ush_log(LOG_LVL_DETAIL, "timespec is 0x%p", pDL);
 
     ush_connect_t conn = NULL;
     ret = ush_connect_create(&conn);
@@ -76,6 +79,7 @@ ush_pipe_create(
     } else {
         *pHdl = -1;
         ush_log(LOG_LVL_FATAL, "hello and howareyou failed");
+        ush_log(LOG_LVL_DETAIL, "destroy connect 0x%p", conn);
         ush_connect_destroy(&conn);
     }
 
@@ -96,6 +100,7 @@ send_hello_and_wait(const ush_char_t *pName,
 
     // use ack to wait feedback
     ush_sync_hello_ack_t ack = NULL;
+    ush_log(LOG_LVL_DETAIL, "create hello ack");
     ush_ret_t ret = ush_sync_hello_ack_create(&ack, conn);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "hello ack create failed");
@@ -104,6 +109,7 @@ send_hello_and_wait(const ush_char_t *pName,
 
     // prepare hello msg
     ush_hello_msg_t hello;
+    ush_log(LOG_LVL_DETAIL, "create hello msg");
     ush_hello_create(&hello, pName, ack, ush_connect_generate_cert(pName));
 
     // send with or without timeout
@@ -119,6 +125,7 @@ send_hello_and_wait(const ush_char_t *pName,
         }
     }
 
+    ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
     ush_sync_hello_ack_destroy(&ack); // ack not needed any more.
     ush_hello_destroy(&hello);
 
@@ -137,6 +144,7 @@ realize_timeout(timespec *ptr, ush_u16_t timeout) {
         return USH_RET_FAILED;
     }
 
+    ush_log(LOG_LVL_DETAIL, "update the deadline");
     ptr->tv_sec += timeout + 1;
 
     return USH_RET_OK;

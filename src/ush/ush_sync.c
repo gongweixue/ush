@@ -26,12 +26,13 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
 
     ush_sync_hello_ack_t pMem =
         (ush_sync_hello_ack_t)malloc(sizeof(struct ush_hello_ack));
-
     if (!pMem) {
         ush_log(LOG_LVL_FATAL, "hello ack init:out of mem failed");
         return USH_RET_OUT_OF_MEM;
     }
+    ush_log(LOG_LVL_DETAIL, "allocate mem for hello ack %p", pMem);
 
+    ush_log(LOG_LVL_DETAIL, "init mutex and cond");
     if (0 != pthread_mutex_init(&pMem->mutex, NULL)) {
         free(pMem);
         ush_log(LOG_LVL_FATAL, "hello ack sync handle mutex create failed");
@@ -69,6 +70,7 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
     pthread_mutex_lock(&ack->mutex);
 
     int ret = USH_RET_OK;
+    ush_log(LOG_LVL_DETAIL, "waiting the cond's signal, ack addr %p", ack);
     switch (pthread_cond_timedwait(&ack->cond, &ack->mutex, pDL)) {
     case 0:
         break;
@@ -81,6 +83,8 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
         ret = USH_RET_FAILED;
         break;
     }
+
+    ush_log(LOG_LVL_DETAIL, "wait return with ret code %d", ret);
 
     // DO anythings you want once the ack arrived..
     if (USH_RET_OK == ret && pCallback) {
@@ -99,6 +103,8 @@ ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
         ush_log(LOG_LVL_INFO, "ush_hello_ack NULL to be destroy");
         return USH_RET_OK;
     }
+
+    ush_log(LOG_LVL_DETAIL, "destroy mutex cond and free mem %p", *pAck);
     pthread_mutex_destroy(&(*pAck)->mutex);
     pthread_condattr_destroy(&(*pAck)->condattr);
     pthread_cond_destroy(&(*pAck)->cond);

@@ -12,7 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/comm/
 
 add_library(${LIB_USHD_TOUCH} STATIC ${SRC_USHD_TOUCH})
 
-target_link_libraries(${LIB_USHD_TOUCH} pthread)
+target_link_libraries(${LIB_USHD_TOUCH} pthread util)
 
 set_target_properties(${LIB_USHD_TOUCH}
                       PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

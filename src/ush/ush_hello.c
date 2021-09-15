@@ -34,6 +34,7 @@ ush_hello_create(ush_hello_msg_t    *pHello,
         ush_log(LOG_LVL_FATAL, "no mem for hello ack");
         return USH_RET_OUT_OF_MEM;
     }
+    ush_log(LOG_LVL_DETAIL, "allocate memory for msg %p", tmp);
 
     tmp->desc.catalog = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
 
@@ -55,6 +56,7 @@ ush_hello_destroy(ush_hello_msg_t *pHello) {
         return USH_RET_OK;
     }
 
+    ush_log(LOG_LVL_DETAIL, "free memory for msg %p", *pHello);
     // just free it self, do not destroy ack
     free(*pHello);
     *pHello = NULL;
