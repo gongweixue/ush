@@ -4,14 +4,14 @@
 
 #include "ush_type_pub.h"
 
-typedef enum ushd_thread_tid_idx_t {
+typedef enum ushd_thread_tid_idx {
     USHD_THREAD_TID_IDX_TOUCH      = 0,
     USHD_THREAD_TID_IDX_SWCR       = 1,
     USHD_THREAD_TID_IDX_PUBLISHER  = 3,
     USHD_THREAD_TID_IDX_MAX
 } ushd_thread_tid_idx_t;
 
-typedef enum ushd_thread_state_t {
+typedef enum ushd_thread_state {
     USHD_THREAD_STATE_NON = 0,
     USHD_THREAD_STATE_RUNNING,
     USHD_THREAD_STATE_STOP

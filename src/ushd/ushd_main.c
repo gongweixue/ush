@@ -1,17 +1,17 @@
 
 #include "ush_log.h"
 
-#include "ushd_dispatch.h"
+#include "ushd_sched.h"
 #include "ushd_touch_thread.h"
 
 int main () {
 
     ush_ret_t ret = USH_RET_OK;
 
-    ushd_log(LOG_LVL_INFO, "starting dispatch of ushd");
-    ret = ushd_dispatch_start();
+    ushd_log(LOG_LVL_INFO, "starting sched of ushd");
+    ret = ushd_sched_start();
     if (USH_RET_OK != ret) {
-        ushd_log(LOG_LVL_FATAL, "dispatch of ushd starts failed");
+        ushd_log(LOG_LVL_FATAL, "sched of ushd starts failed");
         return ret;
     }
 
