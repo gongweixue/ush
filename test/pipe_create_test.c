@@ -5,7 +5,7 @@
 
 ush_ret_t ush_pipe_create(
     const ush_char_t *pName,         // pipe name
-    ush_pp_mode_t     mode,          // std / bunch
+    USH_PIPE_MODE     mode,          // std / bunch
     ush_u32_t         flag,          // bit-mask for indicating tracing/wdg/logging/statistics and so on.
     ush_u16_t         msTimeout,     // the unit is 1s at least, and 0 is forever.
     ush_vptr_t       *pParams,       // 2-level ptrs for all params, conf-file, etc.

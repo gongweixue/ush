@@ -14,7 +14,7 @@ typedef struct ush_hello_ack {
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
     ush_connect_ident   connIdentOnServer;
-    ush_pp_state_t      connStateOnServer;
+    USH_PIPE_STATE      connStateOnServer;
     ush_connect_t       connHdlOnClient;
 } * ush_sync_hello_ack_t;
 
@@ -62,8 +62,8 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
 }
 
 ush_ret_t
-ush_sync_hello_ack_wait(ush_sync_hello_ack_t ack,
-                        const struct timespec *pDL,
+ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
+                        const struct timespec       *pDL,
                         ush_sync_hello_ack_wait_cb_t pCallback) {
     ush_assert(ack);
 

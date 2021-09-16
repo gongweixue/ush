@@ -31,7 +31,7 @@ static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 ush_ret_t
 ush_pipe_create(
     const ush_char_t *pName,
-    ush_pp_mode_t     mode,
+    USH_PIPE_MODE     mode,
     ush_u32_t         flag,
     ush_u16_t         timeout,
     ush_vptr_t       *pParams,
@@ -156,7 +156,7 @@ get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
     ush_assert(ack);
     ush_log(LOG_LVL_INFO, "ack callback should be implemetented!!!");
     // ush_connect_ident   connIdentOnServer;
-    // ush_pp_state_t      connState;
+    // USH_PIPE_STATE      connState;
     // ush_connect_t connHdlOnClient;
     // // check ack valic
     // assert (connHdlOnClient->ident's random feild == connIdentOnServer's random

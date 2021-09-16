@@ -7,13 +7,13 @@
 extern "C" {
 #endif
 
-typedef enum ushd_sched_fifo_option{
+typedef enum USHD_SCHED_FIFO_OPTION{
     USHD_SCHED_FIFO_
-} ushd_despatch_fifo_option_t;
+} USHD_SCHED_FIFO_OPTION;
 
 ush_ret_t   ushd_sched_fifo_init(ush_u32_t len, ush_u32_t sz);
-ush_char_t *ushd_sched_fifo_retain(ushd_despatch_fifo_option_t type);
-ush_ret_t   ushd_sched_fifo_release(ushd_despatch_fifo_option_t type);
+ush_char_t *ushd_sched_fifo_retain(USHD_SCHED_FIFO_OPTION type);
+ush_ret_t   ushd_sched_fifo_release(USHD_SCHED_FIFO_OPTION type);
 
 
 #ifdef __cplusplus

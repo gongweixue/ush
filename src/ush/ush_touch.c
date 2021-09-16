@@ -16,9 +16,9 @@ typedef struct ush_touch {
 } * ush_touch_t;
 
 ush_ret_t
-ush_touch_send_hello(const ush_touch_t     touch,
+ush_touch_send_hello(const ush_touch_t          touch,
                      const ush_comm_hello_msg_t hello,
-                     const struct timespec *pDL) {
+                     const struct timespec     *pDL) {
     ush_assert(touch && hello);
     ush_ret_t ret = USH_RET_OK;
     const ush_char_t *pMsg = (const ush_char_t *)hello;
