@@ -5,11 +5,11 @@ typedef struct ush_touch *  ush_touch_t;
 
 #include "time.h"
 
-#include "ush_hello.h"
+#include "ush_comm_hello_msg.h"
 
 
 ush_ret_t ush_touch_send_hello(const ush_touch_t     touch,
-                               const ush_hello_msg_t hello,
+                               const ush_comm_hello_msg_t hello,
                                const struct timespec *pDL);
 
 ush_ret_t ush_touch_alloc(ush_touch_t *pTouch);

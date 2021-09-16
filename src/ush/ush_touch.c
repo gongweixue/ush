@@ -17,14 +17,16 @@ typedef struct ush_touch {
 
 ush_ret_t
 ush_touch_send_hello(const ush_touch_t     touch,
-                     const ush_hello_msg_t hello,
+                     const ush_comm_hello_msg_t hello,
                      const struct timespec *pDL) {
     ush_assert(touch && hello);
     ush_ret_t ret = USH_RET_OK;
     const ush_char_t *pMsg = (const ush_char_t *)hello;
 
+    ush_size_t sz = ush_comm_hello_msg_size();
     if (pDL) { // with timeout
-        if (-1 == mq_timedsend(touch->mq, pMsg, ush_hello_msg_size(), 0, pDL)) {
+        int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_HELLO_MSG_PRIO, pDL);
+        if (-1 == i) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
                 ush_log(LOG_LVL_FATAL, "send hello timeout");
                 ret = USH_RET_TIMEOUT;
@@ -35,7 +37,8 @@ ush_touch_send_hello(const ush_touch_t     touch,
         }
         ush_log(LOG_LVL_DETAIL, "timedsend return");
     } else {
-        if (-1 == mq_send(touch->mq, pMsg, ush_hello_msg_size(), 0)) {
+        int i = mq_send(touch->mq, pMsg, sz, USH_COMM_HELLO_MSG_PRIO);
+        if (-1 == i) {
             ush_log(LOG_LVL_FATAL, "send hello failed.");
             ret = USH_RET_FAILED;
         }

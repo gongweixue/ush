@@ -43,8 +43,8 @@ ush_pipe_create(
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
         return USH_RET_WRONG_PARAM;
     }
-    ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
-    ush_assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
+    ush_assert(strlen(pName) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
+    ush_assert(strlen(pName) >= USH_COMM_HELLO_MSG_NAME_LEN_MIN);
 
     ush_ret_t ret = USH_RET_OK;
 
@@ -128,7 +128,7 @@ send_hello_and_wait(const ush_char_t *pName,
 
     ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
     ush_sync_hello_ack_destroy(&ack); // ack not needed any more.
-    ush_hello_destroy(&hello);
+    ush_comm_hello_msg_destroy(&hello);
 
     return ret;
 }
