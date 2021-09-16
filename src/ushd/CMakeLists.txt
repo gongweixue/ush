@@ -1,4 +1,4 @@
-add_subdirectory(dispatch)
+add_subdirectory(sched)
 add_subdirectory(touch)
 
 set(EXE_USHD ushd)
@@ -15,13 +15,13 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
 
     ${PROJECT_SOURCE_DIR}/src/ushd/touch/
-    ${PROJECT_SOURCE_DIR}/src/ushd/dispatch/
+    ${PROJECT_SOURCE_DIR}/src/ushd/sched/
 )
 
 
 add_executable(${EXE_USHD} ${SRC_USHD})
 
-target_link_libraries(${EXE_USHD} rt pthread ushd_touch ushd_dispatch util)
+target_link_libraries(${EXE_USHD} rt pthread ushd_touch ushd_sched ush_util)
 
 
 set_target_properties(${EXE_USHD}
