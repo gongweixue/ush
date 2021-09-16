@@ -7,7 +7,7 @@ typedef struct ush_comm_hello_msg * ush_comm_hello_msg_t;
 
 #define USH_COMM_HELLO_MSG_NAME_LEN_MAX (32)
 #define USH_COMM_HELLO_MSG_NAME_LEN_MIN (3)
-
+#define USH_COMM_HELLO_MSG_PRIO         (0)
 
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t      *pHello,

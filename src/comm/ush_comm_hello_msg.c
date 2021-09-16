@@ -10,7 +10,7 @@
 // be carefulto to manipulate the ack, maybe free already.
 typedef struct ush_comm_hello_msg {
     ush_touch_msg_desc desc;
-    ush_s8_t           name[USH_HELLO_NAME_LEN_MAX];
+    ush_s8_t           name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
     void              *ackSync;
     ush_s32_t          cert;
 } * ush_comm_hello_msg_t;
@@ -23,13 +23,13 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
 
     ush_assert(pHello && pName && pAck);
 
-    ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
-    ush_assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
+    ush_assert(strlen(pName) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
+    ush_assert(strlen(pName) >= USH_COMM_HELLO_MSG_NAME_LEN_MIN);
 
     *pHello = NULL;
 
     ush_comm_hello_msg_t tmp =
-        (ush_comm_hello_msg_t)malloc(sizeof(struct ush_comm_hello_msg_msg));
+        (ush_comm_hello_msg_t)malloc(sizeof(struct ush_comm_hello_msg));
     if (!tmp) {
         *pHello = NULL;
         ush_log(LOG_LVL_FATAL, "no mem for hello");

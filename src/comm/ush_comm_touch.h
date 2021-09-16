@@ -10,11 +10,11 @@
 
 typedef enum touch_msg_catalog_type {
     USH_COMM_TOUCH_MSG_CATALOG_HELLO = 0
-} touch_msg_catalog_type;
+} touch_msg_catalog_type_t;
 
 
 typedef struct touch_msg_desc {
-    touch_msg_catalog_type  catalog;
+    touch_msg_catalog_type_t  catalog;
 } ush_touch_msg_desc;
 
 

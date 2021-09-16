@@ -14,10 +14,10 @@
 
 typedef enum listener_msg_catalog {
     USH_COMM_LISTENER_MSG_CATALOG_HOWAREYOU = 0
-} listener_msg_catalog;
+} listener_msg_catalog_t;
 
 typedef struct listener_msg_desc {
-    listener_msg_catalog  catalog;
+    listener_msg_catalog_t  catalog;
 } listener_msg_desc;
 
 // typedef struct listener_msg_howareyou {
