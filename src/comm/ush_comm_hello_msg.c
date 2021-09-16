@@ -2,36 +2,37 @@
 #include "string.h"
 
 #include "ush_assert.h"
-#include "ush_hello.h"
+#include "ush_comm_hello_msg.h"
 #include "ush_log.h"
 
 
 // ack contains the pointers should not be free at destroy function
 // be carefulto to manipulate the ack, maybe free already.
-typedef struct ush_hello_msg {
+typedef struct ush_comm_hello_msg {
     ush_touch_msg_desc desc;
     ush_s8_t           name[USH_HELLO_NAME_LEN_MAX];
     void              *ackSync;
     ush_s32_t          cert;
-} * ush_hello_msg_t;
+} * ush_comm_hello_msg_t;
 
 ush_ret_t
-ush_hello_create(ush_hello_msg_t    *pHello,
-                const ush_char_t    *pName,
-                ush_sync_hello_ack_t ack,
-                ush_u32_t            cert) {
+ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
+                          const ush_char_t        *pName,
+                          void                    *pAck,
+                          ush_u32_t                cert) {
 
-    ush_assert(pHello && pName && ack);
+    ush_assert(pHello && pName && pAck);
 
     ush_assert(strlen(pName) < USH_HELLO_NAME_LEN_MAX);
     ush_assert(strlen(pName) >= USH_HELLO_NAME_LEN_MIN);
 
     *pHello = NULL;
 
-    ush_hello_msg_t tmp = (ush_hello_msg_t)malloc(sizeof(struct ush_hello_msg));
+    ush_comm_hello_msg_t tmp =
+        (ush_comm_hello_msg_t)malloc(sizeof(struct ush_comm_hello_msg_msg));
     if (!tmp) {
         *pHello = NULL;
-        ush_log(LOG_LVL_FATAL, "no mem for hello ack");
+        ush_log(LOG_LVL_FATAL, "no mem for hello");
         return USH_RET_OUT_OF_MEM;
     }
     ush_log(LOG_LVL_DETAIL, "allocate memory for msg %p", tmp);
@@ -40,7 +41,7 @@ ush_hello_create(ush_hello_msg_t    *pHello,
 
     strcpy(tmp->name, pName);
 
-    tmp->ackSync = ack;
+    tmp->ackSync = pAck;
     tmp->cert = cert;
 
     *pHello = tmp;
@@ -49,7 +50,7 @@ ush_hello_create(ush_hello_msg_t    *pHello,
 }
 
 ush_ret_t
-ush_hello_destroy(ush_hello_msg_t *pHello) {
+ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
     ush_assert(pHello);
     if (!(*pHello)) {
         ush_log(LOG_LVL_INFO, "hello_msg_t NULL to be destroy");
@@ -64,6 +65,6 @@ ush_hello_destroy(ush_hello_msg_t *pHello) {
 }
 
 size_t
-ush_hello_msg_size() {
-    return sizeof(struct ush_hello_msg);
+ush_comm_hello_msg_size() {
+    return sizeof(struct ush_comm_hello_msg);
 }

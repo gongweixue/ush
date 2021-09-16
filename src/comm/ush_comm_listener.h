@@ -11,22 +11,19 @@
 
 #define USH_COMM_LISTENER_NAME_LEN_MAX (64)
 
-// typedef struct ush_comm_listener_msg_t {
-//     ush_s8_t   data[USH_COMM_PIPE_listener_MSG_MAX_LEN];
-// } ush_comm_listener_msg_t;
 
-typedef enum listener_msg_catalog_t {
+typedef enum listener_msg_catalog {
     USH_COMM_LISTENER_MSG_CATALOG_HOWAREYOU = 0
-} touch_msg_catalog_t;
+} listener_msg_catalog;
 
-typedef struct listener_msg_desc_t {
-    ush_s16_t  catalog;
-} listener_msg_desc_t;
+typedef struct listener_msg_desc {
+    listener_msg_catalog  catalog;
+} listener_msg_desc;
 
-typedef struct listener_msg_howareyou_t {
-    listener_msg_desc_t desc;
-    ush_s8_t foobar[16];
-} listener_msg_howareyou_t;
+// typedef struct listener_msg_howareyou {
+//     listener_msg_desc desc;
+//     ush_s8_t foobar[16];
+// } listener_msg_howareyou;
 
 
 #endif // USH_COMM_LISTENER_H

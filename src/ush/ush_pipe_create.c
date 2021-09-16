@@ -8,10 +8,10 @@
 #include "time.h"
 
 #include "ush_assert.h"
+#include "ush_comm_hello_msg.h"
 #include "ush_comm_touch.h"
 #include "ush_connect.h"
 #include "ush_log.h"
-#include "ush_hello.h"
 #include "ush_pipe_pub.h"
 #include "ush_sync.h"
 #include "ush_touch.h"
@@ -62,7 +62,7 @@ ush_pipe_create(
             pDL = NULL;
         }
     }
-    ush_log(LOG_LVL_DETAIL, "timespec is 0x%p", pDL);
+    ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
 
     ush_connect_t conn = NULL;
     ret = ush_connect_create(&conn);
@@ -79,7 +79,7 @@ ush_pipe_create(
     } else {
         *pHdl = -1;
         ush_log(LOG_LVL_FATAL, "hello and howareyou failed");
-        ush_log(LOG_LVL_DETAIL, "destroy connect 0x%p", conn);
+        ush_log(LOG_LVL_DETAIL, "destroy connect %p", conn);
         ush_connect_destroy(&conn);
     }
 
@@ -108,9 +108,10 @@ send_hello_and_wait(const ush_char_t *pName,
     }
 
     // prepare hello msg
-    ush_hello_msg_t hello;
+    ush_comm_hello_msg_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    ush_hello_create(&hello, pName, ack, ush_connect_generate_cert(pName));
+    ush_u32_t cert = ush_connect_generate_cert(pName);
+    ush_comm_hello_msg_create(&hello, pName, ack, cert);
 
     // send with or without timeout
     ush_touch_t touch = NULL;
