@@ -5,7 +5,7 @@
 
 typedef struct ushd_touch  * ushd_touch_t;
 
-ush_ret_t ushd_touch_alloc(ushd_touch_t *pTouch);
+ush_ret_t ushd_touch_create(ushd_touch_t *pTouch);
 
 ush_ret_t ushd_touch_open(ushd_touch_t touch);
 

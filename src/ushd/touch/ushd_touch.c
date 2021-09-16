@@ -15,7 +15,7 @@ typedef struct ushd_touch {
 
 
 ush_ret_t
-ushd_touch_alloc(ushd_touch_t *pTouch) {
+ushd_touch_create(ushd_touch_t *pTouch) {
     ush_assert(pTouch);
     *pTouch = NULL;
 
