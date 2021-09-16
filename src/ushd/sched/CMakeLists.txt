@@ -1,7 +1,7 @@
-set(LIB_USHD_DISPATCH ushd_dispatch)
+set(LIB_USHD_SCHED ushd_sched)
 
-set(SRC_USHD_DISPATCH
-    ushd_dispatch.c
+set(SRC_USHD_SCHED
+    ushd_sched.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src/comm/
@@ -9,9 +9,9 @@ include_directories(${PROJECT_SOURCE_DIR}/src/comm/
                     ${PROJECT_SOURCE_DIR}/src/public/
 )
 
-add_library(${LIB_USHD_DISPATCH} STATIC ${SRC_USHD_DISPATCH})
+add_library(${LIB_USHD_SCHED} STATIC ${SRC_USHD_SCHED})
 
-target_link_libraries(${LIB_USHD_DISPATCH} pthread util)
+target_link_libraries(${LIB_USHD_SCHED} rt ush_comm ush_util)
 
-set_target_properties(${LIB_USHD_DISPATCH}
+set_target_properties(${LIB_USHD_SCHED}
                       PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

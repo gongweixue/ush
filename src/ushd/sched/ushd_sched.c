@@ -1,7 +1,7 @@
-#include "ushd_dispatch.h"
+#include "ushd_sched.h"
 
 ush_ret_t
-ushd_dispatch_start() {
+ushd_sched_start() {
     return 0;
 }
 
