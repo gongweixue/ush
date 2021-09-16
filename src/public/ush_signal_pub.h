@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 
-typedef enum ush_sig_data_type_t {
+typedef enum ush_sig_data_type {
     USH_CONTENT_TY_STR = 0,
     USH_CONTENT_TY_S8,
     USH_CONTENT_TY_U8,
@@ -20,12 +20,12 @@ typedef enum ush_sig_data_type_t {
     USH_CONTENT_TY_DBL,
     USH_CONTENT_TY_RAW,
     USH_CONTENT_TY_ADDR,
-} ush_sig_data_type_t;
+} ush_sig_data_type;
 
 
 
 /* Events */
-typedef enum ush_event_type_t {
+typedef enum ush_event_type {
     USH_EVENT_TY_PP_STATE     = 0x1000, // use the high 4bits, mask with others.
     USH_EVENT_TY_PP_ATTR      = 0x2000,
     USH_EVENT_TY_SIG_REG      = 0x3000,

@@ -30,7 +30,7 @@ typedef void *             ush_vptr_t;
 
 
 #define USH_MASK_RET_CATALOG  ( 0x10 )
-typedef enum ush_ret_t {
+typedef enum ush_ret {
     USH_RET_OK          = 0x00,
     USH_RET_FAILED      = 0x01,
     USH_RET_WRONG_PARAM = 0x10, // 8 bits, the low 4 bits for details extention.
