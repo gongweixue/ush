@@ -2,6 +2,7 @@ set(LIB_USHD_SCHED ushd_sched)
 
 set(SRC_USHD_SCHED
     ushd_sched_thread.c
+    ushd_sched_fifo.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src/comm/
