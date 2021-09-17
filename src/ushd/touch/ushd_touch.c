@@ -80,6 +80,13 @@ ushd_touch_close(ushd_touch_t touch) {
 }
 
 ush_ret_t
+ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest) {
+    // receive sz = USH_COMM_TOUCH_Q_MSG_MAX_LEN
+    // return must be ok
+    return USH_RET_OK;
+}
+
+ush_ret_t
 ushd_touch_destroy_with_closing(ushd_touch_t *pTouch) {
     ush_assert(pTouch);
     if (!(*pTouch)) {

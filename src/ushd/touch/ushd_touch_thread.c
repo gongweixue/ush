@@ -6,6 +6,7 @@
 #include "ush_comm_touch.h"
 #include "ush_log.h"
 
+#include "ushd_sched_fifo.h"
 #include "ushd_touch_thread.h"
 #include "ushd_touch.h"
 
@@ -40,7 +41,7 @@ ushd_touch_thread_singleton() {
 ush_ret_t
 ushd_touch_thread_set_id(pthread_t tid) {
     ushd_touch_thread_t touch_thread = ushd_touch_thread_singleton();
-    ush_log(LOG_LVL_DETAIL, "get thread entity singleton %p", touch_thread);
+    ushd_log(LOG_LVL_DETAIL, "get thread entity singleton %p", touch_thread);
     if (!touch_thread || touch_thread->tidFlg) {
         ushd_log(LOG_LVL_FATAL, "can not set tid to NULL or alreay set id");
         return USH_RET_FAILED;
@@ -48,7 +49,7 @@ ushd_touch_thread_set_id(pthread_t tid) {
 
     ushd_touch_thread_cs_enter();
 
-    ush_log(LOG_LVL_DETAIL, "set tid %lu and tid flag", tid);
+    ushd_log(LOG_LVL_DETAIL, "set tid %lu and tid flag", tid);
     touch_thread->tid    = tid;
     touch_thread->tidFlg = 1;
 
@@ -60,52 +61,57 @@ ushd_touch_thread_set_id(pthread_t tid) {
 
 void *
 ushd_touch_thread_entry(void *arg) {
-    ush_log(LOG_LVL_DETAIL, "starting the touch thread entry");
+    ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
     ushd_touch_thread_t touch_thread = ushd_touch_thread_singleton();
     if (!touch_thread) {
         ushd_log(LOG_LVL_FATAL, "singleton touch thread NULL");
         pthread_exit(NULL);
-        goto TERMINITE;
+        goto TERMINATE;
     }
 
     if (USH_RET_OK != ushd_touch_thread_set_id(pthread_self())) {
         ushd_log(LOG_LVL_FATAL, "touch thread set id failed");
-        goto TERMINITE;
+        goto TERMINATE;
     }
-    ushd_log(LOG_LVL_INFO, "set tid of touch thread, %lu", pthread_self());
+    ushd_log(LOG_LVL_DETAIL, "set tid of touch thread, %lu", pthread_self());
 
-    // open touch
-    // alloc mem for msg and wait for receive msg
-    // pass msg ptr to c++ queue for dispatch-thread reading
-
-
-    // struct mq_attr qAttr;
-    // memset(&qAttr, 0, sizeof(qAttr));
-    // qAttr.mq_maxmsg  = USH_COMM_TOUCH_Q_MSG_MAX_CNT
-    // qAttr.mq_msgsize = USH_COMM_TOUCH_Q_MSG_MAX_LEN;
-    // mqd_t mq = mq_open(USH_COMM_TOUCH_Q_PATH,
-    //                    O_RDONLY | O_CREAT, // read end
-    //                    S_IRWXU | S_IRWXG, // 0770
-    //                    &qAttr);
-    // if (-1 == mq) {
-    //     return USH_RET_FAILED;
-    // }
-
-    // touch_thread->mq = mq;
+    ushd_touch_thread_cs_enter();
+    if (USH_RET_OK == ushd_touch_open(touch_thread->touch)) {
+        goto TERMINATE;
+    }
+    ushd_touch_thread_cs_exit();
+    ushd_log(LOG_LVL_DETAIL, "touch been opened %p", touch_thread->touch);
 
     while (1) {
-        // ush_char_t  msg[USH_COMM_TOUCH_Q_MSG_MAX_LEN];
-        // ushd_log(LOG_LVL_INFO, "touch receiving...");
-        // ush_ssize_t rcv_sz = mq_receive(mq, buff, sizeof(buff), NULL);
+        ushd_log(LOG_LVL_DETAIL, "touch forward to receiving new msg...");
 
-    //     if (-1 == rcv_sz) {
-    //         ushd_log(LOG_LVL_ERROR, "ERROR rcv_sz");
-    //         continue;
-    //     }
-    //     touch_dispatch(buff);
+        ush_char_t *buf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_EMPTY);
+        if (!buf) {
+            ushd_log(LOG_LVL_ERROR, "sched_fifo empty buffer retain failed");
+            continue;
+        }
+        ushd_log(LOG_LVL_INFO, "sched_fifo empty buffer retain ok%p", buf);
+
+        ushd_log(LOG_LVL_DETAIL, "receive from touch...");
+        if (USH_RET_OK != ushd_touch_receive(touch_thread->touch, buf)) {
+            ushd_log(LOG_LVL_ERROR, "touch receive msg failed %p", buf);
+
+            ushd_sched_fifo_release(buf, USHD_SCHED_FIFO_EMPTY);
+            continue;
+        }
+
+        ushd_log(LOG_LVL_INFO, "push data buffer into FULL pool of sched fifo");
+        if (USH_RET_OK != ushd_sched_fifo_release(buf, USHD_SCHED_FIFO_FULL)) {
+            ushd_log(LOG_LVL_ERROR, "sched fifo release failed %p", buf);
+            continue;
+        } else {
+            ushd_log(LOG_LVL_INFO, "sched fifo buffer released ok %p", buf);
+        }
+
+        // next receive to go
     }
 
-TERMINITE:
+TERMINATE:
     exit(0);
 }
 
@@ -118,7 +124,7 @@ ushd_touch_thread_start() {
         return USH_RET_FAILED;
     }
 
-    ush_log(LOG_LVL_DETAIL, "ushd_touch_thread start with tid %lu", tid);
+    ushd_log(LOG_LVL_DETAIL, "ushd_touch_thread start with tid %lu", tid);
 
     if (0 != pthread_detach(tid)) {
         ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.");
@@ -145,7 +151,7 @@ touch_thread_create() {
         newMem->tid    = 0xFFFFFFFF; // maybe a valid value
     }
 
-    ush_log(LOG_LVL_DETAIL, "touch_thread singleton init, %p", newMem);
+    ushd_log(LOG_LVL_DETAIL, "touch_thread singleton init, %p", newMem);
     return newMem;
 }
 
@@ -155,11 +161,11 @@ touch_thread_create() {
 pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 ush_ret_t
 ushd_touch_thread_cs_enter() {
-    ush_log(LOG_LVL_DETAIL, "enter cs of touch thread entity");
+    ushd_log(LOG_LVL_DETAIL, "enter cs of touch thread entity");
     return !pthread_mutex_lock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }
 ush_ret_t
 ushd_touch_thread_cs_exit() {
-    ush_log(LOG_LVL_DETAIL, "exit cs of touch thread entity");
+    ushd_log(LOG_LVL_DETAIL, "exit cs of touch thread entity");
     return !pthread_mutex_unlock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }

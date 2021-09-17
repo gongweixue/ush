@@ -1,7 +1,12 @@
-#include "ushd_sched.h"
+#include "ush_comm_touch.h"
+
+#include "ushd_sched_thread.h"
+#include "ushd_sched_fifo.h"
 
 ush_ret_t
-ushd_sched_start() {
+ushd_sched_thread_start() {
+    // first init sched fifo for pass msg from touch thread
+    ushd_sched_fifo_init(USH_SCHED_FIFO_LEN, USH_COMM_TOUCH_Q_MSG_MAX_LEN);
     return 0;
 }
 

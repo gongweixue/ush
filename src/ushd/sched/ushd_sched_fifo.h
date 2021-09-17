@@ -8,12 +8,18 @@ extern "C" {
 #endif
 
 typedef enum USHD_SCHED_FIFO_OPTION{
-    USHD_SCHED_FIFO_
+    USHD_SCHED_FIFO_EMPTY,
+    USHD_SCHED_FIFO_FULL
 } USHD_SCHED_FIFO_OPTION;
 
+#define USH_SCHED_FIFO_LEN    (10)
+
 ush_ret_t   ushd_sched_fifo_init(ush_u32_t len, ush_u32_t sz);
+
+// always return USH_COMM_TOUCH_Q_MSG_MAX_LEN big buffer.
 ush_char_t *ushd_sched_fifo_retain(USHD_SCHED_FIFO_OPTION type);
-ush_ret_t   ushd_sched_fifo_release(USHD_SCHED_FIFO_OPTION type);
+
+ush_ret_t ushd_sched_fifo_release(ush_char_t *buf, USHD_SCHED_FIFO_OPTION type);
 
 
 #ifdef __cplusplus
