@@ -8,6 +8,8 @@
 #define USH_COMM_TOUCH_Q_MSG_MAX_LEN (128)
 
 
+#define USH_COMM_TOUCH_Q_MSG_ALIGNMENT __attribute__((aligned(1)))
+
 typedef enum USH_COMM_TOUCH_MSG_CATALOG {
     USH_COMM_TOUCH_MSG_CATALOG_HELLO = 0
 } USH_COMM_TOUCH_MSG_CATALOG;
@@ -15,7 +17,7 @@ typedef enum USH_COMM_TOUCH_MSG_CATALOG {
 
 typedef struct touch_msg_desc {
     USH_COMM_TOUCH_MSG_CATALOG  catalog;
-} ush_touch_msg_desc;
+} ush_touch_msg_desc USH_COMM_TOUCH_Q_MSG_ALIGNMENT;
 
 
 
