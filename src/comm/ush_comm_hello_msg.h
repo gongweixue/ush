@@ -19,4 +19,6 @@ ush_ret_t ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello);
 
 size_t ush_comm_hello_msg_size();
 
+void ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg);
+
 #endif // USH_COMM_HELLO_MSG_H

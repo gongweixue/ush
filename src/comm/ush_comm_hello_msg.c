@@ -68,3 +68,7 @@ size_t
 ush_comm_hello_msg_size() {
     return sizeof(struct ush_comm_hello_msg);
 }
+
+void ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg) {
+    (void)msg; // breakpoint reached here to inspect the data
+}
