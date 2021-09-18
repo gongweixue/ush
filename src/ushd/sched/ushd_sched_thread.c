@@ -6,14 +6,10 @@
 #include "ushd_sched_thread.h"
 #include "ushd_sched_fifo.h"
 
-#ifndef USH_SCHED_FIFO_LEN
-#define USH_SCHED_FIFO_LEN    (10)
-#endif
-
 ush_ret_t
 ushd_sched_thread_start() {
     // first init sched fifo for pass msg from touch thread
-    ushd_sched_fifo_init(USH_SCHED_FIFO_LEN, USH_COMM_TOUCH_Q_MSG_MAX_LEN);
+    ushd_sched_fifo_init();
 
     while(1) {
         ush_char_t *pbuf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_FULL);
