@@ -112,6 +112,7 @@ send_hello_and_wait(const ush_char_t *pName,
     ush_log(LOG_LVL_DETAIL, "create hello msg");
     ush_u32_t cert = ush_connect_generate_cert(pName);
     ush_comm_hello_msg_create(&hello, pName, ack, cert);
+    ush_comm_hello_msg_testpoint(hello);
 
     // send with or without timeout
     ush_touch_t touch = NULL;
