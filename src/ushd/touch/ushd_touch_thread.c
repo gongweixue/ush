@@ -49,7 +49,7 @@ ushd_touch_thread_set_id(pthread_t tid) {
 
     ushd_touch_thread_cs_enter();
 
-    ushd_log(LOG_LVL_DETAIL, "set tid %lu and tid flag", tid);
+    ushd_log(LOG_LVL_DETAIL, "set tid 0x%08lx and tid flag", tid);
     touch_thread->tid    = tid;
     touch_thread->tidFlg = 1;
 
@@ -73,10 +73,10 @@ ushd_touch_thread_entry(void *arg) {
         ushd_log(LOG_LVL_FATAL, "touch thread set id failed");
         goto TERMINATE;
     }
-    ushd_log(LOG_LVL_DETAIL, "set tid of touch thread, %lu", pthread_self());
+    ushd_log(LOG_LVL_DETAIL, "set touch thread tid, 0x%08lx", pthread_self());
 
     ushd_touch_thread_cs_enter();
-    if (USH_RET_OK == ushd_touch_open(touch_thread->touch)) {
+    if (USH_RET_OK != ushd_touch_open(touch_thread->touch)) {
         goto TERMINATE;
     }
     ushd_touch_thread_cs_exit();
@@ -90,11 +90,11 @@ ushd_touch_thread_entry(void *arg) {
             ushd_log(LOG_LVL_ERROR, "sched_fifo empty buffer retain failed");
             continue;
         }
-        ushd_log(LOG_LVL_INFO, "sched_fifo empty buffer retain ok%p", buf);
+        ushd_log(LOG_LVL_INFO, "sched_fifo empty buffer %p retain ok", buf);
 
         ushd_log(LOG_LVL_DETAIL, "receive from touch...");
         if (USH_RET_OK != ushd_touch_receive(touch_thread->touch, buf)) {
-            ushd_log(LOG_LVL_ERROR, "touch receive msg failed %p", buf);
+            ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
 
             ushd_sched_fifo_release(buf, USHD_SCHED_FIFO_EMPTY);
             continue;
