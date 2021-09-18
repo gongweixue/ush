@@ -1,3 +1,4 @@
+#include "errno.h"
 #include "mqueue.h"
 #include "pthread.h"
 #include "stdlib.h"
@@ -81,8 +82,36 @@ ushd_touch_close(ushd_touch_t touch) {
 
 ush_ret_t
 ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest) {
+    if (-1 == touch->mq) {
+        ushd_log(LOG_LVL_ERROR, "ushd touch not open");
+        return USH_RET_FAILED;
+    }
     // receive sz = USH_COMM_TOUCH_Q_MSG_MAX_LEN
     // return must be ok
+    ushd_log(LOG_LVL_INFO, "receiving from ushd touch...");
+    ush_ssize_t rcv_sz = mq_receive(touch->mq,
+                                    dest,
+                                    USH_COMM_TOUCH_Q_MSG_MAX_LEN,
+                                    NULL);
+
+    if (-1 == rcv_sz) {
+        switch (errno) {
+        case EMSGSIZE:
+            ush_log(LOG_LVL_ERROR, "massage too long from touch pipe");
+            break;
+        case EBADF:
+            ush_log(LOG_LVL_ERROR, "bad mqd_t for touch");
+            break;
+        case EINVAL:
+            ush_log(LOG_LVL_ERROR, "invalid ptr of buffer for receiving.");
+        default:
+            break;
+        }
+
+        ush_log(LOG_LVL_ERROR, "received ret value is -1");
+        return USH_RET_FAILED;
+    }
+
     return USH_RET_OK;
 }
 
