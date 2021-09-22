@@ -10,15 +10,15 @@
 // be carefulto to manipulate the ack, maybe free already.
 typedef struct ush_comm_hello_msg {
     ush_touch_msg_desc desc;
-    ush_s8_t           name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
-    void              *ackSync;
+    ush_char_t         name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_vptr_t        *ackSync;
     ush_s32_t          cert;
 } * ush_comm_hello_msg_t USH_COMM_TOUCH_Q_MSG_ALIGNMENT;
 
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
                           const ush_char_t        *pName,
-                          void                    *pAck,
+                          ush_vptr_t               pAck,
                           ush_u32_t                cert) {
 
     ush_assert(pHello && pName && pAck);
@@ -67,6 +67,24 @@ ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
 size_t
 ush_comm_hello_msg_size() {
     return sizeof(struct ush_comm_hello_msg);
+}
+
+const ush_char_t *
+ush_comm_hello_msg_get_name(const ush_comm_hello_msg_t msg) {
+    ush_assert(msg);
+    return msg->name;
+}
+
+const ush_vptr_t
+ush_comm_hello_msg_get_ack(const ush_comm_hello_msg_t msg) {
+    ush_assert(msg);
+    return msg->ackSync;
+}
+
+ush_s32_t
+ush_comm_hello_msg_get_cert(const ush_comm_hello_msg_t msg) {
+    ush_assert(msg);
+    return msg->cert;
 }
 
 void ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg) {

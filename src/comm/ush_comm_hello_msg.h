@@ -12,12 +12,18 @@ typedef struct ush_comm_hello_msg * ush_comm_hello_msg_t;
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t      *pHello,
                           const ush_char_t          *pName,
-                          void                      *pAck,
+                          ush_vptr_t                 pAck,
                           ush_u32_t                  cert);
 
 ush_ret_t ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello);
 
 size_t ush_comm_hello_msg_size();
+
+const ush_char_t * ush_comm_hello_msg_get_name(const ush_comm_hello_msg_t msg);
+
+const ush_vptr_t ush_comm_hello_msg_get_ack(const ush_comm_hello_msg_t msg);
+
+ush_s32_t ush_comm_hello_msg_get_cert(const ush_comm_hello_msg_t msg);
 
 void ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg);
 
