@@ -16,7 +16,7 @@ typedef enum USHD_SCHED_FIFO_OPTION{
 ush_ret_t   ushd_sched_fifo_init();
 
 // always return USH_COMM_TOUCH_Q_MSG_MAX_LEN big's buffer.
-ush_char_t *ushd_sched_fifo_retain(USHD_SCHED_FIFO_OPTION type);
+ush_char_t *ushd_sched_fifo_retain(USHD_SCHED_FIFO_OPTION opt);
 
 ush_ret_t ushd_sched_fifo_release(ush_char_t *buf, USHD_SCHED_FIFO_OPTION opt);
 
