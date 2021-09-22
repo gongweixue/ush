@@ -7,8 +7,9 @@
 #include "ush_log.h"
 #include "ush_time.h"
 
-#include "ushd_sched_thread.h"
 #include "ushd_sched_fifo.h"
+#include "ushd_sched_proc.h"
+#include "ushd_sched_thread.h"
 
 void *
 ushd_sched_thread_entry(void *arg) {
@@ -25,11 +26,7 @@ ushd_sched_thread_entry(void *arg) {
         if (NULL == pbuf) {
             continue;
         }
-
-        // TODO: convert to basic struct of touch msg,
-        //       and branch to the worker or create a publisher thread
-        ush_touch_msg_desc *desc = (ush_touch_msg_desc*)pbuf;
-        // ushd_log(LOG_LVL_INFO, "delay 500 ms, seems like it do the real work");
+        ushd_sched_proc(pbuf);
 
         ushd_sched_fifo_release(pbuf, USHD_SCHED_FIFO_EMPTY);
     }
@@ -55,20 +52,4 @@ ushd_sched_thread_start() {
     }
 
     return USH_RET_OK;
-}
-
-
-// dispatch into the internal queues for dealling with.
-// static void touch_dispatch(const void *pBuf);
-
-static void touch_dispatch(const void *pBuf) {
-    const ush_comm_touch_msg_t *pMsg = (const ush_comm_touch_msg_t *)pBuf;
-    // process msg
-        printf("receive %ld bytes\n", rcv_sz);
-        ush_impl_touch_msg_t *pTouch = (ush_impl_touch_msg_t *)buff;
-        printf("%d %s\n", pTouch->id, pTouch->name);
-
-        if (USH_COMM_PROTOCOL_TOUCH_ID_PING == pTouch->id) {
-            ushd_sw_open(pTouch->name);
-        }
 }
