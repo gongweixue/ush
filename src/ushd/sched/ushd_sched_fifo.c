@@ -16,39 +16,67 @@
 // or change to C++ with atomic operation and STL, or asm or intrisic-func
 ////////////////////////////////////////////////////////////////////////////////
 
-pthread_mutex_t cs_full_q  = PTHREAD_MUTEX_INITIALIZER;
+// full queue sync
+static pthread_mutex_t cs_full_q_locker  = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t  cs_full_q_cond    = PTHREAD_COND_INITIALIZER;
 static ush_ret_t cs_full_q_entry() {
-    if (0 != pthread_mutex_lock(&cs_full_q)) {
-        ushd_log(LOG_LVL_ERROR, "entry cs_full_q failed");
+    if (0 != pthread_mutex_lock(&cs_full_q_locker)) {
+        ushd_log(LOG_LVL_ERROR, "entry cs_full_q_locker failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_DETAIL, "entry cs_full_q");
+    ushd_log(LOG_LVL_DETAIL, "entry cs_full_q_locker");
     return USH_RET_OK;
 }
 static ush_ret_t cs_full_q_exit() {
-    if (0 != pthread_mutex_unlock(&cs_full_q)) {
-        ushd_log(LOG_LVL_ERROR, "exit cs_full_q failed");
+    if (0 != pthread_mutex_unlock(&cs_full_q_locker)) {
+        ushd_log(LOG_LVL_ERROR, "exit cs_full_q_locker failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_DETAIL, "exit cs_full_q");
+    ushd_log(LOG_LVL_DETAIL, "exit cs_full_q_locker");
+    return USH_RET_OK;
+}
+static ush_ret_t cs_full_q_wait() {
+    if (0 != pthread_cond_wait(&cs_full_q_cond, &cs_full_q_locker)) {
+        return USH_RET_FAILED;
+    }
+    return USH_RET_OK;
+}
+static ush_ret_t cs_full_q_signal() {
+    if (0 != pthread_cond_signal(&cs_full_q_cond)) {
+        return USH_RET_FAILED;
+    }
     return USH_RET_OK;
 }
 
-pthread_mutex_t cs_empty_q  = PTHREAD_MUTEX_INITIALIZER;
+// empty queue sync
+static pthread_mutex_t cs_empty_q_locker  = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t  cs_empty_q_cond    = PTHREAD_COND_INITIALIZER;
 static ush_ret_t cs_empty_q_entry() {
-    if (0 != pthread_mutex_lock(&cs_empty_q)) {
-        ushd_log(LOG_LVL_ERROR, "entry cs_empty_q failed");
+    if (0 != pthread_mutex_lock(&cs_empty_q_locker)) {
+        ushd_log(LOG_LVL_ERROR, "entry cs_empty_q_locker failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_DETAIL, "entry cs_empty_q");
+    ushd_log(LOG_LVL_DETAIL, "entry cs_empty_q_locker");
     return USH_RET_OK;
 }
 static ush_ret_t cs_empty_q_exit() {
-    if (0 != pthread_mutex_unlock(&cs_empty_q)) {
-        ushd_log(LOG_LVL_ERROR, "exit cs_empty_q failed");
+    if (0 != pthread_mutex_unlock(&cs_empty_q_locker)) {
+        ushd_log(LOG_LVL_ERROR, "exit cs_empty_q_locker failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_DETAIL, "exit cs_empty_q");
+    ushd_log(LOG_LVL_DETAIL, "exit cs_empty_q_locker");
+    return USH_RET_OK;
+}
+static ush_ret_t cs_empty_q_wait() {
+    if (0 != pthread_cond_wait(&cs_empty_q_cond, &cs_empty_q_locker)) {
+        return USH_RET_FAILED;
+    }
+    return USH_RET_OK;
+}
+static ush_ret_t cs_empty_q_signal() {
+    if (0 != pthread_cond_signal(&cs_empty_q_cond)) {
+        return USH_RET_FAILED;
+    }
     return USH_RET_OK;
 }
 
@@ -61,14 +89,14 @@ static ush_ret_t cs_empty_q_exit() {
 //        |     __________________________________        |
 //        |     |                                 |       |
 //        |  ---|-->       empty Q with 10elem  --|--->----
-//        |  |  |_________________________________| <--cs_empty_q
+//        |  |  |_________________________________| <--cs_empty_q_locker
 //        |  |
 //        |  |__ retain full, deal, release empty ---<---
 //        |                                             |
 //        |     __________________________________      |
 //        |     |                                 |     |
 //        --->--|-->       full Q with 10elem   --|----->
-//              |_________________________________| <--cs_full_q
+//              |_________________________________| <--cs_full_q_locker
 //
 //
 //  The empty&full just contains the idx(array offset) of sched_resource_type
@@ -133,15 +161,15 @@ static ush_char_t *
 retain_elem_from_empty() {
     ush_char_t *ret = NULL;
 
-    // no need to enter cs
-    if (empty_idx_head == empty_idx_tail) {
-        return NULL;
-    }
-
     cs_empty_q_entry();
 
+    if (empty_idx_head == empty_idx_tail) { // no buffer, wait...
+        ushd_log(LOG_LVL_INFO, "no buffer, waiting......");
+        cs_empty_q_wait();
+    }
+
     // if head not catchs tail yet
-    if ((empty_idx_head) != (empty_idx_tail)) {
+    if (empty_idx_head != empty_idx_tail) {
         ret = resource.elem_array[empty_queue[empty_idx_head]].buf;
         empty_idx_head = (empty_idx_head + 1) % (QUEUE_COUNT);
         ushd_log(LOG_LVL_DETAIL, "dequeue buffer %p from empty", ret);
@@ -165,6 +193,8 @@ release_elem_to_empty(const ush_char_t *ptr) {
         cs_empty_q_entry();
         empty_queue[empty_idx_tail] = idx;
         empty_idx_tail = (empty_idx_tail + 1) % (QUEUE_COUNT);
+        ushd_log(LOG_LVL_INFO, "send signal to the blocking wait on emptyQ.");
+        cs_empty_q_signal();
         cs_empty_q_exit();
         ret = USH_RET_OK;
         ushd_log(LOG_LVL_DETAIL, "release ptr %p to empty queue", ptr);
@@ -185,15 +215,15 @@ static ush_char_t *
 retain_elem_from_full() {
     ush_char_t *ret = NULL;
 
-    // no need to enter cs
-    if (full_idx_head == full_idx_tail) {
-        return NULL;
-    }
-
     cs_full_q_entry();
 
+    if (full_idx_head == full_idx_tail) { // no buffer, wait...
+        ushd_log(LOG_LVL_INFO, "no buffer, waiting......");
+        cs_full_q_wait();
+    }
+
     // if head not catchs tail yet
-    if ((full_idx_head) != (full_idx_tail)) {
+    if (full_idx_head != full_idx_tail) {
         ret = resource.elem_array[full_queue[full_idx_head]].buf;
         full_idx_head = (full_idx_head + 1) % (QUEUE_COUNT);
         ushd_log(LOG_LVL_DETAIL, "dequeue buffer %p from full", ret);
@@ -218,6 +248,8 @@ release_elem_to_full(const ush_char_t *ptr) {
         full_queue[full_idx_tail] = idx;
         full_idx_tail = (full_idx_tail + 1) % (QUEUE_COUNT);
         ret = USH_RET_OK;
+        ushd_log(LOG_LVL_INFO, "send signal to the blocking wait on fullQ.");
+        cs_full_q_signal();
         cs_full_q_exit();
         ushd_log(LOG_LVL_DETAIL, "release ptr %p to full queue", ptr);
     } else {

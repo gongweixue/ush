@@ -24,8 +24,11 @@ ushd_sched_thread_entry(void *arg) {
     while(1) {
         ush_char_t *pbuf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_FULL);
         if (NULL == pbuf) {
+            ushd_log(LOG_LVL_ERROR, "sched_fifo full buffer retain failed");
             continue;
         }
+
+        ushd_log(LOG_LVL_INFO, "dispatch the buffer from sched-full-queue");
         ushd_sched_proc(pbuf);
 
         ushd_sched_fifo_release(pbuf, USHD_SCHED_FIFO_EMPTY);

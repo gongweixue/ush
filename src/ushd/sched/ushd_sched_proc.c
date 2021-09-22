@@ -23,7 +23,7 @@ static proc_function func_tbl[] = {
 
 void ushd_sched_proc(const void *ptr) {
     const ush_touch_msg_desc *pDescription = (const ush_touch_msg_desc *)ptr;
-    func_tbl[pDescription->catalog](ptr);
+    func_tbl[pDescription->catalog].func(ptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
