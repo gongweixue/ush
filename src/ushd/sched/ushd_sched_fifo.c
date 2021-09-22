@@ -22,7 +22,7 @@ static ush_ret_t cs_full_q_entry() {
         ushd_log(LOG_LVL_ERROR, "entry cs_full_q failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_INFO, "entry cs_full_q");
+    ushd_log(LOG_LVL_DETAIL, "entry cs_full_q");
     return USH_RET_OK;
 }
 static ush_ret_t cs_full_q_exit() {
@@ -30,7 +30,7 @@ static ush_ret_t cs_full_q_exit() {
         ushd_log(LOG_LVL_ERROR, "exit cs_full_q failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_INFO, "exit cs_full_q");
+    ushd_log(LOG_LVL_DETAIL, "exit cs_full_q");
     return USH_RET_OK;
 }
 
@@ -40,7 +40,7 @@ static ush_ret_t cs_empty_q_entry() {
         ushd_log(LOG_LVL_ERROR, "entry cs_empty_q failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_INFO, "entry cs_empty_q");
+    ushd_log(LOG_LVL_DETAIL, "entry cs_empty_q");
     return USH_RET_OK;
 }
 static ush_ret_t cs_empty_q_exit() {
@@ -48,7 +48,7 @@ static ush_ret_t cs_empty_q_exit() {
         ushd_log(LOG_LVL_ERROR, "exit cs_empty_q failed");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_INFO, "exit cs_empty_q");
+    ushd_log(LOG_LVL_DETAIL, "exit cs_empty_q");
     return USH_RET_OK;
 }
 
@@ -95,7 +95,7 @@ static ush_ret_t cs_empty_q_exit() {
 #define EMPTY_ELEMENT   USHD_SCHED_FIFO_EMPTY
 
 #ifndef RESOURCE_COUNT
-#define RESOURCE_COUNT    (10)
+#define RESOURCE_COUNT    (100)
 #endif
 #define QUEUE_COUNT    (RESOURCE_COUNT + 2)  // tail never catchs head
 
@@ -268,7 +268,10 @@ ushd_sched_fifo_retain(USHD_SCHED_FIFO_OPTION opt) {
 
 ush_ret_t
 ushd_sched_fifo_release(ush_char_t *buf, USHD_SCHED_FIFO_OPTION opt) {
-    ush_assert(buf);
+    if (!buf) {
+        ushd_log(LOG_LVL_DETAIL, "release NULL to the fifo");
+        return USH_RET_OK;
+    }
     ush_ret_t ret = USH_RET_FAILED;
 
     switch (opt) {
