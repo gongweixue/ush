@@ -61,6 +61,8 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     return USH_RET_OK;
 }
 
+#define PTHREAD_COND_WAIT
+
 ush_ret_t
 ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
                         const struct timespec       *pDL,
@@ -71,7 +73,13 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
 
     int ret = USH_RET_OK;
     ush_log(LOG_LVL_DETAIL, "waiting the cond's signal, ack addr %p", ack);
-    switch (pthread_cond_timedwait(&ack->cond, &ack->mutex, pDL)) {
+    int wait = 0;
+    if (pDL) {
+        wait = pthread_cond_timedwait(&ack->cond, &ack->mutex, pDL);
+    } else {
+        wait = pthread_cond_wait(&ack->cond, &ack->mutex);
+    }
+    switch (wait) {
     case 0:
         break;
     case ETIMEDOUT:

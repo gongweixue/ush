@@ -1,5 +1,7 @@
+add_subdirectory(conn)
 add_subdirectory(sched)
 add_subdirectory(touch)
+add_subdirectory(publish)
 
 set(EXE_USHD ushd)
 
@@ -21,8 +23,15 @@ include_directories(
 
 add_executable(${EXE_USHD} ${SRC_USHD})
 
-target_link_libraries(${EXE_USHD} rt pthread ushd_touch ushd_sched ush_util)
+target_link_libraries(${EXE_USHD}
+    rt
+    pthread
+    ushd_touch
+    ushd_sched
+    ushd_publish
+    ush_util
+)
 
 
 set_target_properties(${EXE_USHD}
-                      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+    PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

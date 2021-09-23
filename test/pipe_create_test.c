@@ -18,8 +18,8 @@ int main () {
     ret = ush_pipe_create("ping", 0, 0, 2, NULL, 0, &hdl);
     printf("create return %d\n", ret);
 
-    // ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
-    // printf("create return %d and back to main\n", ret);
+    ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
+    printf("create return %d and back to main\n", ret);
 
     while(1) {
     }
