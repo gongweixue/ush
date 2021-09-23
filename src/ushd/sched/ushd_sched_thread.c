@@ -7,6 +7,7 @@
 #include "ush_log.h"
 #include "ush_time.h"
 
+#include "ushd_conn_record_tbl.h"
 #include "ushd_sched_fifo.h"
 #include "ushd_sched_proc.h"
 #include "ushd_sched_thread.h"
@@ -18,6 +19,11 @@ ushd_sched_thread_entry(void *arg) {
     ushd_log(LOG_LVL_DETAIL, "sched fifo init");
     if (USH_RET_OK != ushd_sched_fifo_init()) {
         ushd_log(LOG_LVL_FATAL, "sched fifo init failed.");
+        goto TERMINATE;
+    }
+
+    if (USH_RET_OK != ushd_conn_table_init()) {
+        ushd_log(LOG_LVL_FATAL, "conn-table init failed.");
         goto TERMINATE;
     }
 
