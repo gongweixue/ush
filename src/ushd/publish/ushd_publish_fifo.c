@@ -20,6 +20,16 @@ typedef struct publish_fifo {
     ush_s32_t       tail;
 } * ushd_publish_fifo_t;
 
+
+static ush_ret_t fifo_cs_entry(ushd_publish_fifo_t fifo);
+static ush_ret_t fifo_cs_exit(ushd_publish_fifo_t fifo);
+static ush_ret_t fifo_cs_wait(ushd_publish_fifo_t fifo);
+static ush_ret_t fifo_cs_signal(ushd_publish_fifo_t fifo);
+
+static ush_bool_t fifo_is_empty(ushd_publish_fifo_t fifo);
+static ush_bool_t fifo_is_full(ushd_publish_fifo_t fifo);
+
+
 ushd_publish_fifo_t ushd_publish_fifo_create() {
     ushd_publish_fifo_t fifo =
         (ushd_publish_fifo_t)malloc(sizeof(struct publish_fifo));
@@ -61,59 +71,60 @@ ushd_publish_fifo_push(ushd_publish_fifo_t fifo,
 
 }
 
+static ush_ret_t
+fifo_cs_entry(ushd_publish_fifo_t fifo) {
+    if (0 != pthread_mutex_lock(&fifo->mutex)) {
+        ushd_log(LOG_LVL_ERROR, "entry fifo %p failed", fifo);
+        return USH_RET_FAILED;
+    }
+    ushd_log(LOG_LVL_DETAIL, "entry fifo %p", fifo);
+    return USH_RET_OK;
+}
+static ush_ret_t
+fifo_cs_exit(ushd_publish_fifo_t fifo) {
+    if (0 != pthread_mutex_unlock(&fifo->mutex)) {
+        ushd_log(LOG_LVL_ERROR, "exit fifo %p failed", fifo);
+        return USH_RET_FAILED;
+    }
+    ushd_log(LOG_LVL_DETAIL, "exit fifo %p", fifo);
+    return USH_RET_OK;
+}
+static ush_ret_t
+fifo_cs_wait(ushd_publish_fifo_t fifo) {
+    if (0 != pthread_cond_wait(&fifo->cond, &fifo->mutex)) {
+        return USH_RET_FAILED;
+    }
+    return USH_RET_OK;
+}
+static ush_ret_t
+fifo_cs_signal(ushd_publish_fifo_t fifo) {
+    if (0 != pthread_cond_signal(&fifo->cond)) {
+        return USH_RET_FAILED;
+    }
+    return USH_RET_OK;
+}
 
+// true if head == tail, including begining state
+static ush_bool_t
+fifo_is_empty(ushd_publish_fifo_t fifo) {
+    ush_bool_t ret;
+    fifo_cs_entry(fifo);
+    ret = (fifo->head == fifo->tail);
+    fifo_cs_exit(fifo);
+    return ret;
+}
 
+// true if (tail + 1) % SIZE == head
+static ush_bool_t
+fifo_is_full(ushd_publish_fifo_t fifo) {
+    ush_bool_t ret;
+    fifo_cs_entry(fifo);
+    ret = (fifo->head == ((fifo->tail + 1) % FIFO_MSG_MAX_COUNT));
+    fifo_cs_exit(fifo);
+    return ret;
+}
 
-
-
-
-
-// #ifndef RESOURCE_COUNT
-// #define RESOURCE_COUNT    (100)
-// #endif
-// #define QUEUE_COUNT    (RESOURCE_COUNT + 2)  // tail never catchs head
-
-// typedef ush_s32_t fifo_idx_t;
-
-
-// // full queue sync
-// static pthread_mutex_t cs_full_q_locker  = PTHREAD_MUTEX_INITIALIZER;
-// static pthread_cond_t  cs_full_q_cond    = PTHREAD_COND_INITIALIZER;
-// static ush_ret_t cs_full_q_entry() {
-//     if (0 != pthread_mutex_lock(&cs_full_q_locker)) {
-//         ushd_log(LOG_LVL_ERROR, "entry cs_full_q_locker failed");
-//         return USH_RET_FAILED;
-//     }
-//     ushd_log(LOG_LVL_DETAIL, "entry cs_full_q_locker");
-//     return USH_RET_OK;
-// }
-// static ush_ret_t cs_full_q_exit() {
-//     if (0 != pthread_mutex_unlock(&cs_full_q_locker)) {
-//         ushd_log(LOG_LVL_ERROR, "exit cs_full_q_locker failed");
-//         return USH_RET_FAILED;
-//     }
-//     ushd_log(LOG_LVL_DETAIL, "exit cs_full_q_locker");
-//     return USH_RET_OK;
-// }
-// static ush_ret_t cs_full_q_wait() {
-//     if (0 != pthread_cond_wait(&cs_full_q_cond, &cs_full_q_locker)) {
-//         return USH_RET_FAILED;
-//     }
-//     return USH_RET_OK;
-// }
-// static ush_ret_t cs_full_q_signal() {
-//     if (0 != pthread_cond_signal(&cs_full_q_cond)) {
-//         return USH_RET_FAILED;
-//     }
-//     return USH_RET_OK;
-// }
-
-
-// /* full queue */
-// static fifo_idx_t full_queue[QUEUE_COUNT];
-// static int full_idx_head = 0;
-// static int full_idx_tail = 0;
-
+////////////////////////////////////////////////////////////////////////////////
 // static ush_char_t *
 // retain_elem_from_full() {
 //     ush_char_t *ret = NULL;
