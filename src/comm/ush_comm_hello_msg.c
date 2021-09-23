@@ -19,7 +19,7 @@ ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
                           const ush_char_t        *pName,
                           ush_vptr_t               pAck,
-                          ush_u32_t                cert) {
+                          ush_s32_t                cert) {
 
     ush_assert(pHello && pName && pAck);
 

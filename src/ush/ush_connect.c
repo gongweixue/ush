@@ -21,29 +21,29 @@ typedef struct ush_connect {
 
 
 static
-ush_u32_t
+ush_s32_t
 getIdentIdx(const ush_connect_ident ident) {
     ush_log(LOG_LVL_DETAIL, "get connection idx:0x%08x on ushd \
-                             from 0x%016llx", (ush_u32_t)(ident >> 32), ident);
-    return (ush_u32_t)(ident >> 32); // high 32b
+                             from 0x%016llx", (ush_s32_t)(ident >> 32), ident);
+    return (ush_s32_t)(ident >> 32); // high 32b
 }
 
 static
-ush_u32_t
+ush_s32_t
 getIdentCertify(const ush_connect_ident ident) {
     ush_log(LOG_LVL_DETAIL, "get connection cert:0x%08x on ushd \
                              from 0x%016llx",
-                             (ush_u32_t)(ident & 0xFFFFFFFF),
+                             (ush_s32_t)(ident & 0xFFFFFFFF),
                              ident);
-    return (ush_u32_t)(ident & 0xFFFFFFFF);         // low 32b
+    return (ush_s32_t)(ident & 0xFFFFFFFF);         // low 32b
 }
 
 ush_bool_t
 ush_connect_ident_valid(const ush_connect_t conn) {
     ush_assert(conn);
-    ush_u32_t idxRemote = getIdentIdx(conn->ident);
+    ush_s32_t idxRemote = getIdentIdx(conn->ident);
 
-    ush_u32_t certify   = getIdentCertify(conn->ident);
+    ush_s32_t certify   = getIdentCertify(conn->ident);
 
     return ((-1 != idxRemote) && (-1 != certify));
 }
@@ -131,7 +131,7 @@ ush_connect_destroy(ush_connect_t *pConn) {
     return USH_RET_OK;
 }
 
-ush_u32_t
+ush_s32_t
 ush_connect_generate_cert(const ush_char_t *seed) {
     ush_assert(seed);
     static ush_u32_t real_seed = 0;
@@ -139,7 +139,7 @@ ush_connect_generate_cert(const ush_char_t *seed) {
     real_seed += *seed;
 
     srand(real_seed + time(NULL));
-    ush_u32_t cert = rand();
+    ush_s32_t cert = rand();
 
     ush_log(LOG_LVL_INFO, "cert gen 0x%08x", cert);
 
@@ -147,7 +147,7 @@ ush_connect_generate_cert(const ush_char_t *seed) {
 }
 
 ush_connect_ident
-ush_connect_make_ident(ush_u32_t idx, ush_u32_t certify) {
+ush_connect_make_ident(ush_s32_t idx, ush_s32_t certify) {
     return (((ush_connect_ident)idx) << 32) | certify;
 }
 
