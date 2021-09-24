@@ -68,7 +68,11 @@ void * ushd_publish_thread_entry(void *arg) {
     ushd_publish_thread_t thread = (ushd_publish_thread_t)arg;
     thread->tid = pthread_self();
 
-    // get thread->fifo, and wait the cond, read the msg, and react.
+    // msg must be copy out to the external buffer, since the thread who
+    // calls the proc may be blocked by the mqueue functions.
+    // The concurrency of the fifo can not be ensure.
+    // That is: producers would overwrite the buffer which is using by
+    // consumers if the fifo is not locked.
     while(1) {
         ush_char_t buf[USHD_PUBLISH_FIFO_MSG_MAX_SIZE];
         if (0 == ushd_publish_fifo_pop(thread->fifo, buf, sizeof(buf))) {
