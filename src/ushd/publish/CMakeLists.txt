@@ -9,6 +9,7 @@ set(SRC_USHD_PUBLISH
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/src/public/
+    ${PROJECT_SOURCE_DIR}/src/comm/
 )
 
 add_library(${LIB_USHD_PUBLISH} STATIC ${SRC_USHD_PUBLISH})

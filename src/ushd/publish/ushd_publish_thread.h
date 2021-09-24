@@ -6,7 +6,7 @@
 
 typedef struct publish_thread * ushd_publish_thread_t;
 
-ushd_publish_thread_t ushd_publish_thread_create();
+ushd_publish_thread_t ushd_publish_thread_create(const ush_char_t *name);
 
 ush_ret_t            ushd_publish_thread_start(ushd_publish_thread_t thread);
 

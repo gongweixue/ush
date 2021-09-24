@@ -40,7 +40,7 @@ void proc_func_hello(const ush_vptr_t msg) {
     ush_s32_t         cert    = ush_comm_hello_msg_get_cert(hello);
 
     // create publish thread
-    ushd_publish_thread_t publish = ushd_publish_thread_create();
+    ushd_publish_thread_t publish = ushd_publish_thread_create(name);
     if (!publish) {
         ushd_log(LOG_LVL_ERROR, "publish thread create failed.");
         return;
