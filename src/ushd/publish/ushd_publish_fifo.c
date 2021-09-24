@@ -125,6 +125,7 @@ ushd_publish_fifo_pop(ushd_publish_fifo_t fifo, ush_vptr_t buf, ush_size_t sz) {
     }
     memcpy(buf, fifo->buffer[idx].data, fifo->buffer[idx].sz);
     fifo->head = (fifo->head + 1) % FIFO_SIZE;
+    ret = fifo->buffer[idx].sz;
 
     if (fifo_curr_num(fifo) == FIFO_ITEM_NUM-1) { // from 'full' to 'not full'
         fifo_notify_producers(fifo); // avoid prio-reverse
