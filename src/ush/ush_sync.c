@@ -14,7 +14,6 @@ typedef struct ush_hello_ack {
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
     ush_connect_ident   connIdentOnServer;
-    USH_PIPE_STATE      connStateOnServer;
     ush_connect_t       connHdlOnClient;
 } * ush_sync_hello_ack_t;
 
@@ -52,7 +51,6 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     }
 
     pMem->connIdentOnServer = CONNECT_IDENT_VALUE_DEFAULT;
-    pMem->connStateOnServer = USH_PP_STATE_NOT_EXIST;
     pMem->connHdlOnClient = conn;
 
 

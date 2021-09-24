@@ -156,6 +156,7 @@ static ush_ret_t
 get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
     ush_assert(ack);
     ush_log(LOG_LVL_INFO, "ack callback should be implemetented!!!");
+    ush_assert(0);
     // ush_connect_ident   connIdentOnServer;
     // USH_PIPE_STATE      connState;
     // ush_connect_t connHdlOnClient;
