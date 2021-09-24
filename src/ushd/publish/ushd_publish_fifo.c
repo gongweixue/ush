@@ -69,6 +69,8 @@ BAILED_MUTEX:
     pthread_mutex_destroy(&fifo->mutex);
 
 BAILED_FIFO:
+
+    ush_log(LOG_LVL_DETAIL, "free fifo %p", fifo);
     free(fifo);
     fifo = NULL;
 
@@ -90,6 +92,7 @@ ushd_publish_fifo_push(ushd_publish_fifo_t fifo,
     fifo_cs_entry(fifo);
 
     while (fifo_is_full(fifo)) { // for multi producer racing
+        ushd_log(LOG_LVL_INFO, "waiting fifo space...");
         fifo_producers_wait(fifo);
     }
 
@@ -103,6 +106,8 @@ ushd_publish_fifo_push(ushd_publish_fifo_t fifo,
     }
     fifo_cs_exit(fifo);
 
+    ushd_log(LOG_LVL_INFO, "data pushed fo publish fifo");
+
     return USH_RET_OK;
 }
 
@@ -113,6 +118,7 @@ ushd_publish_fifo_pop(ushd_publish_fifo_t fifo, ush_vptr_t buf, ush_size_t sz) {
     fifo_cs_entry(fifo);
 
     while (fifo_is_empty(fifo)) {
+        ushd_log(LOG_LVL_INFO, "waiting fifo item arrived...");
         fifo_consumers_wait(fifo);
     }
 
@@ -130,6 +136,8 @@ ushd_publish_fifo_pop(ushd_publish_fifo_t fifo, ush_vptr_t buf, ush_size_t sz) {
     if (fifo_curr_num(fifo) == FIFO_ITEM_NUM-1) { // from 'full' to 'not full'
         fifo_notify_producers(fifo); // avoid prio-reverse
     }
+
+    ushd_log(LOG_LVL_INFO, "data pop from publish fifo");
 
 BAILED:
     fifo_cs_exit(fifo);
@@ -169,6 +177,8 @@ static ush_ret_t fifo_producers_wait(ushd_publish_fifo_t fifo) {
     if (!fifo) {
         return USH_RET_WRONG_PARAM;
     }
+
+    ushd_log(LOG_LVL_DETAIL, "producer waiting...");
     if (0 != pthread_cond_wait(&fifo->cond_producer, &fifo->mutex)) {
         return USH_RET_FAILED;
     }
@@ -179,6 +189,7 @@ static ush_ret_t fifo_consumers_wait(ushd_publish_fifo_t fifo) {
     if (!fifo) {
         return USH_RET_WRONG_PARAM;
     }
+    ushd_log(LOG_LVL_DETAIL, "consumer waiting...");
     if (0 != pthread_cond_wait(&fifo->cond_consumer, &fifo->mutex)) {
         return USH_RET_FAILED;
     }
@@ -189,6 +200,8 @@ static ush_ret_t fifo_notify_producers(ushd_publish_fifo_t fifo) {
     if (!fifo) {
         return USH_RET_WRONG_PARAM;
     }
+
+    ushd_log(LOG_LVL_DETAIL, "producer trigger...");
     if (0 != pthread_cond_signal(&fifo->cond_producer)) {
         return USH_RET_FAILED;
     }
@@ -199,6 +212,8 @@ static ush_ret_t fifo_notify_consumers(ushd_publish_fifo_t fifo) {
     if (!fifo) {
         return USH_RET_WRONG_PARAM;
     }
+
+    ushd_log(LOG_LVL_DETAIL, "comsumer trigger...");
     if (0 != pthread_cond_signal(&fifo->cond_consumer)) {
         return USH_RET_FAILED;
     }

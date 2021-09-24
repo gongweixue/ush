@@ -31,6 +31,7 @@ ushd_touch_thread_singleton() {
         ushd_touch_thread_cs_enter();
         // ushd_touch_thread_t tmp;
         if (!g_touch_thread) {
+            ushd_log(LOG_LVL_INFO, "touch thread create first time");
             g_touch_thread = touch_thread_create();
         }
         ushd_touch_thread_cs_exit();
@@ -83,7 +84,7 @@ ushd_touch_thread_entry(void *arg) {
     ushd_log(LOG_LVL_DETAIL, "touch been opened %p", touch_thread->touch);
 
     while (1) {
-        ushd_log(LOG_LVL_DETAIL, "touch forward to receiving new msg...");
+        ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
 
         ush_char_t *buf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_EMPTY);
         if (!buf) {
@@ -92,7 +93,7 @@ ushd_touch_thread_entry(void *arg) {
         }
         ushd_log(LOG_LVL_INFO, "sched_fifo empty buffer %p retain ok", buf);
 
-        ushd_log(LOG_LVL_DETAIL, "receive from touch...");
+        ushd_log(LOG_LVL_INFO, "receive from touch...");
         if (USH_RET_OK != ushd_touch_receive(touch_thread->touch, buf)) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
 
@@ -141,7 +142,7 @@ touch_thread_create() {
 
     if (newMem) {
         if (USH_RET_OK !=  ushd_touch_create(&(newMem->touch))) {
-            ushd_log(LOG_LVL_ERROR, "create ushd_touch failed");
+            ushd_log(LOG_LVL_FATAL, "create ushd_touch failed");
             free(newMem);
             return NULL;
         }

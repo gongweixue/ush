@@ -36,12 +36,14 @@ static ush_ret_t cs_full_q_exit() {
     return USH_RET_OK;
 }
 static ush_ret_t cs_full_q_wait() {
+    ushd_log(LOG_LVL_DETAIL, "waiting for cs_full_q_cond");
     if (0 != pthread_cond_wait(&cs_full_q_cond, &cs_full_q_locker)) {
         return USH_RET_FAILED;
     }
     return USH_RET_OK;
 }
 static ush_ret_t cs_full_q_signal() {
+    ushd_log(LOG_LVL_DETAIL, "trigger cs_full_q_cond");
     if (0 != pthread_cond_signal(&cs_full_q_cond)) {
         return USH_RET_FAILED;
     }
@@ -68,12 +70,14 @@ static ush_ret_t cs_empty_q_exit() {
     return USH_RET_OK;
 }
 static ush_ret_t cs_empty_q_wait() {
+    ushd_log(LOG_LVL_DETAIL, "waiting cs_empty_q_cond");
     if (0 != pthread_cond_wait(&cs_empty_q_cond, &cs_empty_q_locker)) {
         return USH_RET_FAILED;
     }
     return USH_RET_OK;
 }
 static ush_ret_t cs_empty_q_signal() {
+    ushd_log(LOG_LVL_DETAIL, "trigger cs_empty_q_cond");
     if (0 != pthread_cond_signal(&cs_empty_q_cond)) {
         return USH_RET_FAILED;
     }
@@ -181,7 +185,7 @@ retain_elem_from_empty() {
 
     return ret;
 }
-
+// no need to check the tail catch the head for 1producer and 1consumer.
 static ush_ret_t
 release_elem_to_empty(const ush_char_t *ptr) {
     ush_assert(ptr);
@@ -193,7 +197,7 @@ release_elem_to_empty(const ush_char_t *ptr) {
         cs_empty_q_entry();
         empty_queue[empty_idx_tail] = idx;
         empty_idx_tail = (empty_idx_tail + 1) % (QUEUE_COUNT);
-        ushd_log(LOG_LVL_INFO, "send signal to the blocking wait on emptyQ.");
+        ushd_log(LOG_LVL_DETAIL, "send signal to the blocking wait on emptyQ.");
         cs_empty_q_signal();
         cs_empty_q_exit();
         ret = USH_RET_OK;
@@ -221,6 +225,8 @@ retain_elem_from_full() {
         ushd_log(LOG_LVL_INFO, "no buffer, waiting......");
         cs_full_q_wait();
     }
+
+    ushd_log(LOG_LVL_DETAIL, "new data comming");
 
     // if head not catchs tail yet
     if (full_idx_head != full_idx_tail) {
@@ -274,6 +280,7 @@ queues_init() {
 
 ush_ret_t
 ushd_sched_fifo_init() {
+    ushd_log(LOG_LVL_INFO, "init the sched fifo");
     resource_init();
     queues_init();
     return USH_RET_OK;

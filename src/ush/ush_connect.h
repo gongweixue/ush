@@ -37,7 +37,7 @@ ush_ret_t ush_connect_cs_enter(ush_connect_t conn);
 
 ush_ret_t ush_connect_cs_exit(ush_connect_t conn);
 
-ush_ret_t ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path);
+// ush_ret_t ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path);
 
 
 #endif // USH_CONNECT_H

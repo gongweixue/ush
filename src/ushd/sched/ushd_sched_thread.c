@@ -14,7 +14,7 @@
 
 void *
 ushd_sched_thread_entry(void *arg) {
-    ushd_log(LOG_LVL_INFO, "starting the touch thread entry");
+    ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
 
     ushd_log(LOG_LVL_DETAIL, "sched fifo init");
     if (USH_RET_OK != ushd_sched_fifo_init()) {
@@ -22,12 +22,14 @@ ushd_sched_thread_entry(void *arg) {
         goto TERMINATE;
     }
 
+    ushd_log(LOG_LVL_DETAIL, "conn table init");
     if (USH_RET_OK != ushd_conn_table_init()) {
         ushd_log(LOG_LVL_FATAL, "conn-table init failed.");
         goto TERMINATE;
     }
 
     while(1) {
+        ushd_log(LOG_LVL_DETAIL, "retain a full buffer");
         ush_char_t *pbuf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_FULL);
         if (NULL == pbuf) {
             ushd_log(LOG_LVL_ERROR, "sched_fifo full buffer retain failed");
@@ -37,6 +39,7 @@ ushd_sched_thread_entry(void *arg) {
         ushd_log(LOG_LVL_INFO, "dispatch the buffer from sched-full-queue");
         ushd_sched_proc(pbuf);
 
+        ushd_log(LOG_LVL_DETAIL, "release a empty buffer");
         ushd_sched_fifo_release(pbuf, USHD_SCHED_FIFO_EMPTY);
     }
 
@@ -48,6 +51,7 @@ TERMINATE:
 ush_ret_t
 ushd_sched_thread_start() {
     pthread_t tid;
+    ushd_log(LOG_LVL_INFO, "starting sched daemon thread...");
     if (0 != pthread_create(&tid, NULL, ushd_sched_thread_entry, NULL)) {
         ushd_log(LOG_LVL_FATAL, "create sched daemon thread: failed.");
         return USH_RET_FAILED;
@@ -55,6 +59,7 @@ ushd_sched_thread_start() {
 
     ushd_log(LOG_LVL_DETAIL, "ushd_sched_thread start with tid %lu", tid);
 
+    ushd_log(LOG_LVL_INFO, "detaching sched daemon thread...");
     if (0 != pthread_detach(tid)) {
         ushd_log(LOG_LVL_ERROR, "detach sched daemon thread: failed.");
         return USH_RET_FAILED;

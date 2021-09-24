@@ -2,6 +2,7 @@
 #include "string.h"
 
 #include "ush_assert.h"
+#include "ush_log.h"
 #include "ush_type_pub.h"
 
 #include "ush_comm_hello_msg.h"
@@ -71,6 +72,8 @@ ushd_conn_table_init() {
     tbl.next = 1;
     tbl.max_idx  = USHD_CONN_RECORD_TABLE_MAX_COUNT - 1;
 
+    ushd_log(LOG_LVL_DETAIL, "conn table init finished");
+
     return USH_RET_OK;
 }
 
@@ -91,6 +94,9 @@ ushd_conn_table_add_record(const ush_char_t           *name,
     tbl.records[curr].cert      = cert;
     tbl.records[curr].publisher = publisher;
     tbl.next                   += 1;
+
+
+    ushd_log(LOG_LVL_INFO, "a new conn record into the table");
 
     return curr;
 }

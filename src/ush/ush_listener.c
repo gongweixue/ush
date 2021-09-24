@@ -37,6 +37,7 @@ ush_listener_open_and_start(ush_listener_t *pListener) {
 
 ush_ret_t
 ush_listener_stop_and_close(ush_listener_t *pListener) {
+    ush_assert(0);
     // assert(pListener);
     // if (!(*pListener)) {
     //     ush_log(LOG_LVL_INFO, "ush_listener_t NULL to be destroy");

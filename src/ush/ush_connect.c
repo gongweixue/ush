@@ -208,8 +208,8 @@ ush_connect_cs_exit(ush_connect_t conn) {
     return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }
 
-ush_ret_t
-ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path) {
-    ush_assert(conn && path);
-    return USH_RET_OK;
-}
+// ush_ret_t
+// ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path) {
+//     ush_assert(conn && path);
+//     return USH_RET_OK;
+// }

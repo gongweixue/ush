@@ -33,6 +33,7 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
 
     ush_log(LOG_LVL_DETAIL, "init mutex and cond");
     if (0 != pthread_mutex_init(&pMem->mutex, NULL)) {
+        ush_log(LOG_LVL_DETAIL, "free pMem %p", pMem);
         free(pMem);
         ush_log(LOG_LVL_FATAL, "hello ack sync handle mutex create failed");
         return USH_RET_FAILED;
@@ -45,6 +46,8 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     if (0 != pthread_cond_init(&pMem->cond, &pMem->condattr)) {
         pthread_mutex_destroy(&pMem->mutex);
         pthread_condattr_destroy(&pMem->condattr);
+
+        ush_log(LOG_LVL_DETAIL, "free pMem %p", pMem);
         free(pMem);
         ush_log(LOG_LVL_FATAL, "hello ack sync handle cond create failed");
         return USH_RET_FAILED;
@@ -115,6 +118,7 @@ ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
     pthread_condattr_destroy(&(*pAck)->condattr);
     pthread_cond_destroy(&(*pAck)->cond);
 
+    ushd_log(LOG_LVL_DETAIL, "free ack %p", pAck);
     free(*pAck);
     *pAck = NULL;
 

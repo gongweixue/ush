@@ -18,6 +18,7 @@ void publish_proc_send_howareyou(mqd_t mq, publish_fifo_msg_howareyou *msg) {
         ident
     };
 
+    ushd_log(LOG_LVL_DETAIL, "sending msg %p", &buf);
     int tmp = mq_send(mq, (char*)&buf, sizeof(buf), USH_COMM_HOWAREYOU_MSG_PRIO);
     if (-1 == tmp) {
         ushd_log(LOG_LVL_FATAL, "send howareyou %p failed.", msg);

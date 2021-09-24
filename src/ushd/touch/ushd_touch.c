@@ -41,7 +41,6 @@ ushd_touch_open(ushd_touch_t touch) {
         return USH_RET_OK;
     }
 
-
     struct mq_attr qAttr;
     memset(&qAttr, 0, sizeof(qAttr));
     qAttr.mq_maxmsg  = USH_COMM_TOUCH_Q_MSG_MAX_CNT;
@@ -70,6 +69,7 @@ ushd_touch_close(ushd_touch_t touch) {
     }
 
     ush_log(LOG_LVL_DETAIL, "closing the touch queue %p", touch);
+
     if (0 != mq_close(touch->mq)) {
         ushd_log(LOG_LVL_ERROR, "ushd touch closed failed");
         return USH_RET_FAILED;
@@ -82,12 +82,11 @@ ushd_touch_close(ushd_touch_t touch) {
 
 ush_ret_t
 ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest) {
-    if (-1 == touch->mq) {
+    if (-1 == touch->mq || !dest) {
         ushd_log(LOG_LVL_ERROR, "ushd touch not open");
         return USH_RET_FAILED;
     }
-    // receive sz = USH_COMM_TOUCH_Q_MSG_MAX_LEN
-    // return must be ok
+
     ushd_log(LOG_LVL_INFO, "receiving from ushd touch...");
     ush_ssize_t rcv_sz = mq_receive(touch->mq,
                                     dest,
@@ -111,6 +110,7 @@ ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest) {
         ush_log(LOG_LVL_ERROR, "received ret value is -1");
         return USH_RET_FAILED;
     }
+    ushd_log(LOG_LVL_DETAIL, "ushd touch got the data");
 
     return USH_RET_OK;
 }

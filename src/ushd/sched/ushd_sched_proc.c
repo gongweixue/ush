@@ -26,6 +26,11 @@ static proc_function func_tbl[] = {
 };
 
 void ushd_sched_proc(const ush_vptr_t ptr) {
+    ush_assert(ptr);
+    if (!ptr) {
+        ushd_log(LOG_LVL_ERROR, "ptr is NULL!!!");
+        return;
+    }
     const ush_touch_msg_desc *pDescription = (const ush_touch_msg_desc *)ptr;
     func_tbl[pDescription->catalog].func(ptr);
 }
@@ -33,6 +38,12 @@ void ushd_sched_proc(const ush_vptr_t ptr) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void proc_func_hello(const ush_vptr_t msg) {
+    ush_assert(msg);
+    if (!msg) {
+        ushd_log(LOG_LVL_ERROR, "msg is NULL!!!");
+        return;
+    }
+
     const ush_comm_hello_msg_t hello = (const ush_comm_hello_msg_t)msg;
 
     const ush_char_t *name   = ush_comm_hello_msg_get_name(hello);
@@ -56,12 +67,16 @@ void proc_func_hello(const ush_vptr_t msg) {
     ushd_log(LOG_LVL_INFO, "info added to conn table, idx %d", record_idx);
 
     ush_u64_t ident = ushd_conn_table_get_record_ident(record_idx);
+    ushd_log(LOG_LVL_INFO, "get record ident 0x%016llx", ident);
 
+    ushd_log(LOG_LVL_INFO, "starting publish thread %p", publish);
     if (USH_RET_OK == ushd_publish_thread_start(publish)) {
         publish_fifo_msg_howareyou msg = {
             {USHD_PUBLISH_FIFO_CMD_HOWAREYOU}, ackSync, ident};
 
         ushd_publish_fifo_t fifo = ushd_publish_thread_get_fifo(publish);
+
+        ushd_log(LOG_LVL_INFO, "push data to the publish fifo");
         ushd_publish_fifo_push(fifo, (publish_fifo_msg_desc*)&msg, sizeof(msg));
     }
 
