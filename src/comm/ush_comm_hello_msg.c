@@ -13,7 +13,7 @@ typedef struct ush_comm_hello_msg {
     ush_char_t         name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
     ush_vptr_t        *ackSync;
     ush_s32_t          cert;
-} * ush_comm_hello_msg_t USH_COMM_TOUCH_Q_MSG_ALIGNMENT;
+} * ush_comm_hello_msg_t USH_COMM_MSG_ALIGNMENT;
 
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
