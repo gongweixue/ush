@@ -7,8 +7,6 @@ set(EXE_USHD ushd)
 
 set(SRC_USHD
         ushd_main.c
-        # ushd_thread.c
-        # ushd_sw.c
 )
 
 include_directories(
