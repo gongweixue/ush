@@ -85,7 +85,7 @@ ush_connect_create(ush_connect_t *pConn) {
         goto BAILED_MUTEX;
     }
 
-NORMAL:
+// NORMAL:
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
     newMem->ident = CONNECT_IDENT_VALUE_DEFAULT; // means not initialed.
     *pConn = newMem;

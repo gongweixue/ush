@@ -35,9 +35,9 @@ void ushd_sched_proc(const ush_vptr_t ptr) {
 void proc_func_hello(const ush_vptr_t msg) {
     const ush_comm_hello_msg_t hello = (const ush_comm_hello_msg_t)msg;
 
-    const ush_char_t *name   = ush_comm_hello_msg_get_name(msg);
-    const ush_vptr_t  ackSync = ush_comm_hello_msg_get_ack(msg);
-    ush_s32_t         cert    = ush_comm_hello_msg_get_cert(msg);
+    const ush_char_t *name   = ush_comm_hello_msg_get_name(hello);
+    const ush_vptr_t  ackSync = ush_comm_hello_msg_get_ack(hello);
+    ush_s32_t         cert    = ush_comm_hello_msg_get_cert(hello);
 
     // create publish thread
     ushd_publish_thread_t publish = ushd_publish_thread_create();

@@ -10,7 +10,11 @@ typedef struct publish_fifo * ushd_publish_fifo_t;
 ushd_publish_fifo_t ushd_publish_fifo_create();
 
 ush_ret_t ushd_publish_fifo_push(ushd_publish_fifo_t fifo,
-                                 publish_fifo_msg_desc *pmsg,
+                                 const ush_vptr_t buf,
+                                 ush_size_t sz);
+
+ush_size_t ushd_publish_fifo_pop(ushd_publish_fifo_t fifo,
+                                 ush_vptr_t buf,
                                  ush_size_t sz);
 
 #endif // USHD_PUBLISH_FIFO_H
