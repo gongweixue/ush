@@ -5,6 +5,7 @@
 #include "ush_log.h"
 
 #include "ushd_publish_fifo.h"
+#include "ushd_publish_proc.h"
 #include "ushd_publish_thread.h"
 
 
@@ -63,8 +64,21 @@ ushd_publish_thread_get_fifo(ushd_publish_thread_t thread) {
 
 
 void * ushd_publish_thread_entry(void *arg) {
+    ush_assert(arg);
     ushd_publish_thread_t thread = (ushd_publish_thread_t)arg;
-    // set tid to the thread->tid;
+    thread->tid = pthread_self();
+
     // get thread->fifo, and wait the cond, read the msg, and react.
-    while(1) {};
+    while(1) {
+        ush_char_t buf[USHD_PUBLISH_FIFO_MSG_MAX_SIZE];
+        if (0 == ushd_publish_fifo_pop(thread->fifo, buf, sizeof(buf))) {
+            ushd_log(LOG_LVL_ERROR, "pop data len = 0");
+            continue;
+        }
+        PUBLISH_FIFO_MSG_TYPE ty = ((publish_fifo_msg_desc*)buf)->type;
+        if (USHD_PUBLISH_FIFO_CMD_HOWAREYOU == ty) {
+            publish_fifo_msg_howareyou *ptr = (publish_fifo_msg_howareyou *)buf;
+            publish_proc_send_howareyou(ptr);
+        }
+    };
 }

@@ -3,6 +3,7 @@ set(LIB_USHD_PUBLISH ushd_publish)
 set(SRC_USHD_PUBLISH
     ushd_publish_thread.c
     ushd_publish_fifo.c
+    ushd_publish_proc.c
 )
 
 include_directories(

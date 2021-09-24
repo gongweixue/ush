@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 
+#include "ush_assert.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
 
@@ -80,7 +81,6 @@ RET:
 /*
  * TODO: performance need to be optimized due to the mutex&cond on the fifo
 */
-
 ush_ret_t
 ushd_publish_fifo_push(ushd_publish_fifo_t fifo,
                        const ush_vptr_t buf,
@@ -112,7 +112,7 @@ ushd_publish_fifo_pop(ushd_publish_fifo_t fifo, ush_vptr_t buf, ush_size_t sz) {
 
     fifo_cs_entry(fifo);
 
-    while (fifo_is_empty()) {
+    while (fifo_is_empty(fifo)) {
         fifo_consumers_wait(fifo);
     }
 
@@ -131,7 +131,7 @@ ushd_publish_fifo_pop(ushd_publish_fifo_t fifo, ush_vptr_t buf, ush_size_t sz) {
     }
 
 BAILED:
-    fifo_cs_exit();
+    fifo_cs_exit(fifo);
 
     return ret;
 }
@@ -162,24 +162,43 @@ fifo_cs_exit(ushd_publish_fifo_t fifo) {
     ushd_log(LOG_LVL_DETAIL, "exit fifo %p", fifo);
     return USH_RET_OK;
 }
-static ush_ret_t
-fifo_cs_wait(ushd_publish_fifo_t fifo) {
+
+static ush_ret_t fifo_producers_wait(ushd_publish_fifo_t fifo) {
     ush_assert(fifo);
     if (!fifo) {
         return USH_RET_WRONG_PARAM;
     }
-    if (0 != pthread_cond_wait(&fifo->cond, &fifo->mutex)) {
+    if (0 != pthread_cond_wait(&fifo->cond_producer, &fifo->mutex)) {
         return USH_RET_FAILED;
     }
     return USH_RET_OK;
 }
-static ush_ret_t
-fifo_cs_signal(ushd_publish_fifo_t fifo) {
+static ush_ret_t fifo_consumers_wait(ushd_publish_fifo_t fifo) {
     ush_assert(fifo);
     if (!fifo) {
         return USH_RET_WRONG_PARAM;
     }
-    if (0 != pthread_cond_signal(&fifo->cond)) {
+    if (0 != pthread_cond_wait(&fifo->cond_consumer, &fifo->mutex)) {
+        return USH_RET_FAILED;
+    }
+    return USH_RET_OK;
+}
+static ush_ret_t fifo_notify_producers(ushd_publish_fifo_t fifo) {
+    ush_assert(fifo);
+    if (!fifo) {
+        return USH_RET_WRONG_PARAM;
+    }
+    if (0 != pthread_cond_signal(&fifo->cond_producer)) {
+        return USH_RET_FAILED;
+    }
+    return USH_RET_OK;
+}
+static ush_ret_t fifo_notify_consumers(ushd_publish_fifo_t fifo) {
+    ush_assert(fifo);
+    if (!fifo) {
+        return USH_RET_WRONG_PARAM;
+    }
+    if (0 != pthread_cond_signal(&fifo->cond_consumer)) {
         return USH_RET_FAILED;
     }
     return USH_RET_OK;
@@ -201,7 +220,6 @@ fifo_is_full(const ushd_publish_fifo_t fifo) {
     }
     return ((fifo->tail + 1) % FIFO_SIZE) == (fifo->head);
 }
-
 static ush_size_t
 fifo_curr_num(const ushd_publish_fifo_t fifo) {
     ush_assert(fifo);
