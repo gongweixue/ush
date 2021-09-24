@@ -125,7 +125,7 @@ static ush_ret_t cs_empty_q_signal() {
 #ifndef RESOURCE_COUNT
 #define RESOURCE_COUNT    (100)
 #endif
-#define QUEUE_COUNT    (RESOURCE_COUNT + 2)  // tail never catchs head
+#define QUEUE_COUNT    (RESOURCE_COUNT + 1)  // tail never catchs head
 
 typedef ush_s32_t fifo_idx_t;
 
