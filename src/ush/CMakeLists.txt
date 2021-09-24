@@ -2,16 +2,16 @@ set(LIB_USH ush)
 
 set(SRC_USH
     ush_connect.c
-    ush_cr.c
-    ush_listener.c
     ush_pipe_create.c
     ush_sync.c
     ush_touch.c
     ush_version.c
+    listener/ush_listener.c
 )
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/ush/
+    ${PROJECT_SOURCE_DIR}/src/ush/listener/
     ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/src/public/
     ${PROJECT_SOURCE_DIR}/src/comm/)
