@@ -15,11 +15,11 @@ ush_ret_t ush_pipe_create(
 int main () {
     ush_pp_hdl_t hdl;
     ush_ret_t ret = USH_RET_OK;
-    ret = ush_pipe_create("ping", 0, 0, 2, NULL, 0, &hdl);
+    ret = ush_pipe_create("XYZ", 0, 0, 2, NULL, 0, &hdl);
     printf("create return %d\n", ret);
 
-    ret = ush_pipe_create("ping", 0, 0, 0, NULL, 0, &hdl);
-    printf("create return %d and back to main\n", ret);
+    // ret = ush_pipe_create("WWW", 0, 0, 0, NULL, 0, &hdl);
+    // printf("create return %d and back to main\n", ret);
 
     while(1) {
     }

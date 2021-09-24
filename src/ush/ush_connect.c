@@ -67,23 +67,24 @@ ush_connect_create(ush_connect_t *pConn) {
         goto BAILED_CONN;
     }
 
-    ret = ush_listener_alloc(&(newMem->listener));
+    ret = ush_touch_open(newMem->touch);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "listener alloc failed");
-        goto BAILED_TOUCH;
+        ush_log(LOG_LVL_FATAL, "open touch failed");
+        goto BAILED_TOUCH_DESTROY;
     }
 
     if (0 != pthread_mutex_init(&(newMem->mutex), NULL)) { // init failed
         ush_log(LOG_LVL_FATAL, "mutex init of connect failed");
         ret = USH_RET_FAILED;
-        goto BAILED_LISTENER;
+        goto BAILED_TOUCH_DESTROY;
     }
 
-    ret = ush_touch_open(newMem->touch);
+    ret = ush_listener_open_and_start(&(newMem->listener));
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "open touch failed");
+        ush_log(LOG_LVL_FATAL, "listener alloc failed");
         goto BAILED_MUTEX;
     }
+
 
 // NORMAL:
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
@@ -91,15 +92,12 @@ ush_connect_create(ush_connect_t *pConn) {
     *pConn = newMem;
     return USH_RET_OK;
 
+
 BAILED_MUTEX:
     ush_log(LOG_LVL_DETAIL, "destory mutext");
     pthread_mutex_destroy(&(newMem->mutex));
 
-BAILED_LISTENER:
-    ush_log(LOG_LVL_DETAIL, "close & destory listener");
-    ush_listener_destroy_with_closing(&(newMem->listener));
-
-BAILED_TOUCH:
+BAILED_TOUCH_DESTROY:
     ush_log(LOG_LVL_DETAIL, "close & destory touch");
     ush_touch_destroy_with_closing(&(newMem->touch));
 
@@ -117,9 +115,10 @@ ush_connect_destroy(ush_connect_t *pConn) {
         return USH_RET_OK;
     }
 
+    ush_listener_stop_and_close(&((*pConn)->listener));
+
     ush_log(LOG_LVL_DETAIL, "destory touch/listener/mutext");
     ush_touch_destroy_with_closing(&((*pConn)->touch));
-    ush_listener_destroy_with_closing(&((*pConn)->listener));
 
     pthread_mutex_destroy(&((*pConn)->mutex));
 
