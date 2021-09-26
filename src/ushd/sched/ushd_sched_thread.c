@@ -16,8 +16,9 @@ void *
 ushd_sched_thread_entry(void *arg) {
     ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
 
-    ushd_log(LOG_LVL_DETAIL, "sched fifo init");
-    if (USH_RET_OK != ushd_sched_fifo_init()) {
+    ushd_log(LOG_LVL_DETAIL, "sched fifo creating...");
+    ushd_sched_fifo_t sched_fifo = ushd_sched_fifo_singleton();
+    if (!sched_fifo) {
         ushd_log(LOG_LVL_FATAL, "sched fifo init failed.");
         goto TERMINATE;
     }
@@ -30,17 +31,15 @@ ushd_sched_thread_entry(void *arg) {
 
     while(1) {
         ushd_log(LOG_LVL_DETAIL, "retain a full buffer");
-        ush_char_t *pbuf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_FULL);
-        if (NULL == pbuf) {
-            ushd_log(LOG_LVL_ERROR, "sched_fifo full buffer retain failed");
+        ush_char_t buf[USHD_SCHED_FIFO_ELEM_DATA_LEN];
+        size_t cnt = ushd_sched_fifo_pop(sched_fifo, buf, sizeof(buf));
+        if (0 == cnt) {
+            ushd_log(LOG_LVL_ERROR, "sched_fifo pop failed.");
             continue;
         }
 
-        ushd_log(LOG_LVL_INFO, "dispatch the buffer from sched-full-queue");
-        ushd_sched_proc(pbuf);
-
-        ushd_log(LOG_LVL_DETAIL, "release a empty buffer");
-        ushd_sched_fifo_release(pbuf, USHD_SCHED_FIFO_EMPTY);
+        ushd_log(LOG_LVL_INFO, "dispatch the buffer to proc-function");
+        ushd_sched_proc(buf);
     }
 
 TERMINATE:

@@ -17,7 +17,7 @@ typedef struct ushd_touch_thread {
 } * ushd_touch_thread_t;
 
 
-ushd_touch_thread_t g_touch_thread = NULL;
+static ushd_touch_thread_t s_touch_thread = NULL;
 
 
 static ush_ret_t ushd_touch_thread_cs_enter();
@@ -27,16 +27,16 @@ static ushd_touch_thread_t touch_thread_create();
 
 ushd_touch_thread_t
 ushd_touch_thread_singleton() {
-    if (!g_touch_thread) { // null test without lock
+    if (!s_touch_thread) { // null test without lock
         ushd_touch_thread_cs_enter();
         // ushd_touch_thread_t tmp;
-        if (!g_touch_thread) {
+        if (!s_touch_thread) {
             ushd_log(LOG_LVL_INFO, "touch thread create first time");
-            g_touch_thread = touch_thread_create();
+            s_touch_thread = touch_thread_create();
         }
         ushd_touch_thread_cs_exit();
     }
-    return g_touch_thread;
+    return s_touch_thread;
 }
 
 ush_ret_t
@@ -86,27 +86,20 @@ ushd_touch_thread_entry(void *arg) {
     while (1) {
         ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
 
-        ush_char_t *buf = ushd_sched_fifo_retain(USHD_SCHED_FIFO_EMPTY);
-        if (!buf) {
-            ushd_log(LOG_LVL_ERROR, "sched_fifo empty buffer retain failed");
-            continue;
-        }
-        ushd_log(LOG_LVL_INFO, "sched_fifo empty buffer %p retain ok", buf);
+        static ush_char_t buf[USH_COMM_TOUCH_Q_MSG_MAX_LEN];
 
         ushd_log(LOG_LVL_INFO, "receive from touch...");
         if (USH_RET_OK != ushd_touch_receive(touch_thread->touch, buf)) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
-
-            ushd_sched_fifo_release(buf, USHD_SCHED_FIFO_EMPTY);
             continue;
         }
-
-        ushd_log(LOG_LVL_INFO, "push data buffer into FULL pool of sched fifo");
-        if (USH_RET_OK != ushd_sched_fifo_release(buf, USHD_SCHED_FIFO_FULL)) {
-            ushd_log(LOG_LVL_ERROR, "sched fifo release failed %p", buf);
+        ush_ret_t res = ushd_sched_fifo_push(ushd_sched_fifo_singleton(),
+                                             buf, sizeof(buf));
+        if (USH_RET_OK != res) {
+            ushd_log(LOG_LVL_ERROR, "sched fifo push failed %p", buf);
             continue;
         } else {
-            ushd_log(LOG_LVL_INFO, "sched fifo buffer released ok %p", buf);
+            ushd_log(LOG_LVL_INFO, "sched fifo push ok %p", buf);
         }
 
         // next receive to go

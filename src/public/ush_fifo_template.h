@@ -2,6 +2,7 @@
 #define USH_FIFO_TEMPLATE_H
 
 #include "pthread.h"
+#include "stdlib.h"
 #include "ush_assert.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
@@ -84,7 +85,7 @@ NAME##_fifo_create() {                                                          
                                                                                 \
     fifo->head = 0;                                                             \
     fifo->tail = 0;                                                             \
-    INIT_ROUTINE();                                                             \
+    INIT_ROUTINE(fifo);                                                         \
     goto RET;                                                                   \
                                                                                 \
 BAILED_COND_CONSUMER:                                                           \
@@ -101,7 +102,7 @@ RET:                                                                            
                                                                                 \
                                                                                 \
 ush_ret_t                                                                       \
-NAME##_fifo_push(NAME##_fifo_t fifo, const ush_vptr_t buf, ush_size_t sz) {     \
+NAME##_fifo_push(NAME##_fifo_t fifo, const void *buf, ush_size_t sz) {          \
     ush_assert(fifo && buf && sz <= MSG_MAX_LEN);                               \
                                                                                 \
     NAME##_fifo_cs_entry(fifo);                                                 \
@@ -125,7 +126,7 @@ NAME##_fifo_push(NAME##_fifo_t fifo, const ush_vptr_t buf, ush_size_t sz) {     
 }                                                                               \
                                                                                 \
 ush_size_t                                                                      \
-NAME##_fifo_pop(NAME##_fifo_t fifo, ush_vptr_t buf, ush_size_t sz) {            \
+NAME##_fifo_pop(NAME##_fifo_t fifo, void *buf, ush_size_t sz) {                 \
     ush_assert(fifo && buf && sz >= MSG_MAX_LEN);                               \
                                                                                 \
     NAME##_fifo_cs_entry(fifo);                                                 \
