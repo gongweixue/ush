@@ -2,19 +2,11 @@
 #define USHD_PUBLISH_FIFO_H
 
 #include "ush_type_pub.h"
-
+#include "ush_fifo_template.h"
 #include "ushd_publish_fifo_msg.h"
 
-typedef struct publish_fifo * ushd_publish_fifo_t;
+#define USHD_PUBLISH_FIFO_ELEM_DATA_LEN   (USHD_PUBLISH_FIFO_MSG_MAX_SIZE)
 
-ushd_publish_fifo_t ushd_publish_fifo_create();
-
-ush_ret_t ushd_publish_fifo_push(ushd_publish_fifo_t fifo,
-                                 const ush_vptr_t buf,
-                                 ush_size_t sz);
-
-ush_size_t ushd_publish_fifo_pop(ushd_publish_fifo_t fifo,
-                                 ush_vptr_t buf,
-                                 ush_size_t sz);
+USH_FIFO_DECL_CODE_GEN(ushd_publish);
 
 #endif // USHD_PUBLISH_FIFO_H

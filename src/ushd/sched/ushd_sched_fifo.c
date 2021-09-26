@@ -65,9 +65,8 @@ ushd_sched_fifo_t
 ushd_sched_fifo_singleton() {
     if (!s_sched_fifo) { // null test without lock
         pthread_mutex_lock(&s_mutex_singleton);
-        // ushd_touch_thread_t tmp;
         if (!s_sched_fifo) {
-            ushd_log(LOG_LVL_INFO, "touch thread create first time");
+            ushd_log(LOG_LVL_INFO, "sched fifo create first time");
             s_sched_fifo = ushd_sched_fifo_create();
         }
         pthread_mutex_unlock(&s_mutex_singleton);
