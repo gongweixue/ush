@@ -59,7 +59,7 @@ ush_pipe_create(
         if(USH_RET_OK != ret) {
             ush_log(LOG_LVL_ERROR, "realize timeout failed");
             ush_log(LOG_LVL_INFO, "ptr of deadline rollback to NULL");
-            pDL = NULL;
+            pDL = NULL; // disable the deadline
         }
     }
     ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);

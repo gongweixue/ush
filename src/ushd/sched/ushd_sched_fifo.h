@@ -15,6 +15,9 @@ extern "C" {
 // all other threads in some cases(local thread may enter the critical section
 // and the touch thread will be blocked by it to copy data into the buf).
 //
+// The sched fifo is for all threads who want to 'talk' with sched, not only
+// the touch thread, so the latency is very critical.
+//
 // And the mqueue len is limited, so we used double queue to avoid the
 // twice-copy(mqueue->schedfifo, and schedfifo->local buf), and avoid the
 // blocking(the fifo is too big for the mqueue len).
