@@ -11,11 +11,15 @@ typedef enum USH_LOG_LVL {
 } USH_LOG_LVL;
 
 
+#define USH_LOG_ON              (0)
 #define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
 
 void ush_log_cs_enter();
 void ush_log_cs_exit();
 
+#if !USH_LOG_ON
+#define log_def(owner, lvl, ...)
+#else
 #define log_def(owner, lvl, ...)   {                                           \
     ush_log_cs_enter();                                                        \
     if (lvl <= USH_LOG_LVL_SELECTOR) {                                         \
@@ -26,8 +30,11 @@ void ush_log_cs_exit();
     }                                                                          \
     ush_log_cs_exit();                                                         \
 }
+#endif // !USH_LOG_ON
+
 
 #define ush_log(lvl, ...) log_def(USH, lvl, __VA_ARGS__)
+
 
 #define ushd_log(lvl, ...) log_def(USHD, lvl, __VA_ARGS__)
 

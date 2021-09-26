@@ -20,7 +20,7 @@ extern "C" {
 //
 // And the mqueue len is limited, so we used double queue to avoid the
 // twice-copy(mqueue->schedfifo, and schedfifo->local buf), and avoid the
-// blocking(the fifo is too big for the mqueue len).
+// blocking(the fifo is far more big than the mqueue len).
 //
 // The overhead is elimated by using in-placed data-deal(buffer retain/release).
 ////////////////////////////////////////////////////////////////////////////////
