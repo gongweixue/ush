@@ -11,7 +11,7 @@ typedef enum USH_LOG_LVL {
 } USH_LOG_LVL;
 
 
-#define USH_LOG_ON              (0)
+#define USH_LOG_ON              (1)
 #define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
 
 void ush_log_cs_enter();
