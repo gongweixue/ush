@@ -118,7 +118,7 @@ ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
     pthread_condattr_destroy(&(*pAck)->condattr);
     pthread_cond_destroy(&(*pAck)->cond);
 
-    ushd_log(LOG_LVL_DETAIL, "free ack %p", pAck);
+    ush_log(LOG_LVL_DETAIL, "free ack %p", pAck);
     free(*pAck);
     *pAck = NULL;
 

@@ -65,7 +65,7 @@ ush_pipe_create(
     ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
 
     ush_connect_t conn = NULL;
-    ret = ush_connect_create(&conn);
+    ret = ush_connect_create(&conn, pName);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect create failed");
         goto RET;

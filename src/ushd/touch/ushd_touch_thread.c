@@ -89,20 +89,22 @@ ushd_touch_thread_entry(void *arg) {
         static ush_char_t buf[USH_COMM_TOUCH_Q_MSG_MAX_LEN];
 
         ushd_log(LOG_LVL_INFO, "receive from touch...");
-        if (USH_RET_OK != ushd_touch_receive(touch_thread->touch, buf)) {
+        ush_ret_t res = USH_RET_OK;
+        res = ushd_touch_receive(touch_thread->touch, buf, sizeof(buf));
+        if (USH_RET_OK != res) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
             continue;
         }
-        ush_ret_t res = ushd_sched_fifo_push(ushd_sched_fifo_singleton(),
-                                             buf, sizeof(buf));
-        if (USH_RET_OK != res) {
+
+        // push msg
+        ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();
+        if (USH_RET_OK != ushd_sched_fifo_push(fifo, buf, sizeof(buf))) {
             ushd_log(LOG_LVL_ERROR, "sched fifo push failed %p", buf);
             continue;
-        } else {
-            ushd_log(LOG_LVL_INFO, "sched fifo push ok %p", buf);
         }
+        ushd_log(LOG_LVL_INFO, "sched fifo push ok");
 
-        // next receive to go
+        // and then next receive to go
     }
 
 TERMINATE:

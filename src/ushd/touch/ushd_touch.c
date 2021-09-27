@@ -81,17 +81,14 @@ ushd_touch_close(ushd_touch_t touch) {
 }
 
 ush_ret_t
-ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest) {
-    if (-1 == touch->mq || !dest) {
+ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest, ush_size_t sz) {
+    if (-1 == touch->mq || !dest || sz < USH_COMM_TOUCH_Q_MSG_MAX_LEN) {
         ushd_log(LOG_LVL_ERROR, "ushd touch not open");
         return USH_RET_FAILED;
     }
 
     ushd_log(LOG_LVL_INFO, "receiving from ushd touch...");
-    ush_ssize_t rcv_sz = mq_receive(touch->mq,
-                                    dest,
-                                    USH_COMM_TOUCH_Q_MSG_MAX_LEN,
-                                    NULL);
+    ush_ssize_t rcv_sz = mq_receive(touch->mq, dest, sz, NULL);
 
     if (-1 == rcv_sz) {
         switch (errno) {

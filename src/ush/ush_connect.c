@@ -49,8 +49,8 @@ ush_connect_ident_valid(const ush_connect_t conn) {
 }
 
 ush_ret_t
-ush_connect_create(ush_connect_t *pConn) {
-    ush_assert(pConn);
+ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
+    ush_assert(pConn && name);
 
     *pConn = NULL;
 
@@ -79,9 +79,9 @@ ush_connect_create(ush_connect_t *pConn) {
         goto BAILED_TOUCH_DESTROY;
     }
 
-    ret = ush_listener_open_and_start(&(newMem->listener));
+    ret = ush_listener_open_and_start(&(newMem->listener), name);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "listener alloc failed");
+        ush_log(LOG_LVL_FATAL, "listener start failed");
         goto BAILED_MUTEX;
     }
 
