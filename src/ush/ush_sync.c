@@ -5,6 +5,7 @@
 
 #include "ush_assert.h"
 #include "ush_connect.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
 #include "ush_sync.h"
@@ -103,7 +104,9 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
 }
 
 ush_ret_t
-ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack, ush_connect_ident ident) {
+ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
+                          ush_s32_t idx,
+                          ush_s32_t cert) {
     ush_assert(ack);
     if (!ack) {
         return USH_RET_OK;
@@ -111,10 +114,16 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack, ush_connect_ident ident) {
 
     pthread_mutex_lock(&ack->mutex);
 
+    ush_s32_t local_cert = INVALID_CERT_VALUE_DEFAULT;
+    ush_connect_get_cert(ack->connHdlOnClient, &local_cert);
+    if (cert != local_cert) { // nothing todo with this connection;
+        goto BAILED;
+    }
+
     // set the ident from ushd back to the conn
-    ush_ret_t ret = ush_connect_set_ident(ack->connHdlOnClient, ident);
+    ush_ret_t ret = ush_connect_set_remote_idx(ack->connHdlOnClient, idx);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "connect ident can not set");
+        ush_log(LOG_LVL_FATAL, "connect remote idx can not set");
         goto BAILED;
     }
 

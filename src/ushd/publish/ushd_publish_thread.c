@@ -4,6 +4,7 @@
 #include "stdlib.h"
 
 #include "ush_assert.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_time.h"
 
@@ -32,7 +33,7 @@ ushd_publish_thread_create(const ush_char_t *name) {
         ushd_log(LOG_LVL_ERROR, "publish thread create failed");
         return NULL;
     }
-    thread->tid = 0xFFFFFFFF; // invalid tid
+    thread->tid = INVALID_TID; // invalid tid
 
     if (USH_RET_OK != publish_mq_open(thread, name)) {
         ushd_log(LOG_LVL_ERROR, "open publish %s failed", name);

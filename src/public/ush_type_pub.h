@@ -25,8 +25,6 @@ typedef long               ush_ssize_t;
 typedef void *             ush_vptr_t;
 
 
-typedef ush_u64_t          ush_connect_ident;
-
 #ifndef NULL
 #define NULL ((ush_vptr_t)0)
 #endif

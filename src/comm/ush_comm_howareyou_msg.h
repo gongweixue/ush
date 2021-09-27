@@ -8,7 +8,8 @@
 typedef struct ush_comm_howareyou_msg {
     ush_listener_msg_desc_t desc;
     ush_vptr_t              sync;
-    ush_connect_ident       ident;
+    ush_s32_t               remote_idx;
+    ush_s32_t               cert;
 } ush_comm_howareyou_msg USH_COMM_MSG_ALIGNMENT;
 
 

@@ -4,7 +4,6 @@
 
 #define USH_COMM_MSG_ALIGNMENT __attribute__((aligned(1)))
 
-
 ////////////////////////////       Touch       /////////////////////////////////
 #define USH_COMM_TOUCH_Q_PATH "/FAW-HQ-COS-USH-TOUCH_PIPE"
 #define USH_COMM_TOUCH_Q_MSG_MAX_CNT  (10)

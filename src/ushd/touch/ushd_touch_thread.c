@@ -4,6 +4,7 @@
 #include "stdlib.h"
 
 #include "ush_comm_touch.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 
 #include "ushd_sched_fifo.h"
@@ -87,7 +88,6 @@ ushd_touch_thread_entry(void *arg) {
         ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
 
         static ush_char_t buf[USH_COMM_TOUCH_Q_MSG_MAX_LEN];
-        ush_comm_hello_msg_testpoint((ush_comm_hello_msg_t)buf);
 
         ushd_log(LOG_LVL_INFO, "receive from touch...");
         ush_ret_t res = USH_RET_OK;
@@ -96,6 +96,7 @@ ushd_touch_thread_entry(void *arg) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
             continue;
         }
+        ush_comm_hello_msg_testpoint((ush_comm_hello_msg_t)buf);
 
         // push msg
         ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();
@@ -145,7 +146,7 @@ touch_thread_create() {
         ushd_log(LOG_LVL_INFO, "ushd_touch created, addr %p", newMem->touch);
 
         newMem->tidFlg = 0;
-        newMem->tid    = 0xFFFFFFFF; // maybe a valid value
+        newMem->tid    = INVALID_TID; // maybe a valid value
     }
 
     ushd_log(LOG_LVL_DETAIL, "touch_thread singleton init, %p", newMem);

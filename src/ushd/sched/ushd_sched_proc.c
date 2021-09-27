@@ -4,6 +4,7 @@
 #include "ush_comm_hello_msg.h"
 #include "ush_comm_touch.h"
 #include "ush_log.h"
+#include "ush_string.h"
 
 #include "ushd_conn_record_tbl.h"
 #include "ushd_publish_fifo.h"
@@ -51,7 +52,10 @@ void proc_func_hello(const ush_vptr_t msg) {
     ush_s32_t         cert    = ush_comm_hello_msg_get_cert(hello);
 
     // create publish thread
-    ushd_publish_thread_t publish = ushd_publish_thread_create(name);
+    ush_char_t certname[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_string_certname(certname, name, cert);
+
+    ushd_publish_thread_t publish = ushd_publish_thread_create(certname);
     if (!publish) {
         ushd_log(LOG_LVL_ERROR, "publish thread create failed.");
         return;
@@ -66,13 +70,10 @@ void proc_func_hello(const ush_vptr_t msg) {
     }
     ushd_log(LOG_LVL_INFO, "info added to conn table, idx %d", record_idx);
 
-    ush_connect_ident ident = ushd_conn_table_get_record_ident(record_idx);
-    ushd_log(LOG_LVL_INFO, "get record ident 0x%016llx", ident);
-
     ushd_log(LOG_LVL_INFO, "starting publish thread %p", publish);
     if (USH_RET_OK == ushd_publish_thread_start(publish)) {
         publish_fifo_msg_howareyou msg = {
-            {USHD_PUBLISH_FIFO_CMD_HOWAREYOU}, ackSync, ident};
+            {USHD_PUBLISH_FIFO_CMD_HOWAREYOU}, ackSync, record_idx, cert};
 
         ushd_publish_fifo_t fifo = ushd_publish_thread_get_fifo(publish);
 

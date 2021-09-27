@@ -18,11 +18,11 @@ int main () {
     ush_pp_hdl_t hdl;
     ush_ret_t ret = USH_RET_OK;
     ush_char_t name[64];
-    ush_itoa(time(NULL), name);
+    ush_itoa(name, time(NULL));
     // ret = ush_pipe_create(name, 0, 0, 2, NULL, 0, &hdl);
     // printf("create return %d\n", ret);
 
-    ret = ush_pipe_create(name, 0, 0, 0, NULL, 0, &hdl);
+    ret = ush_pipe_create("AAA", 0, 0, 0, NULL, 0, &hdl);
     printf("create return %d\n", ret);
 
     while(1) {

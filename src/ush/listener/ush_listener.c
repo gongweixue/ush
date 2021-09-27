@@ -6,6 +6,7 @@
 #include "string.h"
 
 #include "ush_assert.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 
 #include "ush_comm_hello_msg.h"
@@ -15,8 +16,6 @@
 #include "ush_listener.h"
 #include "ush_listener_deal.h"
 #include "ush_sync.h"
-
-#define INVALID_TID  (0xFFFFFFFF)
 
 typedef struct ush_listener {
     mqd_t      mq;

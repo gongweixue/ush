@@ -43,7 +43,7 @@ ush_s32_t ushd_conn_table_add_record(const ush_char_t           *name,
                                      ush_s32_t                   cert,
                                      const ushd_publish_thread_t publisher);
 
-ush_connect_ident ushd_conn_table_get_record_ident(ush_s32_t idx);
+ush_s32_t ushd_conn_table_get_record_cert(ush_s32_t idx);
 
 // ush_bool_t ushd_conn_table_is_record_valid(ush_s32_t idx);
 

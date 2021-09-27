@@ -13,11 +13,12 @@ ush_listener_deal(ush_listener_msg_desc_t *desc) {
         ush_comm_howareyou_msg *howareyou = (ush_comm_howareyou_msg *)desc;
         ush_comm_howareyou_msg_testpoint(howareyou);
 
-        ush_connect_ident ident  = howareyou->ident;
+        ush_s32_t remote_idx     = howareyou->remote_idx;
+        ush_s32_t cert           = howareyou->cert;
         ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)(howareyou->sync);
 
         ush_log(LOG_LVL_INFO, "signal the ack for hello");
-        ush_sync_hello_ack_signal(ack, ident); // no matter ok nor not
+        ush_sync_hello_ack_signal(ack, remote_idx, cert); // ok nor not
     }
 
     return USH_RET_OK;

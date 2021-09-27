@@ -11,6 +11,7 @@
 #include "ush_comm_hello_msg.h"
 #include "ush_comm_touch.h"
 #include "ush_connect.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
 #include "ush_random.h"
@@ -113,7 +114,8 @@ send_hello_and_wait(const ush_char_t *pName,
     // prepare hello msg
     ush_comm_hello_msg_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    ush_s32_t cert = ush_random_generate_cert(pName);
+    int cert = INVALID_CERT_VALUE_DEFAULT;
+    ush_connect_get_cert(conn, &cert);
     ush_comm_hello_msg_create(&hello, pName, ack, cert);
     ush_comm_hello_msg_testpoint(hello);
 
@@ -173,10 +175,4 @@ static void
 gen_full_name(ush_char_t *name, const ush_char_t *shortname) {
     strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
     strcat(name, shortname);
-    strcat(name, "-");
-
-    // gen random listener path surfix
-    ush_char_t num[16];
-    ush_itoa(ush_random_generate_cert(num), num);
-    strcat(name, num);
 }

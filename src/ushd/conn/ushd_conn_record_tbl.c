@@ -2,6 +2,7 @@
 #include "string.h"
 
 #include "ush_assert.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
 
@@ -80,7 +81,7 @@ ushd_conn_table_init() {
     tbl.records[0].idx       = 0;
     tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';
-    tbl.records[0].cert      = 0xFFFFFFFF;
+    tbl.records[0].cert      = INVALID_CERT_VALUE_DEFAULT;
     tbl.records[0].publisher = NULL;
 
     tbl.cursor = 0;
@@ -94,7 +95,7 @@ ush_s32_t
 ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
                            const ushd_publish_thread_t publisher) {
-    ush_assert(name && (0xFFFFFFFF != cert) && publisher);
+    ush_assert(name && (INVALID_CERT_VALUE_DEFAULT != cert) && publisher);
 
     move_cursor_to_next_invalid();
     if (0 == tbl.cursor) {
@@ -112,13 +113,13 @@ ushd_conn_table_add_record(const ush_char_t           *name,
     return tbl.cursor;
 }
 
-ush_connect_ident
-ushd_conn_table_get_record_ident(ush_s32_t idx) {
-    if (idx <= 0) {
-        return 0xFFFFFFFFFFFFFFFF;
+ush_s32_t
+ushd_conn_table_get_record_cert(ush_s32_t idx) {
+    if (idx <= 0 || 0 == tbl.records[idx].valid) {
+        return INVALID_CERT_VALUE_DEFAULT;
     }
 
-    return (((ush_connect_ident)idx) << 32) | tbl.records[idx].cert;
+    return tbl.records[idx].cert;
 }
 
 // ush_bool_t
@@ -126,7 +127,7 @@ ushd_conn_table_get_record_ident(ush_s32_t idx) {
 //     const ushd_conn_record_t record = tbl.records[idx];
 
 //     if (0 == idx || idx > tbl.max_idx || 0 == record.valid
-//         || 0xFFFFFFFF == record.cert || NULL == record.publisher) {
+//         || INVALID_TID == record.cert || NULL == record.publisher) {
 //         return 0;
 //     }
 

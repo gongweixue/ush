@@ -4,49 +4,48 @@
 #include "stdlib.h"
 
 #include "ush_assert.h"
+#include "ush_def_pub.h"
 #include "ush_comm_touch.h"
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
+#include "ush_random.h"
+#include "ush_string.h"
 #include "ush_touch.h"
 #include "ush_listener.h"
 
 
 typedef struct ush_connect {
-    ush_connect_ident    ident;
+    ush_s32_t            cert;
+    ush_s32_t            remote_idx;
     ush_touch_t          touch;
     ush_listener_t       listener;
     pthread_mutex_t      mutex;
 } * ush_connect_t;
 
 
-static
-ush_s32_t
-getIdentIdx(const ush_connect_ident ident) {
-    ush_log(LOG_LVL_DETAIL, "get connection idx:0x%08x on ushd \
-                             from 0x%016llx", (ush_s32_t)(ident >> 32), ident);
-    return (ush_s32_t)(ident >> 32); // high 32b
-}
+// static
+// ush_s32_t
+// getRemoteIdx(const ush_connect_t conn) {
+//     ush_assert(conn);
+//     if (!conn) {
+//         return 0xFFFFFFFF;
+//     }
+//     ush_log(LOG_LVL_DETAIL, "connection remote idx: %d", conn->remote_idx);
+//     return conn->remote_idx;
+// }
 
-static
-ush_s32_t
-getIdentCertify(const ush_connect_ident ident) {
-    ush_log(LOG_LVL_DETAIL, "get connection cert:0x%08x on ushd \
-                             from 0x%016llx",
-                             (ush_s32_t)(ident & 0xFFFFFFFF),
-                             ident);
-    return (ush_s32_t)(ident & 0xFFFFFFFF);         // low 32b
-}
+// static
+// ush_s32_t
+// getCert(const ush_connect_t conn) {
+//     ush_assert(conn);
+//     if (!conn) {
+//         return 0xFFFFFFFF;
+//     }
+//     ush_log(LOG_LVL_DETAIL, "connection cert: %d", conn->cert);
+//     return conn->cert;
+// }
 
-ush_bool_t
-ush_connect_ident_check(const ush_connect_t conn) {
-    ush_assert(conn);
-    ush_s32_t idxRemote = getIdentIdx(conn->ident);
-
-    ush_s32_t certify   = getIdentCertify(conn->ident);
-
-    return ((-1 != idxRemote) && (-1 != certify));
-}
 
 ush_ret_t
 ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
@@ -79,7 +78,11 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
         goto BAILED_TOUCH_DESTROY;
     }
 
-    ret = ush_listener_open_and_start(&(newMem->listener), name);
+    ush_char_t certname[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_s32_t cert = ush_random_generate_cert(certname);
+    ush_string_certname(certname, name, cert);
+
+    ret = ush_listener_open_and_start(&(newMem->listener), certname);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "listener start failed");
         goto BAILED_MUTEX;
@@ -88,7 +91,8 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
 
 // NORMAL:
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
-    newMem->ident = CONNECT_IDENT_VALUE_DEFAULT; // means not initialed.
+    newMem->cert = cert;
+    newMem->remote_idx = 0xFFFFFFFF;
     *pConn = newMem;
     return USH_RET_OK;
 
@@ -130,39 +134,28 @@ ush_connect_destroy(ush_connect_t *pConn) {
     return USH_RET_OK;
 }
 
-ush_connect_ident
-ush_connect_make_ident(ush_s32_t idx, ush_s32_t certify) {
-    return (((ush_connect_ident)idx) << 32) | certify;
+ush_ret_t
+ush_connect_get_cert(ush_connect_t conn, ush_s32_t *ptr) {
+    ush_assert(conn && ptr);
+    if (!conn || !ptr) {
+        *ptr = INVALID_CERT_VALUE_DEFAULT;
+        return USH_RET_FAILED;
+    }
+
+    *ptr = conn->cert;
+
+    return USH_RET_OK;
 }
 
 ush_ret_t
-ush_connect_set_ident(ush_connect_t conn, ush_connect_ident ident) {
+ush_connect_set_remote_idx(ush_connect_t conn, ush_s32_t idx) {
     ush_assert(conn);
-    ush_ret_t ret = USH_RET_FAILED;
-
-    if (!ush_connect_ident_check(conn)) { // assign twice is not allow
-        conn->ident = ident;
-        ret          = USH_RET_OK;
-    } else {
-        ush_log(LOG_LVL_ERROR, "valid ident is already exist.");
+    if (!conn) {
+        return USH_RET_FAILED;
     }
 
-    return ret;
-}
-
-ush_ret_t
-ush_connect_get_ident(ush_connect_t conn, ush_connect_ident *pIdent) {
-    ush_assert(conn && pIdent);
-    ush_ret_t ret = USH_RET_FAILED;
-    if (ush_connect_ident_check(conn)) {
-
-        *pIdent = conn->ident;
-
-        ret = USH_RET_OK;
-    } else {
-        ush_log(LOG_LVL_ERROR, "no valid ident here.");
-    }
-    return ret;
+    conn->remote_idx = idx;
+    return USH_RET_OK;
 }
 
 ush_ret_t
@@ -192,9 +185,3 @@ ush_connect_cs_exit(ush_connect_t conn) {
     ush_log(LOG_LVL_DETAIL, "exit cs of %p conn", conn);
     return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }
-
-// ush_ret_t
-// ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path) {
-//     ush_assert(conn && path);
-//     return USH_RET_OK;
-// }

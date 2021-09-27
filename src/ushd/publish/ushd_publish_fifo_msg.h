@@ -19,7 +19,8 @@ typedef struct publish_fifo_msg_desc {
 typedef struct publish_fifo_msg_howareyou {
     publish_fifo_msg_desc      desc;
     ush_vptr_t                 ack_sync;
-    ush_connect_ident          ident;
+    ush_s32_t                  idx;
+    ush_s32_t                  cert;
 } publish_fifo_msg_howareyou;
 
 #endif // USHD_PUBLISH_FIFO_MSG_H
