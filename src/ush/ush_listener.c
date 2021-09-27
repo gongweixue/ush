@@ -15,6 +15,8 @@
 #include "ush_listener.h"
 #include "ush_sync.h"
 
+#define INVALID_TID  (0xFFFFFFFF)
+
 typedef struct ush_listener {
     mqd_t      mq;
     pthread_t  tid;
@@ -37,6 +39,7 @@ ush_listener_open_and_start(ush_listener_t *pListener, const ush_char_t *name) {
     }
     ush_log(LOG_LVL_DETAIL, "allocate memory for listener %p", tmp);
 
+    tmp->tid = INVALID_TID;
     strcpy(tmp->name, name);
 
     // open the mqueue
@@ -46,8 +49,7 @@ ush_listener_open_and_start(ush_listener_t *pListener, const ush_char_t *name) {
     attr.mq_msgsize = USH_COMM_LISTENER_Q_MSG_MAX_LEN;
     tmp->mq = mq_open(name, O_RDONLY | O_CREAT, S_IRWXU | S_IRWXG, &attr);
     if (-1 == tmp->mq) {
-        int code = errno;
-        ush_log(LOG_LVL_FATAL, "mqueue %s can not open, return -1", name);
+        ush_log(LOG_LVL_FATAL, "%s can not open, errno:%d", name, errno);
         free(tmp);
         return USH_RET_FAILED;
     }
@@ -82,9 +84,9 @@ ush_listener_stop_and_close(ush_listener_t *pListener) {
         return USH_RET_OK;
     }
 
-    if (0xFFFFFFFF != (*pListener)->tid) {
+    if (INVALID_TID != (*pListener)->tid) {
         pthread_cancel((*pListener)->tid);
-        (*pListener)->tid = 0xFFFFFFFF;
+        (*pListener)->tid = INVALID_TID;
         ush_log(LOG_LVL_INFO, "listener thread %lu cancel", (*pListener)->tid);
     }
 

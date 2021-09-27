@@ -43,8 +43,12 @@ ush_pipe_create(
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
         return USH_RET_WRONG_PARAM;
     }
-    ush_assert(strlen(pName) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
-    ush_assert(strlen(pName) >= USH_COMM_HELLO_MSG_NAME_LEN_MIN);
+
+    ush_char_t name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
+    strcat(name, pName);
+
+    ush_assert(strlen(name) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
 
     ush_ret_t ret = USH_RET_OK;
 
@@ -65,13 +69,13 @@ ush_pipe_create(
     ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
 
     ush_connect_t conn = NULL;
-    ret = ush_connect_create(&conn, pName);
+    ret = ush_connect_create(&conn, name);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect create failed");
         goto RET;
     }
 
-    ret = send_hello_and_wait(pName, pDL, conn);
+    ret = send_hello_and_wait(name, pDL, conn);
 
     if (USH_RET_OK == ret) {
         *pHdl = (ush_s64_t)conn;

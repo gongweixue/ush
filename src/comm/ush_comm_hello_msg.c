@@ -24,7 +24,6 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
     ush_assert(pHello && pName && pAck);
 
     ush_assert(strlen(pName) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
-    ush_assert(strlen(pName) >= USH_COMM_HELLO_MSG_NAME_LEN_MIN);
 
     *pHello = NULL;
 
