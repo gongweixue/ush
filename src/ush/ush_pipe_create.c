@@ -30,6 +30,8 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
 static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 
+static void gen_full_name(ush_char_t *name, const ush_char_t *shortname);
+
 ush_ret_t
 ush_pipe_create(
     const ush_char_t *pName,
@@ -47,15 +49,7 @@ ush_pipe_create(
     }
 
     ush_char_t name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
-    strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
-    strcat(name, pName);
-
-    // gen random listener path surfix
-    ush_char_t num[16];
-    ush_itoa(ush_random_generate_cert(num), num);
-    strcat(name, num);
-
-    ush_assert(strlen(name) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
+    gen_full_name(name, pName);
 
     ush_ret_t ret = USH_RET_OK;
 
@@ -173,4 +167,16 @@ static ush_ret_t
 get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
     ush_assert(ack);
     return USH_RET_OK;
+}
+
+static void
+gen_full_name(ush_char_t *name, const ush_char_t *shortname) {
+    strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
+    strcat(name, shortname);
+    strcat(name, "-");
+
+    // gen random listener path surfix
+    ush_char_t num[16];
+    ush_itoa(ush_random_generate_cert(num), num);
+    strcat(name, num);
 }
