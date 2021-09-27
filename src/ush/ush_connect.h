@@ -18,8 +18,6 @@ ush_ret_t ush_connect_create(ush_connect_t *pConn, const ush_char_t *name);
 
 ush_ret_t ush_connect_destroy(ush_connect_t *pConn);
 
-ush_s32_t ush_connect_generate_cert(const ush_char_t *seed);
-
 ush_connect_ident ush_connect_make_ident(ush_s32_t idx, ush_s32_t certify);
 
 ush_bool_t ush_connect_ident_check(const ush_connect_t conn);

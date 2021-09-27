@@ -2,6 +2,8 @@ set(LIB_UTIL ush_util)
 
 set(SRC_UTIL
     ush_log.c
+    ush_random.c
+    ush_string.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src/util/)

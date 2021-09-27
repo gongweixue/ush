@@ -13,6 +13,8 @@
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
+#include "ush_random.h"
+#include "ush_string.h"
 #include "ush_sync.h"
 #include "ush_touch.h"
 #include "ush_type_pub.h"
@@ -47,6 +49,11 @@ ush_pipe_create(
     ush_char_t name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
     strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
     strcat(name, pName);
+
+    // gen random listener path surfix
+    ush_char_t num[16];
+    ush_itoa(ush_random_generate_cert(num), num);
+    strcat(name, num);
 
     ush_assert(strlen(name) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
 
@@ -112,7 +119,7 @@ send_hello_and_wait(const ush_char_t *pName,
     // prepare hello msg
     ush_comm_hello_msg_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    ush_s32_t cert = ush_connect_generate_cert(pName);
+    ush_s32_t cert = ush_random_generate_cert(pName);
     ush_comm_hello_msg_create(&hello, pName, ack, cert);
     ush_comm_hello_msg_testpoint(hello);
 

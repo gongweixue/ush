@@ -130,21 +130,6 @@ ush_connect_destroy(ush_connect_t *pConn) {
     return USH_RET_OK;
 }
 
-ush_s32_t
-ush_connect_generate_cert(const ush_char_t *seed) {
-    ush_assert(seed);
-    static ush_u32_t real_seed = 0;
-
-    real_seed += *seed;
-
-    srand(real_seed + time(NULL));
-    ush_s32_t cert = rand();
-
-    ush_log(LOG_LVL_INFO, "cert gen 0x%08x", cert);
-
-    return cert;
-}
-
 ush_connect_ident
 ush_connect_make_ident(ush_s32_t idx, ush_s32_t certify) {
     return (((ush_connect_ident)idx) << 32) | certify;
