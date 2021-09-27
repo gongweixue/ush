@@ -83,8 +83,6 @@ ush_pipe_create(
     } else {
         *pHdl = -1;
         ush_log(LOG_LVL_FATAL, "hello and howareyou failed");
-        ush_log(LOG_LVL_DETAIL, "destroy connect %p", conn);
-        ush_connect_destroy(&conn);
     }
 
 RET:
@@ -128,8 +126,16 @@ send_hello_and_wait(const ush_char_t *pName,
         ret = ush_sync_hello_ack_wait(ack, pDL, get_info_from_hello_ack_cb);
         if (USH_RET_OK != ret) {
             ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
+
+            ush_log(LOG_LVL_DETAIL, "destroy connect %p", conn);
+
+            // Connect_t must be destroy before the ack reached, in case of the
+            // ack addr reached from ushd after the listener thread cancled to
+            // avoid the NULL ptr crushing.
+            ush_connect_destroy(&conn);
         }
     }
+
 
     ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
     ush_sync_hello_ack_destroy(&ack); // ack not needed any more.
