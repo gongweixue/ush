@@ -54,23 +54,36 @@ typedef struct ushd_conn_record {
 
 typedef struct {
     struct ushd_conn_record    records[USHD_CONN_RECORD_TABLE_MAX_COUNT];
-    ush_s32_t                  next; // always increse by 1, NEVER descrese
-    ush_s32_t                  max_idx;
+    ush_s32_t                  cursor;
 } conn_tbl;
 
 static conn_tbl tbl; // all 0 when init
 
+static void move_cursor_to_next_invalid() {
+    while (tbl.records[tbl.cursor].valid || 0 == tbl.cursor) {
+        static int counter = 0;
+        counter++;
+
+        if (USHD_CONN_RECORD_TABLE_MAX_COUNT <= counter) { // no more for now
+            tbl.cursor = 0;
+            break;
+        } else {
+            tbl.cursor = (tbl.cursor + 1) % USHD_CONN_RECORD_TABLE_MAX_COUNT;
+        }
+    }
+    return;
+}
+
 ush_ret_t
 ushd_conn_table_init() {
     //make idx 0 invalid
-    tbl.records[0].idx       = 0xFFFFFFFF;
-    tbl.records[0].valid     = 0;
+    tbl.records[0].idx       = 0;
+    tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';
     tbl.records[0].cert      = 0xFFFFFFFF;
     tbl.records[0].publisher = NULL;
 
-    tbl.next = 1;
-    tbl.max_idx  = USHD_CONN_RECORD_TABLE_MAX_COUNT - 1;
+    tbl.cursor = 0;
 
     ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 
@@ -82,28 +95,26 @@ ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
                            const ushd_publish_thread_t publisher) {
     ush_assert(name && (0xFFFFFFFF != cert) && publisher);
-    if ((tbl.max_idx) < (tbl.next + 1)) {
+
+    move_cursor_to_next_invalid();
+    if (0 == tbl.cursor) {
         return -1;
     }
 
-    ush_s32_t curr = tbl.next;
-
-    tbl.records[curr].idx       = curr;
-    tbl.records[curr].valid     = 1;
-    strcpy(tbl.records[curr].name, name);
-    tbl.records[curr].cert      = cert;
-    tbl.records[curr].publisher = publisher;
-    tbl.next                   += 1;
-
+    tbl.records[tbl.cursor].idx       = tbl.cursor;
+    tbl.records[tbl.cursor].valid     = 1;
+    strcpy(tbl.records[tbl.cursor].name, name);
+    tbl.records[tbl.cursor].cert      = cert;
+    tbl.records[tbl.cursor].publisher = publisher;
 
     ushd_log(LOG_LVL_INFO, "a new conn record into the table");
 
-    return curr;
+    return tbl.cursor;
 }
 
 ush_connect_ident
 ushd_conn_table_get_record_ident(ush_s32_t idx) {
-    if (idx < 0 || idx >= tbl.next) {
+    if (idx <= 0) {
         return 0xFFFFFFFFFFFFFFFF;
     }
 
@@ -114,7 +125,7 @@ ushd_conn_table_get_record_ident(ush_s32_t idx) {
 // ushd_conn_table_is_record_valid(ush_s32_t idx) {
 //     const ushd_conn_record_t record = tbl.records[idx];
 
-//     if (0 == idx || idx >= tbl.next || idx >= tbl.max || 0 == record.valid
+//     if (0 == idx || idx > tbl.max_idx || 0 == record.valid
 //         || 0xFFFFFFFF == record.cert || NULL == record.publisher) {
 //         return 0;
 //     }

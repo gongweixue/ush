@@ -15,6 +15,7 @@ void publish_proc_send_howareyou(mqd_t mq, publish_fifo_msg_howareyou *msg) {
     ush_comm_howareyou_msg buf = {
         {USH_COMM_LISTENER_MSG_CATALOG_HOWAREYOU}, ack, ident
     };
+    ush_comm_howareyou_msg_testpoint(&buf);
 
     ushd_log(LOG_LVL_DETAIL, "sending msg %p", &buf);
     int tmp = mq_send(mq, (char*)&buf, sizeof(buf), USH_COMM_HOWAREYOU_MSG_PRIO);

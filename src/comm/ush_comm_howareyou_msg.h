@@ -12,4 +12,6 @@ typedef struct ush_comm_howareyou_msg {
 } ush_comm_howareyou_msg USH_COMM_MSG_ALIGNMENT;
 
 
+void ush_comm_howareyou_msg_testpoint(ush_comm_howareyou_msg *msg);
+
 #endif // USH_COMM_HOWAREYOU_MSG_H

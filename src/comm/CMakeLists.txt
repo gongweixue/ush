@@ -2,6 +2,7 @@ set(LIB_USH_COMM ush_comm)
 
 set(SRC_USH_COMM
     ush_comm_hello_msg.c
+    ush_comm_howareyou_msg.c
 )
 
 include_directories(

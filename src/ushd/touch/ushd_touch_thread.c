@@ -87,6 +87,7 @@ ushd_touch_thread_entry(void *arg) {
         ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
 
         static ush_char_t buf[USH_COMM_TOUCH_Q_MSG_MAX_LEN];
+        ush_comm_hello_msg_testpoint((ush_comm_hello_msg_t)buf);
 
         ushd_log(LOG_LVL_INFO, "receive from touch...");
         ush_ret_t res = USH_RET_OK;
