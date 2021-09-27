@@ -159,16 +159,5 @@ realize_timeout(timespec *ptr, ush_u16_t timeout) {
 static ush_ret_t
 get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
     ush_assert(ack);
-    ush_log(LOG_LVL_INFO, "ack callback should be implemetented!!!");
-    ush_assert(0);
-    // ush_connect_ident   connIdentOnServer;
-    // USH_PIPE_STATE      connState;
-    // ush_connect_t connHdlOnClient;
-    // // check ack valic
-    // assert (connHdlOnClient->ident's random feild == connIdentOnServer's random
-    //     && connIdentOnServer's idx feild is not 0xFFFFFFFF
-    //     && state is USH_PP_STATE_NEW);
-    // then ack is valid
-    // and connHdlOnClient->ident = connIdentOnServer;
     return USH_RET_OK;
 }

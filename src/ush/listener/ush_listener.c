@@ -13,6 +13,7 @@
 #include "ush_comm_listener.h"
 
 #include "ush_listener.h"
+#include "ush_listener_deal.h"
 #include "ush_sync.h"
 
 #define INVALID_TID  (0xFFFFFFFF)
@@ -116,16 +117,8 @@ ushd_listener_thread_entry(void *arg) {
             ush_log(LOG_LVL_ERROR, "listener %p receive msg failed", listener);
             continue;
         }
-
-        ush_listener_msg_desc_t *ptr = (ush_listener_msg_desc_t *)buf;
-        if (USH_COMM_LISTENER_MSG_CATALOG_HOWAREYOU == ptr->catalog) {
-            ush_comm_howareyou_msg *msg = (ush_comm_howareyou_msg *)ptr;
-            ush_u64_t ident = msg->ident;
-            ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)msg->sync;
-
-            (void)ident;
-            (void)ack;
-        }
+        ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
+        ush_listener_deal((ush_listener_msg_desc_t *)buf);
     }
 }
 

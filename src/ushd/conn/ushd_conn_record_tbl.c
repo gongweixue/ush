@@ -101,13 +101,13 @@ ushd_conn_table_add_record(const ush_char_t           *name,
     return curr;
 }
 
-ush_u64_t
+ush_connect_ident
 ushd_conn_table_get_record_ident(ush_s32_t idx) {
     if (idx < 0 || idx >= tbl.next) {
         return 0xFFFFFFFFFFFFFFFF;
     }
 
-    return (((ush_u64_t)idx) << 32) | tbl.records[idx].cert;
+    return (((ush_connect_ident)idx) << 32) | tbl.records[idx].cert;
 }
 
 // ush_bool_t

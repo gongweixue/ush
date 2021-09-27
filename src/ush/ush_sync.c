@@ -13,7 +13,6 @@ typedef struct ush_hello_ack {
     pthread_cond_t      cond;
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
-    ush_connect_ident   connIdentOnServer;
     ush_connect_t       connHdlOnClient;
 } * ush_sync_hello_ack_t;
 
@@ -53,9 +52,7 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
         return USH_RET_FAILED;
     }
 
-    pMem->connIdentOnServer = CONNECT_IDENT_VALUE_DEFAULT;
     pMem->connHdlOnClient = conn;
-
 
     *pAck = pMem;
 
@@ -101,6 +98,29 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
         ret = pCallback(ack);
     }
 
+    pthread_mutex_unlock(&ack->mutex);
+    return ret;
+}
+
+ush_ret_t
+ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack, ush_connect_ident ident) {
+    ush_assert(ack);
+    if (!ack) {
+        return USH_RET_OK;
+    }
+
+    pthread_mutex_lock(&ack->mutex);
+
+    // set the ident from ushd back to the conn
+    ush_ret_t ret = ush_connect_set_ident(ack->connHdlOnClient, ident);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_FATAL, "connect ident can not set");
+        goto BAILED;
+    }
+
+    pthread_cond_signal(&ack->cond);
+
+BAILED:
     pthread_mutex_unlock(&ack->mutex);
     return ret;
 }

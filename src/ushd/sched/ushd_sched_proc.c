@@ -66,7 +66,7 @@ void proc_func_hello(const ush_vptr_t msg) {
     }
     ushd_log(LOG_LVL_INFO, "info added to conn table, idx %d", record_idx);
 
-    ush_u64_t ident = ushd_conn_table_get_record_ident(record_idx);
+    ush_connect_ident ident = ushd_conn_table_get_record_ident(record_idx);
     ushd_log(LOG_LVL_INFO, "get record ident 0x%016llx", ident);
 
     ushd_log(LOG_LVL_INFO, "starting publish thread %p", publish);

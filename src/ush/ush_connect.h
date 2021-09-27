@@ -7,7 +7,6 @@ typedef struct ush_connect * ush_connect_t;
 #include "ush_touch.h"
 #include "ush_type_pub.h"
 
-typedef ush_u64_t ush_connect_ident;
 #define CONNECT_IDENT_VALUE_DEFAULT (0xFFFFFFFFFFFFFFFF)
 
 // Ident     0xAAAAAAAA BBBBBBBB
@@ -23,7 +22,7 @@ ush_s32_t ush_connect_generate_cert(const ush_char_t *seed);
 
 ush_connect_ident ush_connect_make_ident(ush_s32_t idx, ush_s32_t certify);
 
-ush_bool_t ush_connect_ident_valid(const ush_connect_t conn);
+ush_bool_t ush_connect_ident_check(const ush_connect_t conn);
 
 ush_ret_t ush_connect_set_ident(ush_connect_t conn, ush_connect_ident ident);
 

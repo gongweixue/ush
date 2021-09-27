@@ -39,7 +39,7 @@ getIdentCertify(const ush_connect_ident ident) {
 }
 
 ush_bool_t
-ush_connect_ident_valid(const ush_connect_t conn) {
+ush_connect_ident_check(const ush_connect_t conn) {
     ush_assert(conn);
     ush_s32_t idxRemote = getIdentIdx(conn->ident);
 
@@ -155,7 +155,7 @@ ush_connect_set_ident(ush_connect_t conn, ush_connect_ident ident) {
     ush_assert(conn);
     ush_ret_t ret = USH_RET_FAILED;
 
-    if (!ush_connect_ident_valid(conn)) { // assign twice is not allow
+    if (!ush_connect_ident_check(conn)) { // assign twice is not allow
         conn->ident = ident;
         ret          = USH_RET_OK;
     } else {
@@ -169,7 +169,7 @@ ush_ret_t
 ush_connect_get_ident(ush_connect_t conn, ush_connect_ident *pIdent) {
     ush_assert(conn && pIdent);
     ush_ret_t ret = USH_RET_FAILED;
-    if (ush_connect_ident_valid(conn)) {
+    if (ush_connect_ident_check(conn)) {
 
         *pIdent = conn->ident;
 
