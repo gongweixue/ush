@@ -16,7 +16,7 @@
 typedef struct ushd_conn_record {
     ush_s32_t                    idx;   // equal to the offset in the table
     ush_bool_t                   valid; // 0 for invalid, 1 for valid
-    ush_char_t                   name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_char_t                   name[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
     ush_s32_t                    cert;
     ushd_publish_thread_t        publisher;
 } * ushd_conn_record_t;
@@ -81,7 +81,7 @@ ushd_conn_table_init() {
     tbl.records[0].idx       = 0;
     tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';
-    tbl.records[0].cert      = INVALID_CERT_VALUE_DEFAULT;
+    tbl.records[0].cert      = USH_INVALID_CERT_VALUE_DEFAULT;
     tbl.records[0].publisher = NULL;
 
     tbl.cursor = 0;
@@ -95,7 +95,7 @@ ush_s32_t
 ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
                            const ushd_publish_thread_t publisher) {
-    ush_assert(name && (INVALID_CERT_VALUE_DEFAULT != cert) && publisher);
+    ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && publisher);
 
     move_cursor_to_next_invalid();
     if (0 == tbl.cursor) {
@@ -116,7 +116,7 @@ ushd_conn_table_add_record(const ush_char_t           *name,
 ush_s32_t
 ushd_conn_table_get_record_cert(ush_s32_t idx) {
     if (idx <= 0 || 0 == tbl.records[idx].valid) {
-        return INVALID_CERT_VALUE_DEFAULT;
+        return USH_INVALID_CERT_VALUE_DEFAULT;
     }
 
     return tbl.records[idx].cert;

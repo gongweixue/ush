@@ -114,7 +114,7 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
 
     pthread_mutex_lock(&ack->mutex);
 
-    ush_s32_t local_cert = INVALID_CERT_VALUE_DEFAULT;
+    ush_s32_t local_cert = USH_INVALID_CERT_VALUE_DEFAULT;
     ush_connect_get_cert(ack->connHdlOnClient, &local_cert);
     if (cert != local_cert) { // nothing todo with this connection;
         goto BAILED;

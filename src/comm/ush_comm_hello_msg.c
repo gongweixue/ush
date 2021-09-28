@@ -8,9 +8,9 @@
 
 // ack contains the pointers should not be free at destroy function
 // be carefulto to manipulate the ack, maybe free already.
-typedef struct ush_comm_hello_msg {
-    ush_touch_msg_desc desc;
-    ush_char_t         name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+typedef struct hello_msg {
+    ush_touch_msg_description desc;
+    ush_char_t         name[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
     ush_vptr_t        *ackSync;
     ush_s32_t          cert;
 } * ush_comm_hello_msg_t USH_COMM_MSG_ALIGNMENT;
@@ -18,15 +18,15 @@ typedef struct ush_comm_hello_msg {
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
                           const ush_char_t        *name,
-                          ush_vptr_t               pAck,
+                          ush_vptr_t               ack,
                           ush_s32_t                cert) {
 
-    ush_assert(pHello && name && pAck);
+    ush_assert(pHello && name && ack);
 
     *pHello = NULL;
 
     ush_comm_hello_msg_t tmp =
-        (ush_comm_hello_msg_t)malloc(sizeof(struct ush_comm_hello_msg));
+        (ush_comm_hello_msg_t)malloc(sizeof(struct hello_msg));
     if (!tmp) {
         *pHello = NULL;
         ush_log(LOG_LVL_FATAL, "no mem for hello");
@@ -39,7 +39,7 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
     ush_assert(strlen(name) < sizeof(tmp->name));
     strcpy(tmp->name, name);
 
-    tmp->ackSync = pAck;
+    tmp->ackSync = ack;
     tmp->cert = cert;
 
     *pHello = tmp;
@@ -59,12 +59,13 @@ ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
     // just free it self, do not destroy ack
     free(*pHello);
     *pHello = NULL;
+
     return USH_RET_OK;
 }
 
 size_t
 ush_comm_hello_msg_size() {
-    return sizeof(struct ush_comm_hello_msg);
+    return sizeof(struct hello_msg);
 }
 
 const ush_char_t *
@@ -85,6 +86,7 @@ ush_comm_hello_msg_cert(const ush_comm_hello_msg_t msg) {
     return msg->cert;
 }
 
-void ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg) {
+void
+ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg) {
     (void)msg; // breakpoint reached here to inspect the data
 }

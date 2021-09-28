@@ -11,7 +11,7 @@ typedef enum USH_COMM_LISTENER_MSG_CATALOG {
 
 typedef struct listener_msg_desc {
     USH_COMM_LISTENER_MSG_CATALOG  catalog;
-} ush_listener_msg_desc_t USH_COMM_MSG_ALIGNMENT;
+} ush_listener_msg_description USH_COMM_MSG_ALIGNMENT;
 
 
 #endif // USH_COMM_LISTENER_H

@@ -56,7 +56,7 @@ ush_pipe_create(
         return USH_RET_NOT_SUPPORT;
     }
 
-    ush_char_t name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_char_t name[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
     gen_full_name(name, sizeof(name), pName);
 
     ush_ret_t ret = USH_RET_OK;
@@ -121,7 +121,7 @@ send_hello_and_wait(const ush_char_t *pName,
     // prepare hello msg
     ush_comm_hello_msg_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    int cert = INVALID_CERT_VALUE_DEFAULT;
+    int cert = USH_INVALID_CERT_VALUE_DEFAULT;
     ush_connect_get_cert(conn, &cert);
     ush_comm_hello_msg_create(&hello, pName, ack, cert);
     ush_comm_hello_msg_testpoint(hello);

@@ -39,7 +39,7 @@ ush_listener_open_and_start(ush_listener_t *pListener, const ush_char_t *name) {
     }
     ush_log(LOG_LVL_DETAIL, "allocate memory for listener %p", tmp);
 
-    tmp->tid = INVALID_TID;
+    tmp->tid = USH_INVALID_TID;
     strcpy(tmp->name, name);
 
     // open the mqueue
@@ -84,9 +84,9 @@ ush_listener_stop_and_close(ush_listener_t *pListener) {
         return USH_RET_OK;
     }
 
-    if (INVALID_TID != (*pListener)->tid) {
+    if (USH_INVALID_TID != (*pListener)->tid) {
         pthread_cancel((*pListener)->tid);
-        (*pListener)->tid = INVALID_TID;
+        (*pListener)->tid = USH_INVALID_TID;
         ush_log(LOG_LVL_INFO, "listener thread %lu cancel", (*pListener)->tid);
     }
 
@@ -117,7 +117,7 @@ ushd_listener_thread_entry(void *arg) {
             continue;
         }
         ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
-        ush_listener_deal((ush_listener_msg_desc_t *)buf);
+        ush_listener_deal((ush_listener_msg_description *)buf);
     }
 }
 

@@ -11,7 +11,7 @@ typedef enum USH_COMM_TOUCH_MSG_CATALOG {
 
 typedef struct touch_msg_desc {
     USH_COMM_TOUCH_MSG_CATALOG  catalog;
-} ush_touch_msg_desc USH_COMM_MSG_ALIGNMENT;
+} ush_touch_msg_description USH_COMM_MSG_ALIGNMENT;
 
 
 

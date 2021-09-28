@@ -146,7 +146,7 @@ touch_thread_create() {
         ushd_log(LOG_LVL_INFO, "ushd_touch created, addr %p", newMem->touch);
 
         newMem->tidFlg = 0;
-        newMem->tid    = INVALID_TID; // maybe a valid value
+        newMem->tid    = USH_INVALID_TID; // maybe a valid value
     }
 
     ushd_log(LOG_LVL_DETAIL, "touch_thread singleton init, %p", newMem);

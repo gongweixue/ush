@@ -32,7 +32,9 @@ void ushd_sched_proc(const ush_vptr_t ptr) {
         ushd_log(LOG_LVL_ERROR, "ptr is NULL!!!");
         return;
     }
-    const ush_touch_msg_desc *pDescription = (const ush_touch_msg_desc *)ptr;
+    const ush_touch_msg_description *pDescription =
+        (const ush_touch_msg_description *)ptr;
+
     func_tbl[pDescription->catalog].func(ptr);
 }
 
@@ -52,7 +54,7 @@ void proc_func_hello(const ush_vptr_t msg) {
     ush_s32_t         cert    = ush_comm_hello_msg_cert(hello);
 
     // create publish thread
-    ush_char_t certname[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_char_t certname[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
     ush_string_certname(certname, sizeof(certname), name, cert);
 
     ushd_publish_thread_t publish = ushd_publish_thread_create(certname);

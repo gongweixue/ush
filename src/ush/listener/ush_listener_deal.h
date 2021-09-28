@@ -5,6 +5,6 @@
 
 #include "ush_comm_listener.h"
 
-ush_ret_t ush_listener_deal(ush_listener_msg_desc_t *msg);
+ush_ret_t ush_listener_deal(ush_listener_msg_description *msg);
 
 #endif // USH_LISTENER_DEAL_H

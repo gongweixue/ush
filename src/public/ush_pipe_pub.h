@@ -53,7 +53,7 @@ typedef enum USH_PIPE_MODE {
  * sync call: y
  * thread safe: n
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ NO_DATA TIMEOUT
- * restriction: pName/pHdl should not NULL, same name will return WRONG_PARAM
+ * restriction: pName/pHdl should not NULL nor too long (less than 20 is fair)
  * detail:
  *     wait until timeout value reached, 0 means forever. Handle could be passed
  *     to other threads for registering or querying operations, starting, stopping,
@@ -139,14 +139,6 @@ ush_ret_t ush_pipe_update(ush_pp_hdl_t hdl,
                           USH_PIPE_ATTR attr,
                           const ush_vptr_t ptr);
 
-/*
- * Find a handle by name.
- * sync call: y
- * thread safe: n (thread sync must be made by yourself)
- * ret: OK FAILED WRONG_PARAM NOT_SUPPORT NO_DATA
- * restriction: sync operation needed for protecting the name changed. Do not use if not nesessary.
-*/
-ush_ret_t ush_pipe_find(const ush_char_t *pName, ush_pp_hdl_t *pHdl);
 
 #ifdef __cplusplus
 } // extern "C"

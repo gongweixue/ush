@@ -78,7 +78,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
         goto BAILED_TOUCH_DESTROY;
     }
 
-    ush_char_t certname[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
+    ush_char_t certname[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
     ush_s32_t cert = ush_random_generate_cert(certname);
     ush_string_certname(certname, sizeof(certname), name, cert);
 
@@ -138,7 +138,7 @@ ush_ret_t
 ush_connect_get_cert(ush_connect_t conn, ush_s32_t *ptr) {
     ush_assert(conn && ptr);
     if (!conn || !ptr) {
-        *ptr = INVALID_CERT_VALUE_DEFAULT;
+        *ptr = USH_INVALID_CERT_VALUE_DEFAULT;
         return USH_RET_FAILED;
     }
 
