@@ -113,7 +113,7 @@ void * ushd_publish_thread_entry(void *arg) {
 
 static ush_ret_t
 publish_mq_open(ushd_publish_thread_t thread, const ush_char_t *name) {
-    if (!name) {
+    if (!name || USH_MQD_INVALID_VALUE != thread->mq) {
         return USH_RET_WRONG_PARAM;
     }
 
