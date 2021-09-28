@@ -14,7 +14,7 @@ ush_comm_howareyou_msg_create(ush_vptr_t sync, ush_s32_t idx, ush_s32_t cert);
 ush_vptr_t ush_comm_howareyou_msg_ack_of(ush_comm_howareyou_msg_t msg);
 ush_s32_t  ush_comm_howareyou_msg_remote_idx_of(ush_comm_howareyou_msg_t msg);
 ush_s32_t  ush_comm_howareyou_msg_cert_of(ush_comm_howareyou_msg_t msg);
-ush_size_t ush_comm_howareyou_msg_size_of();
+ush_size_t ush_comm_howareyou_msg_sizeof();
 
 ush_ret_t  ush_comm_howareyou_msg_destroy(ush_comm_howareyou_msg_t *pMsg);
 

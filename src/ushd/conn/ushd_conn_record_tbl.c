@@ -55,12 +55,23 @@ typedef struct ushd_conn_record {
 
 #define CONN_INVALID_IDX (0)
 
+typedef pthread_mutex_t * conn_tbl_cs_guard_t;
+
 typedef struct {
     struct ushd_conn_record    records[RECORD_TABLE_MAX_COUNT];
     ush_s32_t                  cursor;
+    conn_tbl_cs_guard_t        cs;
 } conn_tbl;
 
 static conn_tbl tbl; // all 0 when init
+
+static void conn_tbl_cs_entry(conn_tbl_cs_guard_t cs) {
+    pthread_mutex_lock(cs);
+}
+
+static void conn_tbl_cs_exit(conn_tbl_cs_guard_t cs) {
+    pthread_mutex_unlock(cs);
+}
 
 static void move_cursor_to_next_empty_record() {
     int pos = tbl.cursor;
@@ -68,7 +79,7 @@ static void move_cursor_to_next_empty_record() {
         pos = (pos + 1) % RECORD_TABLE_MAX_COUNT; // move to next
         if (pos == tbl.cursor) { // empty slot not found
             tbl.cursor = CONN_INVALID_IDX;
-            return;
+            goto BAILED;
         }
     }
 
@@ -78,6 +89,7 @@ static void move_cursor_to_next_empty_record() {
         tbl.cursor = CONN_INVALID_IDX;
     }
 
+BAILED:
     return;
 }
 
@@ -92,6 +104,8 @@ ushd_conn_table_init() {
 
     tbl.cursor = CONN_INVALID_IDX;
 
+    pthread_mutex_init(&tbl.mutex);
+
     ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 
     return USH_RET_OK;
@@ -102,6 +116,8 @@ ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
                            const ushd_publish_thread_t publish) {
     ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && publish);
+
+    conn_tbl_cs_entry(tbl.cs);
 
     move_cursor_to_next_empty_record();
     if (CONN_INVALID_IDX == tbl.cursor) {
@@ -114,6 +130,8 @@ ushd_conn_table_add_record(const ush_char_t           *name,
     tbl.records[tbl.cursor].cert      = cert;
     tbl.records[tbl.cursor].publish   = publish;
 
+    conn_tbl_cs_exit(tbl.cs);
+
     ushd_log(LOG_LVL_INFO, "a new conn record into the table");
 
     return tbl.cursor;
@@ -121,24 +139,17 @@ ushd_conn_table_add_record(const ush_char_t           *name,
 
 ush_s32_t
 ushd_conn_table_get_record_cert(ush_s32_t idx) {
+    ush_s32_t ret = USH_INVALID_CERT_VALUE_DEFAULT;
+    conn_tbl_cs_entry(tbl.cs);
+
     if (idx <= 0 && idx >= RECORD_TABLE_MAX_COUNT) {
-        return USH_INVALID_CERT_VALUE_DEFAULT;
-    }
-    if (0 == tbl.records[idx].valid) {
-        return USH_INVALID_CERT_VALUE_DEFAULT;
+        ret = USH_INVALID_CERT_VALUE_DEFAULT;
+    } else  if (0 == tbl.records[idx].valid) {
+        ret = USH_INVALID_CERT_VALUE_DEFAULT;
+    } else {
+        ret = tbl.records[idx].cert;
     }
 
-    return tbl.records[idx].cert;
+    conn_tbl_cs_exit(tbl.cs);
+    return ret;
 }
-
-// ush_bool_t
-// ushd_conn_table_is_record_valid(ush_s32_t idx) {
-//     const ushd_conn_record_t record = tbl.records[idx];
-
-//     if (0 == idx || idx > tbl.max_idx || 0 == record.valid
-//         || INVALID_TID == record.cert || NULL == record.publish) {
-//         return 0;
-//     }
-
-//     return 1;
-// }

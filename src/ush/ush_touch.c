@@ -24,7 +24,7 @@ ush_touch_send_hello(const ush_touch_t          touch,
     ush_ret_t ret = USH_RET_OK;
     const ush_char_t *pMsg = (const ush_char_t *)hello;
 
-    ush_size_t sz = ush_comm_hello_msg_size_of();
+    ush_size_t sz = ush_comm_hello_msg_sizeof();
     if (pDL) { // with timeout
         int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_HELLO_MSG_PRIO, pDL);
         if (-1 == i) {

@@ -15,7 +15,7 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t      *pHello,
 
 ush_ret_t         ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello);
 
-size_t            ush_comm_hello_msg_size_of();
+size_t            ush_comm_hello_msg_sizeof();
 const ush_char_t *ush_comm_hello_msg_name_of(const ush_comm_hello_msg_t msg);
 const ush_vptr_t  ush_comm_hello_msg_ack_of(const ush_comm_hello_msg_t msg);
 ush_s32_t         ush_comm_hello_msg_cert_of(const ush_comm_hello_msg_t msg);

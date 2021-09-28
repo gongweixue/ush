@@ -62,7 +62,7 @@ ush_comm_howareyou_msg_cert_of(ush_comm_howareyou_msg_t msg) {
 }
 
 ush_size_t
-ush_comm_howareyou_msg_size_of() {
+ush_comm_howareyou_msg_sizeof() {
     return sizeof(struct howareyou_msg);
 }
 

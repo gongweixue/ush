@@ -64,7 +64,7 @@ ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
 }
 
 size_t
-ush_comm_hello_msg_size_of() {
+ush_comm_hello_msg_sizeof() {
     return sizeof(struct hello_msg);
 }
 
