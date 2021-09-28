@@ -64,24 +64,24 @@ ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
 }
 
 size_t
-ush_comm_hello_msg_size() {
+ush_comm_hello_msg_size_of() {
     return sizeof(struct hello_msg);
 }
 
 const ush_char_t *
-ush_comm_hello_msg_name(const ush_comm_hello_msg_t msg) {
+ush_comm_hello_msg_name_of(const ush_comm_hello_msg_t msg) {
     ush_assert(msg);
     return msg->name;
 }
 
 const ush_vptr_t
-ush_comm_hello_msg_ack(const ush_comm_hello_msg_t msg) {
+ush_comm_hello_msg_ack_of(const ush_comm_hello_msg_t msg) {
     ush_assert(msg);
     return msg->ackSync;
 }
 
 ush_s32_t
-ush_comm_hello_msg_cert(const ush_comm_hello_msg_t msg) {
+ush_comm_hello_msg_cert_of(const ush_comm_hello_msg_t msg) {
     ush_assert(msg);
     return msg->cert;
 }

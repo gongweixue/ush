@@ -32,7 +32,7 @@ ush_comm_howareyou_msg_create(ush_vptr_t sync, ush_s32_t idx, ush_s32_t cert) {
 }
 
 ush_vptr_t
-ush_comm_howareyou_msg_ack(ush_comm_howareyou_msg_t msg) {
+ush_comm_howareyou_msg_ack_of(ush_comm_howareyou_msg_t msg) {
     ush_assert(msg);
     if (!msg) {
         return NULL;
@@ -42,7 +42,7 @@ ush_comm_howareyou_msg_ack(ush_comm_howareyou_msg_t msg) {
 }
 
 ush_s32_t
-ush_comm_howareyou_msg_remote_idx(ush_comm_howareyou_msg_t msg) {
+ush_comm_howareyou_msg_remote_idx_of(ush_comm_howareyou_msg_t msg) {
     ush_assert(msg);
     if (!msg) {
         return 0;
@@ -52,7 +52,7 @@ ush_comm_howareyou_msg_remote_idx(ush_comm_howareyou_msg_t msg) {
 }
 
 ush_s32_t
-ush_comm_howareyou_msg_cert(ush_comm_howareyou_msg_t msg) {
+ush_comm_howareyou_msg_cert_of(ush_comm_howareyou_msg_t msg) {
     ush_assert(msg);
     if (!msg) {
         return USH_INVALID_CERT_VALUE_DEFAULT;
@@ -62,7 +62,7 @@ ush_comm_howareyou_msg_cert(ush_comm_howareyou_msg_t msg) {
 }
 
 ush_size_t
-ush_comm_howareyou_msg_size() {
+ush_comm_howareyou_msg_size_of() {
     return sizeof(struct howareyou_msg);
 }
 
