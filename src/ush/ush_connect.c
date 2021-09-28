@@ -80,7 +80,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
 
     ush_char_t certname[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
     ush_s32_t cert = ush_random_generate_cert(certname);
-    ush_string_certname(certname, name, cert);
+    ush_string_certname(certname, sizeof(certname), name, cert);
 
     ret = ush_listener_open_and_start(&(newMem->listener), certname);
     if (USH_RET_OK != ret) {

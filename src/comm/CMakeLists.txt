@@ -14,7 +14,9 @@ add_library(${LIB_USH_COMM} STATIC ${SRC_USH_COMM})
 
 target_link_libraries(${LIB_USH_COMM}
     rt
-    ush_util)
+    ush_util
+)
 
 set_target_properties(${LIB_USH_COMM}
-    PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+    PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
+)

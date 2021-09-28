@@ -31,7 +31,9 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
 static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 
-static void gen_full_name(ush_char_t *name, const ush_char_t *shortname);
+static void gen_full_name(ush_char_t *name,
+                          ush_size_t sz,
+                          const ush_char_t *shortname);
 
 ush_ret_t
 ush_pipe_create(
@@ -48,9 +50,14 @@ ush_pipe_create(
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
         return USH_RET_WRONG_PARAM;
     }
+    if (USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
+        ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
+                USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX);
+        return USH_RET_NOT_SUPPORT;
+    }
 
     ush_char_t name[USH_COMM_HELLO_MSG_NAME_LEN_MAX];
-    gen_full_name(name, pName);
+    gen_full_name(name, sizeof(name), pName);
 
     ush_ret_t ret = USH_RET_OK;
 
@@ -172,7 +179,18 @@ get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
 }
 
 static void
-gen_full_name(ush_char_t *name, const ush_char_t *shortname) {
+gen_full_name(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
+    ush_size_t l = strlen(shortname) + strlen(USH_COMM_LISTENER_Q_PATH_PREFIX);
+
+    // prefix-name
+    ush_assert(sz > l);
     strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
     strcat(name, shortname);
+
+    // prefix-name-timestamp
+    ush_char_t timestamp[16];
+    ush_itoa(timestamp, time(NULL));
+    ush_assert(sz > strlen(name) + 1 + strlen(timestamp));
+    strcat(name, "-");
+    strcat(name, timestamp);
 }

@@ -1,4 +1,4 @@
-
+#include "assert.h"
 #include "string.h"
 
 #include "ush_string.h"
@@ -26,10 +26,14 @@ void ush_itoa(char *str, int num) {
 }
 
 
-void ush_string_certname(char *certname, const char *name, int cert) {
-    strcpy(certname, name);
-    strcat(certname, "-");
+void ush_string_certname(char *dst, size_t sz, const char *name, int cert) {
+    assert(dst);
+
     char certstr[16];
     ush_itoa(certstr, cert);
-    strcat(certname, certstr);
+    assert(sz > strlen(name) + 1 + strlen(certstr));
+
+    strcpy(dst, name);
+    strcat(dst, "-");
+    strcat(dst, certstr);
 }

@@ -17,13 +17,11 @@ typedef struct ush_comm_hello_msg {
 
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
-                          const ush_char_t        *pName,
+                          const ush_char_t        *name,
                           ush_vptr_t               pAck,
                           ush_s32_t                cert) {
 
-    ush_assert(pHello && pName && pAck);
-
-    ush_assert(strlen(pName) < USH_COMM_HELLO_MSG_NAME_LEN_MAX);
+    ush_assert(pHello && name && pAck);
 
     *pHello = NULL;
 
@@ -38,7 +36,8 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
 
     tmp->desc.catalog = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
 
-    strcpy(tmp->name, pName);
+    ush_assert(strlen(name) < sizeof(tmp->name));
+    strcpy(tmp->name, name);
 
     tmp->ackSync = pAck;
     tmp->cert = cert;
@@ -51,7 +50,7 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
 ush_ret_t
 ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
     ush_assert(pHello);
-    if (!(*pHello)) {
+    if (!pHello || !(*pHello)) {
         ush_log(LOG_LVL_INFO, "hello_msg_t NULL to be destroy");
         return USH_RET_OK;
     }
@@ -69,19 +68,19 @@ ush_comm_hello_msg_size() {
 }
 
 const ush_char_t *
-ush_comm_hello_msg_get_name(const ush_comm_hello_msg_t msg) {
+ush_comm_hello_msg_name(const ush_comm_hello_msg_t msg) {
     ush_assert(msg);
     return msg->name;
 }
 
 const ush_vptr_t
-ush_comm_hello_msg_get_ack(const ush_comm_hello_msg_t msg) {
+ush_comm_hello_msg_ack(const ush_comm_hello_msg_t msg) {
     ush_assert(msg);
     return msg->ackSync;
 }
 
 ush_s32_t
-ush_comm_hello_msg_get_cert(const ush_comm_hello_msg_t msg) {
+ush_comm_hello_msg_cert(const ush_comm_hello_msg_t msg) {
     ush_assert(msg);
     return msg->cert;
 }
