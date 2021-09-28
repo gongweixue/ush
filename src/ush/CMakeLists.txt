@@ -8,6 +8,7 @@ set(SRC_USH
     ush_version.c
     listener/ush_listener.c
     listener/ush_listener_deal.c
+    listener/ush_listener_routine.c
 )
 
 include_directories(
