@@ -9,8 +9,8 @@
 #include "ush_time.h"
 #include "ush_touch.h"
 
-#define USH_TOUCH_OPEN_RETRY_CNT    3
-#define USH_TOUCH_OPEN_INTERVAL_MS  10
+#define USH_TOUCH_OPEN_RETRY_CNT    (3)
+#define USH_TOUCH_OPEN_INTERVAL_MS  (10)
 
 typedef struct ush_touch {
     mqd_t mq;

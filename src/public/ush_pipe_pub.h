@@ -23,6 +23,10 @@ typedef enum USH_PIPE_ATTR {
     USH_PP_ATTR_FLAG    = 3, // trace, wdg, log, statistics, etc.
 } USH_PIPE_ATTR;
 
+#define USH_PP_ATTR_FLG_MASK_WDG  (0x0000000F) // 4bits for 0-15s, 0 for no wdg
+#define USH_PP_ATTR_FLG_SHFT_WDG  (0)
+
+
 /* state of the pipe */
 typedef enum USH_PIPE_STATE {
     USH_PP_STATE_NEW       = 0,

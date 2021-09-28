@@ -2,13 +2,14 @@ set(LIB_USH ush)
 
 set(SRC_USH
     ush_connect.c
-    ush_pipe_create.c
     ush_sync.c
     ush_touch.c
     ush_version.c
     listener/ush_listener.c
     listener/ush_listener_deal.c
     listener/ush_listener_routine.c
+    pipe/ush_pipe_create.c
+    pipe/ush_pipe_attr.c
 )
 
 include_directories(
