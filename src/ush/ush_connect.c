@@ -23,30 +23,6 @@ typedef struct ush_connect {
     pthread_mutex_t      mutex;
 } * ush_connect_t;
 
-
-// static
-// ush_s32_t
-// getRemoteIdx(const ush_connect_t conn) {
-//     ush_assert(conn);
-//     if (!conn) {
-//         return 0xFFFFFFFF;
-//     }
-//     ush_log(LOG_LVL_DETAIL, "connection remote idx: %d", conn->remote_idx);
-//     return conn->remote_idx;
-// }
-
-// static
-// ush_s32_t
-// getCert(const ush_connect_t conn) {
-//     ush_assert(conn);
-//     if (!conn) {
-//         return 0xFFFFFFFF;
-//     }
-//     ush_log(LOG_LVL_DETAIL, "connection cert: %d", conn->cert);
-//     return conn->cert;
-// }
-
-
 ush_ret_t
 ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
     ush_assert(pConn && name);
@@ -78,11 +54,11 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
         goto BAILED_TOUCH_DESTROY;
     }
 
-    ush_char_t certname[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
+    ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
     ush_s32_t cert = ush_random_generate_cert(certname);
     ush_string_certname(certname, sizeof(certname), name, cert);
 
-    ret = ush_listener_open_and_start(&(newMem->listener), certname);
+    ret = ush_listener_open_start(&(newMem->listener), certname);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "listener start failed");
         goto BAILED_MUTEX;
@@ -119,7 +95,7 @@ ush_connect_destroy(ush_connect_t *pConn) {
         return USH_RET_OK;
     }
 
-    ush_listener_stop_and_close(&((*pConn)->listener));
+    ush_listener_stop_close(&((*pConn)->listener));
 
     ush_log(LOG_LVL_DETAIL, "destory touch/listener/mutext");
     ush_touch_destroy_with_closing(&((*pConn)->touch));

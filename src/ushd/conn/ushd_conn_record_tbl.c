@@ -11,14 +11,14 @@
 #include "ushd_conn_record_tbl.h"
 #include "ushd_publish_thread.h"
 
-#define USHD_CONN_RECORD_TABLE_MAX_COUNT  (128)
+#define RECORD_TABLE_MAX_COUNT  (128)
 
 typedef struct ushd_conn_record {
     ush_s32_t                    idx;   // equal to the offset in the table
     ush_bool_t                   valid; // 0 for invalid, 1 for valid
-    ush_char_t                   name[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
+    ush_char_t                   name[USH_COMM_CONN_NAME_LEN_MAX];
     ush_s32_t                    cert;
-    ushd_publish_thread_t        publisher;
+    ushd_publish_thread_t        publish;
 } * ushd_conn_record_t;
 
 // ush_bool_t
@@ -53,25 +53,31 @@ typedef struct ushd_conn_record {
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+#define CONN_INVALID_IDX (0)
+
 typedef struct {
-    struct ushd_conn_record    records[USHD_CONN_RECORD_TABLE_MAX_COUNT];
+    struct ushd_conn_record    records[RECORD_TABLE_MAX_COUNT];
     ush_s32_t                  cursor;
 } conn_tbl;
 
 static conn_tbl tbl; // all 0 when init
 
-static void move_cursor_to_next_invalid() {
-    while (tbl.records[tbl.cursor].valid || 0 == tbl.cursor) {
-        static int counter = 0;
-        counter++;
-
-        if (USHD_CONN_RECORD_TABLE_MAX_COUNT <= counter) { // no more for now
-            tbl.cursor = 0;
-            break;
-        } else {
-            tbl.cursor = (tbl.cursor + 1) % USHD_CONN_RECORD_TABLE_MAX_COUNT;
+static void move_cursor_to_next_empty_record() {
+    int pos = tbl.cursor;
+    while (tbl.records[pos].valid || CONN_INVALID_IDX == pos) {
+        pos = (pos + 1) % RECORD_TABLE_MAX_COUNT; // move to next
+        if (pos == tbl.cursor) { // empty slot not found
+            tbl.cursor = CONN_INVALID_IDX;
+            return;
         }
     }
+
+    if (!tbl.records[pos].valid) {
+            tbl.cursor = pos;
+    } else {
+        tbl.cursor = CONN_INVALID_IDX;
+    }
+
     return;
 }
 
@@ -82,9 +88,9 @@ ushd_conn_table_init() {
     tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';
     tbl.records[0].cert      = USH_INVALID_CERT_VALUE_DEFAULT;
-    tbl.records[0].publisher = NULL;
+    tbl.records[0].publish   = NULL;
 
-    tbl.cursor = 0;
+    tbl.cursor = CONN_INVALID_IDX;
 
     ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 
@@ -94,19 +100,19 @@ ushd_conn_table_init() {
 ush_s32_t
 ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
-                           const ushd_publish_thread_t publisher) {
-    ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && publisher);
+                           const ushd_publish_thread_t publish) {
+    ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && publish);
 
-    move_cursor_to_next_invalid();
-    if (0 == tbl.cursor) {
-        return -1;
+    move_cursor_to_next_empty_record();
+    if (CONN_INVALID_IDX == tbl.cursor) {
+        return CONN_INVALID_IDX;
     }
 
     tbl.records[tbl.cursor].idx       = tbl.cursor;
     tbl.records[tbl.cursor].valid     = 1;
     strcpy(tbl.records[tbl.cursor].name, name);
     tbl.records[tbl.cursor].cert      = cert;
-    tbl.records[tbl.cursor].publisher = publisher;
+    tbl.records[tbl.cursor].publish   = publish;
 
     ushd_log(LOG_LVL_INFO, "a new conn record into the table");
 
@@ -115,7 +121,10 @@ ushd_conn_table_add_record(const ush_char_t           *name,
 
 ush_s32_t
 ushd_conn_table_get_record_cert(ush_s32_t idx) {
-    if (idx <= 0 || 0 == tbl.records[idx].valid) {
+    if (idx <= 0 && idx >= RECORD_TABLE_MAX_COUNT) {
+        return USH_INVALID_CERT_VALUE_DEFAULT;
+    }
+    if (0 == tbl.records[idx].valid) {
         return USH_INVALID_CERT_VALUE_DEFAULT;
     }
 
@@ -127,7 +136,7 @@ ushd_conn_table_get_record_cert(ush_s32_t idx) {
 //     const ushd_conn_record_t record = tbl.records[idx];
 
 //     if (0 == idx || idx > tbl.max_idx || 0 == record.valid
-//         || INVALID_TID == record.cert || NULL == record.publisher) {
+//         || INVALID_TID == record.cert || NULL == record.publish) {
 //         return 0;
 //     }
 

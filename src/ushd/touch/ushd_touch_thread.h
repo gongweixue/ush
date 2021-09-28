@@ -12,7 +12,6 @@ ushd_touch_thread_t ushd_touch_thread_singleton();
 
 ush_ret_t ushd_touch_thread_set_id(pthread_t tid);
 
-
 ush_ret_t ushd_touch_thread_start();
 
 #endif //USHD_TOUCH_THREAD_H

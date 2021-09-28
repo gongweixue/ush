@@ -24,15 +24,15 @@
 typedef struct timespec timespec;
 
 static ush_ret_t send_hello_and_wait(const ush_char_t      *pName,
-                                const timespec        *pDL,
-                                ush_connect_t          conn);
+                                     const timespec        *pDL,
+                                     ush_connect_t          conn);
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
 static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 
-static void gen_full_name(ush_char_t *name,
-                          ush_size_t sz,
+static void gen_full_name(ush_char_t       *name,
+                          ush_size_t        sz,
                           const ush_char_t *shortname);
 
 ush_ret_t
@@ -56,9 +56,11 @@ ush_pipe_create(
         return USH_RET_NOT_SUPPORT;
     }
 
-    ush_char_t name[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
+    ush_char_t name[USH_COMM_CONN_NAME_LEN_MAX];
     gen_full_name(name, sizeof(name), pName);
 
+
+    *pHdl = 0; // NULL for error return;
     ush_ret_t ret = USH_RET_OK;
 
 
@@ -90,7 +92,6 @@ ush_pipe_create(
         *pHdl = (ush_s64_t)conn;
         ush_log(LOG_LVL_INFO, "set conn's ptr to handle returned");
     } else {
-        *pHdl = -1;
         ush_log(LOG_LVL_FATAL, "hello and howareyou failed");
     }
 
@@ -161,6 +162,7 @@ realize_timeout(timespec *ptr, ush_u16_t timeout) {
         ush_log(LOG_LVL_INFO, "timespec os null, just return OK.");
         return USH_RET_OK;
     }
+
     if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
         ush_log(LOG_LVL_ERROR, "clock_gettime failed");
         return USH_RET_FAILED;

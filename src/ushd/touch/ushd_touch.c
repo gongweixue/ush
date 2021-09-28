@@ -6,6 +6,7 @@
 
 #include "ush_assert.h"
 #include "ush_comm_touch.h"
+#include "ush_def_pub.h"
 #include "ush_log.h"
 
 #include "ushd_touch.h"
@@ -27,7 +28,7 @@ ushd_touch_create(ushd_touch_t *pTouch) {
     }
     ush_log(LOG_LVL_DETAIL, "alloc mem for touch, addr %p", tmp);
 
-    tmp->mq = -1;
+    tmp->mq = USH_MQD_INVALID_VALUE;
     *pTouch = tmp;
 
     return USH_RET_OK;
@@ -36,7 +37,7 @@ ushd_touch_create(ushd_touch_t *pTouch) {
 ush_ret_t
 ushd_touch_open(ushd_touch_t touch) {
     ush_assert(touch);
-    if (-1 != touch->mq) { // maybe already opened
+    if (USH_MQD_INVALID_VALUE != touch->mq) { // maybe already opened
         ushd_log(LOG_LVL_INFO, "touch already opened");
         return USH_RET_OK;
     }
@@ -50,8 +51,8 @@ ushd_touch_open(ushd_touch_t touch) {
                         S_IRWXU  | S_IRWXG, // 0770
                         &qAttr);
 
-    if (-1 == touch->mq) {
-        ushd_log(LOG_LVL_ERROR, "ushd touch open returns -1");
+    if (USH_MQD_INVALID_VALUE == touch->mq) {
+        ushd_log(LOG_LVL_ERROR, "ushd touch open returns invalid value");
         return USH_RET_FAILED;
     }
 
@@ -63,7 +64,7 @@ ushd_touch_open(ushd_touch_t touch) {
 ush_ret_t
 ushd_touch_close(ushd_touch_t touch) {
     ush_assert(touch);
-    if (!touch || -1 == touch->mq) {
+    if (!touch || USH_MQD_INVALID_VALUE == touch->mq) {
         ushd_log(LOG_LVL_INFO, "ushd touch already closed");
         return USH_RET_OK;
     }
@@ -75,14 +76,15 @@ ushd_touch_close(ushd_touch_t touch) {
         return USH_RET_FAILED;
     }
 
-    touch->mq = -1;
+    touch->mq = USH_MQD_INVALID_VALUE;
 
     return USH_RET_OK;
 }
 
 ush_ret_t
 ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest, ush_size_t sz) {
-    if (-1 == touch->mq || !dest || sz < USH_COMM_TOUCH_Q_MSG_MAX_LEN) {
+    ush_assert(sz >= USH_COMM_TOUCH_Q_MSG_MAX_LEN);
+    if (USH_MQD_INVALID_VALUE == touch->mq || !dest) {
         ushd_log(LOG_LVL_ERROR, "ushd touch not open");
         return USH_RET_FAILED;
     }

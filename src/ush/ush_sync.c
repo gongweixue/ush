@@ -14,7 +14,7 @@ typedef struct ush_hello_ack {
     pthread_cond_t      cond;
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
-    ush_connect_t       connHdlOnClient;
+    ush_connect_t       conn;
 } * ush_sync_hello_ack_t;
 
 
@@ -53,14 +53,12 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
         return USH_RET_FAILED;
     }
 
-    pMem->connHdlOnClient = conn;
+    pMem->conn = conn;
 
     *pAck = pMem;
 
     return USH_RET_OK;
 }
-
-#define PTHREAD_COND_WAIT
 
 ush_ret_t
 ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
@@ -105,8 +103,8 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
 
 ush_ret_t
 ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
-                          ush_s32_t idx,
-                          ush_s32_t cert) {
+                          ush_s32_t            idx,
+                          ush_s32_t            cert) {
     ush_assert(ack);
     if (!ack) {
         return USH_RET_OK;
@@ -115,13 +113,13 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
     pthread_mutex_lock(&ack->mutex);
 
     ush_s32_t local_cert = USH_INVALID_CERT_VALUE_DEFAULT;
-    ush_connect_get_cert(ack->connHdlOnClient, &local_cert);
+    ush_connect_get_cert(ack->conn, &local_cert);
     if (cert != local_cert) { // nothing todo with this connection;
         goto BAILED;
     }
 
     // set the ident from ushd back to the conn
-    ush_ret_t ret = ush_connect_set_remote_idx(ack->connHdlOnClient, idx);
+    ush_ret_t ret = ush_connect_set_remote_idx(ack->conn, idx);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect remote idx can not set");
         goto BAILED;

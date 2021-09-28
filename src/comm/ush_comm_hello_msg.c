@@ -10,7 +10,7 @@
 // be carefulto to manipulate the ack, maybe free already.
 typedef struct hello_msg {
     ush_touch_msg_description desc;
-    ush_char_t         name[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
+    ush_char_t         name[USH_COMM_CONN_NAME_LEN_MAX];
     ush_vptr_t        *ackSync;
     ush_s32_t          cert;
 } * ush_comm_hello_msg_t USH_COMM_MSG_ALIGNMENT;

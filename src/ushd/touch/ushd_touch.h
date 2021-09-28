@@ -13,8 +13,8 @@ ush_ret_t ushd_touch_open(ushd_touch_t touch);
 ush_ret_t ushd_touch_close(ushd_touch_t touch);
 
 ush_ret_t ushd_touch_receive(ushd_touch_t touch,
-                             ush_char_t *dest,
-                             ush_size_t sz);
+                             ush_char_t  *dest,
+                             ush_size_t   sz);
 
 ush_ret_t ushd_touch_destroy_with_closing(ushd_touch_t *pTouch);
 

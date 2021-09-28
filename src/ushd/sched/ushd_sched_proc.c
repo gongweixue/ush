@@ -54,7 +54,7 @@ void proc_func_hello(const ush_vptr_t msg) {
     ush_s32_t         cert    = ush_comm_hello_msg_cert(hello);
 
     // create publish thread
-    ush_char_t certname[USH_COMM_LISTENER_Q_NAME_LEN_MAX];
+    ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
     ush_string_certname(certname, sizeof(certname), name, cert);
 
     ushd_publish_thread_t publish = ushd_publish_thread_create(certname);

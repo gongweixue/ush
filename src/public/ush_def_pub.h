@@ -5,4 +5,6 @@
 
 #define USH_INVALID_TID  (0xFFFFFFFF)
 
+#define USH_MQD_INVALID_VALUE (-1)
+
 #endif // USH_DEF_PUB_H
