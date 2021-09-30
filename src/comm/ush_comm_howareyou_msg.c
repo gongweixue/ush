@@ -10,7 +10,7 @@ typedef struct howareyou_msg {
     ush_vptr_t              sync;
     ush_s32_t               remote_idx;
     ush_s32_t               cert;
-} * ush_comm_howareyou_msg_t USH_COMM_MSG_ALIGNMENT;
+} USH_COMM_MSG_PACKED * ush_comm_howareyou_msg_t;
 
 
 ush_comm_howareyou_msg_t

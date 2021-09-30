@@ -10,9 +10,13 @@ typedef enum USH_LOG_LVL {
     LOG_LVL_DETAIL  // every step of the routine
 } USH_LOG_LVL;
 
-
+#ifndef USH_LOG_ON
 #define USH_LOG_ON              (1)
+#endif
+
+#ifndef USH_LOG_LVL_SELECTOR
 #define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
+#endif
 
 void ush_log_cs_enter();
 void ush_log_cs_exit();

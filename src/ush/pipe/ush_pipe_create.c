@@ -31,7 +31,7 @@ static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
 static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 
-static void gen_full_name(ush_char_t       *name,
+static void gen_prefix_name(ush_char_t       *name,
                           ush_size_t        sz,
                           const ush_char_t *shortname);
 
@@ -57,7 +57,7 @@ ush_pipe_create(
     }
 
     ush_char_t name[USH_COMM_CONN_NAME_LEN_MAX];
-    gen_full_name(name, sizeof(name), pName);
+    gen_prefix_name(name, sizeof(name), pName);
 
 
     *pHdl = 0; // NULL for error return;
@@ -181,18 +181,28 @@ get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
 }
 
 static void
-gen_full_name(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
-    ush_size_t l = strlen(shortname) + strlen(USH_COMM_LISTENER_Q_PATH_PREFIX);
-
-    // prefix-name
-    ush_assert(sz > l);
+gen_prefix_name(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
+    if (strlen(USH_COMM_LISTENER_Q_PATH_PREFIX) >= sz) {
+        ush_log(LOG_LVL_ERROR, "name too long, name gen failed");
+        return;
+    }
+    // prefix
     strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
+
+    if (strlen(name) + strlen(shortname) >= sz) {
+        ush_log(LOG_LVL_INFO, "name too long, but only gen prefix.");
+        return;
+    }
+    // prefix-shortname
     strcat(name, shortname);
 
-    // prefix-name-timestamp
+    // prefix-shortname-timestamp
     ush_char_t timestamp[16];
     ush_itoa(timestamp, time(NULL));
-    ush_assert(sz > strlen(name) + 1 + strlen(timestamp));
+    if (strlen(name) + 1 + strlen(timestamp) >= sz) { // with an extra "-"
+        ush_log(LOG_LVL_INFO, "name too long, but prefix-shortname gen.");
+        return;
+    }
     strcat(name, "-");
     strcat(name, timestamp);
 }

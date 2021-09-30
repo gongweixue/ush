@@ -104,7 +104,7 @@ ushd_conn_table_init() {
 
     tbl.cursor = CONN_INVALID_IDX;
 
-    pthread_mutex_init(&tbl.mutex);
+    pthread_mutex_init(tbl.cs, NULL);
 
     ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 

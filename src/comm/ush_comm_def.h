@@ -2,7 +2,7 @@
 #define USH_COMM_DEF_H
 
 
-#define USH_COMM_MSG_ALIGNMENT __attribute__((aligned(1)))
+#define USH_COMM_MSG_PACKED __attribute__((packed))
 
 #define USH_COMM_CONN_NAME_LEN_MAX            (64)
 

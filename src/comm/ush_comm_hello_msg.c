@@ -13,17 +13,32 @@ typedef struct hello_msg {
     ush_char_t         name[USH_COMM_CONN_NAME_LEN_MAX];
     ush_vptr_t        *ackSync;
     ush_s32_t          cert;
-} * ush_comm_hello_msg_t USH_COMM_MSG_ALIGNMENT;
+} USH_COMM_MSG_PACKED * ush_comm_hello_msg_t;
 
 ush_ret_t
 ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
                           const ush_char_t        *name,
-                          ush_vptr_t               ack,
+                          ush_sync_hello_ack_t     ack,
                           ush_s32_t                cert) {
 
-    ush_assert(pHello && name && ack);
+    if (!pHello || !name || !ack) {
+        if (pHello) *pHello = NULL;
+        ush_log(LOG_LVL_FATAL, "param NULL");
+        return USH_RET_WRONG_PARAM;
+    }
 
     *pHello = NULL;
+
+    // name overflow
+    if (strlen(name) >= sizeof(((ush_comm_hello_msg_t)0)->name)) {
+        ush_log(LOG_LVL_FATAL, "name overflow");
+        return USH_RET_WRONG_PARAM;
+    }
+    if (strlen(name) == 0) {
+        ush_log(LOG_LVL_FATAL, "name len = 0");
+        return USH_RET_WRONG_PARAM;
+    }
+
 
     ush_comm_hello_msg_t tmp =
         (ush_comm_hello_msg_t)malloc(sizeof(struct hello_msg));
@@ -36,10 +51,9 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
 
     tmp->desc.catalog = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
 
-    ush_assert(strlen(name) < sizeof(tmp->name));
     strcpy(tmp->name, name);
 
-    tmp->ackSync = ack;
+    tmp->ackSync = (ush_vptr_t)ack;
     tmp->cert = cert;
 
     *pHello = tmp;
@@ -49,7 +63,6 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
 
 ush_ret_t
 ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello) {
-    ush_assert(pHello);
     if (!pHello || !(*pHello)) {
         ush_log(LOG_LVL_INFO, "hello_msg_t NULL to be destroy");
         return USH_RET_OK;
@@ -70,13 +83,19 @@ ush_comm_hello_msg_sizeof() {
 
 const ush_char_t *
 ush_comm_hello_msg_name_of(const ush_comm_hello_msg_t msg) {
-    ush_assert(msg);
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return NULL;
+    }
     return msg->name;
 }
 
 const ush_vptr_t
 ush_comm_hello_msg_ack_of(const ush_comm_hello_msg_t msg) {
-    ush_assert(msg);
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return NULL;
+    }
     return msg->ackSync;
 }
 

@@ -119,6 +119,8 @@ listener_thread_entry(void *arg) {
         ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
         ush_listener_deal((ush_listener_msg_description *)buf);
     }
+
+    return 0;
 }
 
 static ush_ret_t

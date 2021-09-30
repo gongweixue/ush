@@ -1,11 +1,12 @@
 #ifndef USH_SYNC_H
 #define USH_SYNC_H
 
-typedef struct ush_hello_ack * ush_sync_hello_ack_t;
-
 #include "time.h"
 
 #include "ush_connect.h"
+
+
+typedef struct ush_hello_ack * ush_sync_hello_ack_t;
 
 
 typedef ush_ret_t (*ush_sync_hello_ack_wait_cb_t)(ush_sync_hello_ack_t ack);
