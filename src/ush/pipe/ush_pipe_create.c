@@ -48,8 +48,12 @@ ush_pipe_create(
     // params valid
     if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
+        if (pHdl) *pHdl = 0;
         return USH_RET_WRONG_PARAM;
     }
+
+    *pHdl = 0; // NULL for error return;
+
     if (USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
         ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
                 USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX);
@@ -60,7 +64,6 @@ ush_pipe_create(
     gen_prefix_name(name, sizeof(name), pName);
 
 
-    *pHdl = 0; // NULL for error return;
     ush_ret_t ret = USH_RET_OK;
 
 

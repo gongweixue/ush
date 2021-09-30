@@ -7,4 +7,6 @@ set(CMAKE_C_FLAGS "-Wall")
 
 add_subdirectory(src)
 
+if (USH_UT)
 add_subdirectory(test)
+endif()
