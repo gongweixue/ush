@@ -55,7 +55,7 @@ typedef struct ushd_conn_record {
 
 #define CONN_INVALID_IDX (0)
 
-typedef pthread_mutex_t * conn_tbl_cs_guard_t;
+typedef pthread_mutex_t conn_tbl_cs_guard_t;
 
 typedef struct {
     struct ushd_conn_record    records[RECORD_TABLE_MAX_COUNT];
@@ -65,12 +65,12 @@ typedef struct {
 
 static conn_tbl tbl; // all 0 when init
 
-static void conn_tbl_cs_entry(conn_tbl_cs_guard_t cs) {
-    pthread_mutex_lock(cs);
+static void conn_tbl_cs_entry() {
+    pthread_mutex_lock(&tbl.cs);
 }
 
-static void conn_tbl_cs_exit(conn_tbl_cs_guard_t cs) {
-    pthread_mutex_unlock(cs);
+static void conn_tbl_cs_exit() {
+    pthread_mutex_unlock(&tbl.cs);
 }
 
 static void move_cursor_to_next_empty_record() {
@@ -104,7 +104,7 @@ ushd_conn_table_init() {
 
     tbl.cursor = CONN_INVALID_IDX;
 
-    pthread_mutex_init(tbl.cs, NULL);
+    pthread_mutex_init(&tbl.cs, NULL);
 
     ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 
@@ -117,7 +117,7 @@ ushd_conn_table_add_record(const ush_char_t           *name,
                            const ushd_publish_thread_t publish) {
     ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && publish);
 
-    conn_tbl_cs_entry(tbl.cs);
+    conn_tbl_cs_entry();
 
     move_cursor_to_next_empty_record();
     if (CONN_INVALID_IDX == tbl.cursor) {
@@ -130,7 +130,7 @@ ushd_conn_table_add_record(const ush_char_t           *name,
     tbl.records[tbl.cursor].cert      = cert;
     tbl.records[tbl.cursor].publish   = publish;
 
-    conn_tbl_cs_exit(tbl.cs);
+    conn_tbl_cs_exit();
 
     ushd_log(LOG_LVL_INFO, "a new conn record into the table");
 
@@ -140,7 +140,7 @@ ushd_conn_table_add_record(const ush_char_t           *name,
 ush_s32_t
 ushd_conn_table_get_record_cert(ush_s32_t idx) {
     ush_s32_t ret = USH_INVALID_CERT_VALUE_DEFAULT;
-    conn_tbl_cs_entry(tbl.cs);
+    conn_tbl_cs_entry();
 
     if (idx <= 0 && idx >= RECORD_TABLE_MAX_COUNT) {
         ret = USH_INVALID_CERT_VALUE_DEFAULT;
@@ -150,6 +150,6 @@ ushd_conn_table_get_record_cert(ush_s32_t idx) {
         ret = tbl.records[idx].cert;
     }
 
-    conn_tbl_cs_exit(tbl.cs);
+    conn_tbl_cs_exit();
     return ret;
 }

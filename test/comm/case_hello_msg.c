@@ -1,9 +1,6 @@
-#include "string.h"
+#include "common.h"
 
 #include "ush_comm_hello_msg.h"
-#include "ush_assert.h"
-
-#define OK USH_RET_OK
 
 static void test_hello_create() {
     ush_ret_t ret = USH_RET_OK;

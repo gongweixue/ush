@@ -11,29 +11,29 @@ typedef enum USH_LOG_LVL {
 } USH_LOG_LVL;
 
 #ifndef USH_LOG_ON
-#define USH_LOG_ON              (1)
+    #define USH_LOG_ON              (1)
 #endif
 
 #ifndef USH_LOG_LVL_SELECTOR
-#define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
+    #define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
 #endif
 
 void ush_log_cs_enter();
 void ush_log_cs_exit();
 
 #if !USH_LOG_ON
-#define log_def(owner, lvl, ...)
+    #define log_def(owner, lvl, ...)
 #else
-#define log_def(owner, lvl, ...)   {                                           \
-    ush_log_cs_enter();                                                        \
-    if (lvl <= USH_LOG_LVL_SELECTOR) {                                         \
-        printf("*****" #owner"-"#lvl":\n");                                    \
-        printf("---- At :%s:%s:%d\n", __FILE__, __FUNCTION__, __LINE__);       \
-        printf("---- "); printf(__VA_ARGS__);                                  \
-        printf("\n\n");                                                        \
-    }                                                                          \
-    ush_log_cs_exit();                                                         \
-}
+    #define log_def(owner, lvl, ...)   {                                        \
+        ush_log_cs_enter();                                                     \
+        if (lvl <= USH_LOG_LVL_SELECTOR) {                                      \
+            printf("*****" #owner"-"#lvl":\n");                                 \
+            printf("---- At :%s:%s:%d\n", __FILE__, __FUNCTION__, __LINE__);    \
+            printf("---- "); printf(__VA_ARGS__);                               \
+            printf("\n\n");                                                     \
+        }                                                                       \
+        ush_log_cs_exit();                                                      \
+    }
 #endif // !USH_LOG_ON
 
 
