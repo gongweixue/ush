@@ -12,6 +12,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/public/
     ${PROJECT_SOURCE_DIR}/src/ushd/conn/
     ${PROJECT_SOURCE_DIR}/src/ushd/dist/
+    ${PROJECT_SOURCE_DIR}/src/ushd/reg/
 )
 
 add_library(${LIB_USHD_SCHED} STATIC ${SRC_USHD_SCHED})

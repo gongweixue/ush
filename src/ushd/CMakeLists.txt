@@ -2,6 +2,7 @@ add_subdirectory(conn)
 add_subdirectory(sched)
 add_subdirectory(touch)
 add_subdirectory(dist)
+add_subdirectory(reg)
 
 set(EXE_USHD ushd)
 

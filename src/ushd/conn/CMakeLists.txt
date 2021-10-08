@@ -9,6 +9,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/public/
     ${PROJECT_SOURCE_DIR}/src/comm/
     ${PROJECT_SOURCE_DIR}/src/ushd/dist/
+    ${PROJECT_SOURCE_DIR}/src/ushd/reg/
 )
 
 add_library(${LIB_USHD_CONN} STATIC ${SRC_USHD_CONN})
@@ -18,6 +19,7 @@ target_link_libraries(${LIB_USHD_CONN}
     pthread
     ush_util
     ush_comm
+    ushd_reg
 )
 
 set_target_properties(${LIB_USHD_CONN}
