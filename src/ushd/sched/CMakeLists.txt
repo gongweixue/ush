@@ -9,7 +9,7 @@ set(SRC_USHD_SCHED
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
     ${PROJECT_SOURCE_DIR}/src/util/
-    ${PROJECT_SOURCE_DIR}/src/public/
+    ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/ushd/conn/
     ${PROJECT_SOURCE_DIR}/src/ushd/dist/
     ${PROJECT_SOURCE_DIR}/src/ushd/reg/
