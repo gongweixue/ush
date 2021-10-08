@@ -3,7 +3,7 @@
 
 #include "ush_type_pub.h"
 
-#include "ushd_publish_thread.h"
+#include "ushd_dist_thread.h"
 
 typedef enum {
     USHD_CONN_RECORD_ATTR_NAME,
@@ -41,7 +41,7 @@ ush_ret_t ushd_conn_table_init();
 // return -1 means failed
 ush_s32_t ushd_conn_table_add_record(const ush_char_t           *name,
                                      ush_s32_t                   cert,
-                                     const ushd_publish_thread_t publish);
+                                     const ushd_dist_thread_t    dist);
 
 ush_s32_t ushd_conn_table_get_record_cert(ush_s32_t idx);
 

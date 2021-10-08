@@ -11,7 +11,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/src/public/
     ${PROJECT_SOURCE_DIR}/src/ushd/conn/
-    ${PROJECT_SOURCE_DIR}/src/ushd/publish/
+    ${PROJECT_SOURCE_DIR}/src/ushd/dist/
 )
 
 add_library(${LIB_USHD_SCHED} STATIC ${SRC_USHD_SCHED})
@@ -21,7 +21,7 @@ target_link_libraries(${LIB_USHD_SCHED}
     ush_comm
     ush_util
     ushd_conn
-    ushd_publish
+    ushd_dist
 )
 
 set_target_properties(${LIB_USHD_SCHED}

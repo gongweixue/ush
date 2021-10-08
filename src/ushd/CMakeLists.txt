@@ -1,7 +1,7 @@
 add_subdirectory(conn)
 add_subdirectory(sched)
 add_subdirectory(touch)
-add_subdirectory(publish)
+add_subdirectory(dist)
 
 set(EXE_USHD ushd)
 
@@ -26,7 +26,7 @@ target_link_libraries(${EXE_USHD}
     pthread
     ushd_touch
     ushd_sched
-    ushd_publish
+    ushd_dist
     ush_util
 )
 

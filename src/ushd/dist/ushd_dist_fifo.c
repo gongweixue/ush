@@ -6,24 +6,24 @@
 #include "ush_log.h"
 #include "ush_type_pub.h"
 
-#include "ushd_publish_fifo.h"
+#include "ushd_dist_fifo.h"
 
 
-#define PUBLISH_FIFO_ELEM_MAX_NUM (128)
+#define DIST_FIFO_ELEM_MAX_NUM (128)
 
 typedef struct elem {
-    ush_char_t data[USHD_PUBLISH_FIFO_ELEM_DATA_LEN];
+    ush_char_t data[USHD_DIST_FIFO_ELEM_DATA_LEN];
     ush_size_t sz;
 } elem;
 
 static void
-fifo_init(ushd_publish_fifo_t fifo) {
+fifo_init(ushd_dist_fifo_t fifo) {
     ush_assert(fifo);
 }
 
 static void
 write_elem(elem *dst, const void *src, ush_size_t sz) {
-    ush_assert(sz <= USHD_PUBLISH_FIFO_ELEM_DATA_LEN && dst && src);
+    ush_assert(sz <= USHD_DIST_FIFO_ELEM_DATA_LEN && dst && src);
     memcpy(dst->data, src, sz);
     dst->sz = sz;
 }
@@ -38,11 +38,11 @@ read_elem(void *dst, const elem *src, ush_size_t sz) {
     return src->sz;
 }
 
-USH_FIFO_IMPL_CODE_GEN(ushd_publish,
-                       PUBLISH_FIFO_ELEM_MAX_NUM,
+USH_FIFO_IMPL_CODE_GEN(ushd_dist,
+                       DIST_FIFO_ELEM_MAX_NUM,
                        elem,
                        fifo_init,
                        write_elem,
                        read_elem,
-                       USHD_PUBLISH_FIFO_ELEM_DATA_LEN
+                       USHD_DIST_FIFO_ELEM_DATA_LEN
 );

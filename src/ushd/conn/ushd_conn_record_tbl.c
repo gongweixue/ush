@@ -9,7 +9,7 @@
 #include "ush_comm_hello_msg.h"
 
 #include "ushd_conn_record_tbl.h"
-#include "ushd_publish_thread.h"
+#include "ushd_dist_thread.h"
 
 #define RECORD_TABLE_MAX_COUNT  (128)
 
@@ -18,7 +18,7 @@ typedef struct ushd_conn_record {
     ush_bool_t                   valid; // 0 for invalid, 1 for valid
     ush_char_t                   name[USH_COMM_CONN_NAME_LEN_MAX];
     ush_s32_t                    cert;
-    ushd_publish_thread_t        publish;
+    ushd_dist_thread_t           dist;
 } * ushd_conn_record_t;
 
 // ush_bool_t
@@ -100,7 +100,7 @@ ushd_conn_table_init() {
     tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';
     tbl.records[0].cert      = USH_INVALID_CERT_VALUE_DEFAULT;
-    tbl.records[0].publish   = NULL;
+    tbl.records[0].dist      = NULL;
 
     tbl.cursor = CONN_INVALID_IDX;
 
@@ -114,8 +114,8 @@ ushd_conn_table_init() {
 ush_s32_t
 ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
-                           const ushd_publish_thread_t publish) {
-    ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && publish);
+                           const ushd_dist_thread_t    dist) {
+    ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT != cert) && dist);
 
     conn_tbl_cs_entry();
 
@@ -128,7 +128,7 @@ ushd_conn_table_add_record(const ush_char_t           *name,
     tbl.records[tbl.cursor].valid     = 1;
     strcpy(tbl.records[tbl.cursor].name, name);
     tbl.records[tbl.cursor].cert      = cert;
-    tbl.records[tbl.cursor].publish   = publish;
+    tbl.records[tbl.cursor].dist      = dist;
 
     conn_tbl_cs_exit();
 

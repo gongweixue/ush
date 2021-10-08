@@ -4,9 +4,9 @@
 
 #include "ush_comm_howareyou_msg.h"
 
-#include "ushd_publish_proc.h"
+#include "ushd_dist_proc.h"
 
-void publish_proc_send_howareyou(mqd_t mq, publish_fifo_msg_howareyou *msg) {
+void dist_proc_send_howareyou(mqd_t mq, dist_fifo_msg_howareyou *msg) {
     ush_assert(-1 != mq && msg);
 
     // construct msg over mqueue

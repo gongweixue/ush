@@ -7,9 +7,9 @@
 #include "ush_string.h"
 
 #include "ushd_conn_record_tbl.h"
-#include "ushd_publish_fifo.h"
-#include "ushd_publish_fifo_msg.h"
-#include "ushd_publish_thread.h"
+#include "ushd_dist_fifo.h"
+#include "ushd_dist_fifo_msg.h"
+#include "ushd_dist_thread.h"
 #include "ushd_sched_proc.h"
 
 typedef void (*proc_func_t)(const ush_vptr_t ptr);
@@ -53,34 +53,34 @@ void proc_func_hello(const ush_vptr_t msg) {
     const ush_vptr_t  ackSync = ush_comm_hello_msg_ack_of(hello);
     ush_s32_t         cert    = ush_comm_hello_msg_cert_of(hello);
 
-    // create publish thread
+    // create dist thread
     ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
     ush_string_certname(certname, sizeof(certname), name, cert);
 
-    ushd_publish_thread_t publish = ushd_publish_thread_create(certname);
-    if (!publish) {
-        ushd_log(LOG_LVL_ERROR, "publish thread create failed.");
+    ushd_dist_thread_t dist = ushd_dist_thread_create(certname);
+    if (!dist) {
+        ushd_log(LOG_LVL_ERROR, "dist thread create failed.");
         return;
     }
-    ushd_log(LOG_LVL_INFO, "publish thread created %p.", publish);
+    ushd_log(LOG_LVL_INFO, "dist thread created %p.", dist);
 
     // add the info to the conn table
-    ush_s32_t record_idx = ushd_conn_table_add_record(name, cert, publish);
+    ush_s32_t record_idx = ushd_conn_table_add_record(name, cert, dist);
     if (-1 == record_idx) {
         ushd_log(LOG_LVL_ERROR, "conn can not add to the table");
         return;
     }
     ushd_log(LOG_LVL_INFO, "info added to conn table, idx %d", record_idx);
 
-    ushd_log(LOG_LVL_INFO, "starting publish thread %p", publish);
-    if (USH_RET_OK == ushd_publish_thread_start(publish)) {
-        publish_fifo_msg_howareyou msg = {
-            {USHD_PUBLISH_FIFO_CMD_HOWAREYOU}, ackSync, record_idx, cert};
+    ushd_log(LOG_LVL_INFO, "starting dist thread %p", dist);
+    if (USH_RET_OK == ushd_dist_thread_start(dist)) {
+        dist_fifo_msg_howareyou msg = {
+            {USHD_DIST_FIFO_CMD_HOWAREYOU}, ackSync, record_idx, cert};
 
-        ushd_publish_fifo_t fifo = ushd_publish_thread_get_fifo(publish);
+        ushd_dist_fifo_t fifo = ushd_dist_thread_get_fifo(dist);
 
-        ushd_log(LOG_LVL_INFO, "push data to the publish fifo");
-        ushd_publish_fifo_push(fifo, (publish_fifo_msg_desc*)&msg, sizeof(msg));
+        ushd_log(LOG_LVL_INFO, "push data to the dist fifo");
+        ushd_dist_fifo_push(fifo, (dist_fifo_msg_desc*)&msg, sizeof(msg));
     }
 
     return; // return anyway
