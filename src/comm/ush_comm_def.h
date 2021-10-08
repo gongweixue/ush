@@ -6,8 +6,6 @@
 
 #define USH_COMM_CONN_NAME_LEN_MAX            (64)
 
-#define USH_COMM_SIG_IDX_MAX                  (1024)
-
 ////////////////////////////       Touch       /////////////////////////////////
 #define USH_COMM_TOUCH_Q_PATH "/USH-TOUCH"
 #define USH_COMM_TOUCH_Q_MSG_MAX_CNT  (10)

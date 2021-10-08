@@ -25,6 +25,20 @@ typedef long               ush_ssize_t;
 typedef void *             ush_vptr_t;
 
 
+typedef ush_bool_t         BOOL;
+typedef ush_u8_t           U8;
+typedef ush_s8_t           S8;
+typedef ush_u16_t          U16;
+typedef ush_s16_t          S16;
+typedef ush_u32_t          U32;
+typedef ush_s32_t          S32;
+typedef ush_u64_t          U64;
+typedef ush_s64_t          S64;
+typedef ush_fp32_t         FP32;
+typedef ush_fp64_t         FP64;
+typedef ush_char_t         CHAR;
+
+
 #ifndef NULL
 #define NULL ((ush_vptr_t)0)
 #endif
