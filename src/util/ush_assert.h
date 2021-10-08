@@ -3,6 +3,6 @@
 
 #include "assert.h"
 
-#define ush_assert(exp)    assert((exp))
+#define ush_assert(exp)    do { assert((exp)); } while(0)
 
 #endif

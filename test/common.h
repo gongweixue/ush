@@ -10,7 +10,7 @@
 #include "ush_log.h"
 #include "ush_time.h"
 
-#define OK USH_RET_OK
+#define OK (USH_RET_OK)
 
 #define true     (1)
 #define false    (0)

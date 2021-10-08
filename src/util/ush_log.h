@@ -37,9 +37,9 @@ void ush_log_cs_exit();
 #endif // !USH_LOG_ON
 
 
-#define ush_log(lvl, ...) log_def(USH, lvl, __VA_ARGS__)
+#define ush_log(lvl, ...) { log_def(USH, lvl, __VA_ARGS__);}
 
 
-#define ushd_log(lvl, ...) log_def(USHD, lvl, __VA_ARGS__)
+#define ushd_log(lvl, ...) { log_def(USHD, lvl, __VA_ARGS__);}
 
 #endif // USH_LOG_H
