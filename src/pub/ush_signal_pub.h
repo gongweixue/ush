@@ -1,6 +1,10 @@
 #ifndef USH_SIGNAL_PUB_H
 #define USH_SIGNAL_PUB_H
 
+#include "ush_type_pub.h"
+
+#include "ush_signal_enum.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -12,29 +16,29 @@ extern "C" {
  * ret: OK FAILED WRONG_PARAM
  * restriction: every new binding will be performed, use NULL to remove CB
 */
-// typedef ush_ret_t *ush_cb_pp_state_chg_t(ush_pp_hdl_t hdl,
+// typedef ush_ret_t *ush_cb_pp_state_chg_t(ush_pipe_t pipe,
 //                                          USH_PIPE_STATE st,
 //                                          const ush_pvoid_t *pParams);
 
-// typedef ush_ret_t *ush_cb_pp_attr_chg_t(ush_pp_hdl_t hdl,
+// typedef ush_ret_t *ush_cb_pp_attr_chg_t(ush_pipe_t pipe,
 //                                         USH_PIPE_ATTR attrType,
 //                                         const ush_pvoid_t pVal,
 //                                         const ush_pvoid_t *pParams);
 
-typedef ush_ret_t *ush_cb_sig_reg_done_t(ush_pp_hdl_t hdl,
-                                         ush_u32_t sigId,
+typedef ush_ret_t *ush_cb_sig_reg_done_t(ush_pipe_t pipe,
+                                         ush_signal_idx_t sigId,
                                          ush_bool_t success,
                                          const ush_pvoid_t *pParams);
 
 // implement with burst reg mode
-// typedef ush_ret_t *ush_cb_sig_lst_reg_done_t(ush_pp_hdl_t,
+// typedef ush_ret_t *ush_cb_sig_lst_reg_done_t(ush_pipe_t pipe,
 //                                              const ush_u32_t *pFailList,
 //                                              ush_size_t cnt,
 //                                              const ush_pvoid_t *pParams);
 
 
 /////////////////////////////////////// signal reached /////////////////////////
-typedef ush_ret_t *ush_cb_sig_rcv_t(ush_pp_hdl_t hdl,
+typedef ush_ret_t *ush_cb_sig_rcv_t(ush_pipe_t pipe,
                                     ush_u32_t sigId,
                                     const ush_pvoid_t pVal,
                                     const ush_pvoid_t *pParams);
@@ -52,7 +56,7 @@ typedef struct ush_sig_reg_conf_t {
     ush_bool_t       verbose;
     ush_u8_t         timeSlice;
 } ush_sig_reg_conf_t;
-ush_ret_t ush_register_sig_rcv(ush_pp_hdl_t hdl,
+ush_ret_t ush_register_sig_rcv(ush_pipe_t pipe,
                                ush_cb_sig_rcv_t pFunc,
                                const ush_sig_reg_conf_t *pConf);
 
@@ -66,7 +70,7 @@ ush_ret_t ush_register_sig_rcv(ush_pp_hdl_t hdl,
  * restriction: value may be out of date when arrived.
  *     0 of Timeout means block for ever.
 */
-// ush_ret_t ush_sig_query(ush_pp_hdl_t hdl,
+// ush_ret_t ush_sig_query(ush_pipe_t pipe,
 //                         ush_u32_t sigId,
 //                         ush_pvoid_t pVal,
 //                         ush_u16_t msTimeout);

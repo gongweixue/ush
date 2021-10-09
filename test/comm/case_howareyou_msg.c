@@ -1,4 +1,4 @@
-#include "common.h"
+#include "test-common.h"
 
 #include "ush_comm_howareyou_msg.h"
 

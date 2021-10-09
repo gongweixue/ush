@@ -72,7 +72,7 @@ ush_ret_t ush_pipe_create(
     ush_u16_t         timeout,       // the unit is 1s at least, and 0 is forever.
     ush_pvoid_t      *pParams,       // 2-level ptrs for all params, conf-file, etc.
     ush_size_t        paramCnt,
-    ush_pp_hdl_t     *pHdl);
+    ush_pipe_t       *pPipe);
 
 /*
  * Destory a pipe connection with the hub
@@ -89,7 +89,7 @@ ush_ret_t ush_pipe_create(
  *         It would be closed by the hub implicite
  *         The flush will be performed when the value is not 0.
 */
-ush_ret_t ush_pipe_delete(ush_pp_hdl_t hdl,
+ush_ret_t ush_pipe_delete(ush_pipe_t   pipe,
                           ush_bool_t   flush,
                           ush_u16_t    msDelay);
 
@@ -102,7 +102,7 @@ ush_ret_t ush_pipe_delete(ush_pp_hdl_t hdl,
  * detail: flush all the data(triger the events) in the indicated pipe.
  * this call may trigger the event 'sig receive'
 */
-ush_ret_t ush_pipe_flush(ush_pp_hdl_t hdl);
+ush_ret_t ush_pipe_flush(ush_pipe_t pipe);
 
 
 /*
@@ -116,9 +116,9 @@ ush_ret_t ush_pipe_flush(ush_pp_hdl_t hdl);
  *     **Use "flush" to clean the data in the pipe manully if you need it.
  *     The flush will be performed when the value is not 0.
 */
-ush_ret_t ush_pipe_start(ush_pp_hdl_t hdl);
+ush_ret_t ush_pipe_start(ush_pipe_t pipe);
 
-ush_ret_t ush_pipe_stop(ush_pp_hdl_t hdl, ush_u8_t flush, ush_u16_t msTimeout);
+ush_ret_t ush_pipe_stop(ush_pipe_t pipe, ush_u8_t flush, ush_u16_t msTimeout);
 
 
 /*
@@ -127,7 +127,7 @@ ush_ret_t ush_pipe_stop(ush_pp_hdl_t hdl, ush_u8_t flush, ush_u16_t msTimeout);
  * thread safe: n
  * ret: OK FAILED WRONG_PARAM NOT_SUPPORT NO_DATA
 */
-ush_ret_t ush_pipe_query(ush_pp_hdl_t hdl,
+ush_ret_t ush_pipe_query(ush_pipe_t pipe,
                          USH_PIPE_ATTR attr,
                          ush_pvoid_t ptr);
 
@@ -139,7 +139,7 @@ ush_ret_t ush_pipe_query(ush_pp_hdl_t hdl,
  * restriction: wrong seq once the pipe starts,
  *     need to stop the pipe to update the attr of a pipe
 */
-ush_ret_t ush_pipe_update(ush_pp_hdl_t hdl,
+ush_ret_t ush_pipe_update(ush_pipe_t pipe,
                           USH_PIPE_ATTR attr,
                           const ush_pvoid_t ptr);
 

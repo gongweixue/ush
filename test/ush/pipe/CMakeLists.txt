@@ -5,9 +5,9 @@ set(EXE_NAME test-ush-pipe)
 set(SRC_LIST test-ush-pipe.c)
 
 include_directories(
+    ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/ushd/sched/
     ${PROJECT_SOURCE_DIR}/src/ushd/touch/
-    ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/test/
 )

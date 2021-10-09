@@ -56,7 +56,7 @@ typedef enum ush_ret {
 } ush_ret_t;
 
 // handle type for pipe, just a number, no meaning on client.
-typedef ush_s64_t          ush_pp_hdl_t;
+typedef ush_s64_t          ush_pipe_t;
 
 
 #ifdef __cplusplus

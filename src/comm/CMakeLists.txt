@@ -6,8 +6,8 @@ set(SRC_USH_COMM
 )
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/src/pub/
+    ${PROJECT_SOURCE_DIR}/src/util/
 )
 
 add_library(${LIB_USH_COMM} STATIC ${SRC_USH_COMM})

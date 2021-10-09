@@ -7,7 +7,7 @@
 #include "ush_def_pub.h"
 #include "ush_log.h"
 
-#include "ushd_sched_fifo.h"
+#include "sched/ushd_sched_fifo.h"
 #include "ushd_touch_thread.h"
 #include "ushd_touch.h"
 

@@ -3,6 +3,8 @@
 
 #include "ush_type_pub.h"
 
+#include "ush_signal_enum.h"
+
 #include "ushd_reg_list.h"
 
 //   | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |

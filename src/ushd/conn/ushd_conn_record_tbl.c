@@ -2,15 +2,12 @@
 #include "string.h"
 
 #include "ush_assert.h"
+#include "ush_comm_hello_msg.h"
 #include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
 
-#include "ush_comm_hello_msg.h"
-
 #include "ushd_conn_record_tbl.h"
-#include "ushd_dist_thread.h"
-#include "ushd_reg_list.h"
 
 #define RECORD_TABLE_MAX_COUNT  (128)
 

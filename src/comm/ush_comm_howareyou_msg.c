@@ -1,9 +1,9 @@
 #include "stdlib.h"
 
 #include "ush_assert.h"
-#include "ush_log.h"
-#include "ush_def_pub.h"
 #include "ush_comm_howareyou_msg.h"
+#include "ush_def_pub.h"
+#include "ush_log.h"
 
 typedef struct howareyou_msg {
     ush_listener_msg_description desc;

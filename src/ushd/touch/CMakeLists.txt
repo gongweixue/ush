@@ -7,9 +7,9 @@ set(SRC_USHD_TOUCH
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
-    ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/src/pub/
-    ${PROJECT_SOURCE_DIR}/src/ushd/sched/
+    ${PROJECT_SOURCE_DIR}/src/ushd/
+    ${PROJECT_SOURCE_DIR}/src/util/
 )
 
 add_library(${LIB_USHD_TOUCH} STATIC ${SRC_USHD_TOUCH})

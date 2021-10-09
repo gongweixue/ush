@@ -43,16 +43,16 @@ ush_pipe_create(
     ush_u16_t         timeout,
     ush_pvoid_t      *pParams,
     ush_size_t        paramCnt,
-    ush_pp_hdl_t     *pHdl)
+    ush_pipe_t       *pPipe)
 {
     // params valid
-    if (!pName || !pHdl || USH_PP_MODE_MAX_GUARD <= mode) {
+    if (!pName || !pPipe || USH_PP_MODE_MAX_GUARD <= mode) {
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
-        if (pHdl) *pHdl = 0;
+        if (pPipe) *pPipe = 0;
         return USH_RET_WRONG_PARAM;
     }
 
-    *pHdl = 0; // NULL for error return;
+    *pPipe = 0; // NULL for error return;
 
     if (USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
         ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
@@ -92,7 +92,7 @@ ush_pipe_create(
     ret = send_hello_and_wait(name, pDL, conn);
 
     if (USH_RET_OK == ret) {
-        *pHdl = (ush_s64_t)conn;
+        *pPipe = (ush_s64_t)conn;
         ush_log(LOG_LVL_INFO, "set conn's ptr to handle returned");
     } else {
         ush_log(LOG_LVL_FATAL, "hello and howareyou failed");

@@ -3,8 +3,8 @@
 
 #include "ush_type_pub.h"
 
-#include "ushd_dist_thread.h"
-#include "ushd_reg_list.h"
+#include "dist/ushd_dist_thread.h"
+#include "reg/ushd_reg_list.h"
 
 // typedef enum {
 //     USHD_CONN_RECORD_ATTR_NAME,

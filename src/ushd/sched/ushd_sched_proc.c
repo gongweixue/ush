@@ -6,10 +6,10 @@
 #include "ush_log.h"
 #include "ush_string.h"
 
-#include "ushd_conn_record_tbl.h"
-#include "ushd_dist_fifo.h"
-#include "ushd_dist_fifo_msg.h"
-#include "ushd_dist_thread.h"
+#include "conn/ushd_conn_record_tbl.h"
+#include "dist/ushd_dist_fifo.h"
+#include "dist/ushd_dist_fifo_msg.h"
+#include "dist/ushd_dist_thread.h"
 #include "ushd_sched_proc.h"
 
 typedef void (*proc_func_t)(const ush_pvoid_t ptr);

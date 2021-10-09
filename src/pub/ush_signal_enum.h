@@ -7,10 +7,21 @@
 #endif
 #define USH_ADD_SIGNAL(GRP, NAME, TY) GRP##_##NAME##_##TY,
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
 #include "ush_signal_conf"
     USH_SIGNAL_IDX_MAX
 } ush_signal_idx_t;
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #ifdef USH_ADD_SIGNAL

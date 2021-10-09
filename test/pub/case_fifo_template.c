@@ -1,8 +1,10 @@
-#include "common.h"
-#include "ush_fifo_template.h"
 
 #include "stdlib.h"
 #include "string.h"
+
+#include "test-common.h"
+#include "ush_fifo_template.h"
+
 
 static unsigned int cnt = 0;
 static const unsigned int max = 4096;

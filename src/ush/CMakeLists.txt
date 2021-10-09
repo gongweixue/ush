@@ -13,11 +13,11 @@ set(SRC_USH
 )
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src/ush/
-    ${PROJECT_SOURCE_DIR}/src/ush/listener/
-    ${PROJECT_SOURCE_DIR}/src/util/
+    ${PROJECT_SOURCE_DIR}/src/comm/
     ${PROJECT_SOURCE_DIR}/src/pub/
-    ${PROJECT_SOURCE_DIR}/src/comm/)
+    ${PROJECT_SOURCE_DIR}/src/ush/
+    ${PROJECT_SOURCE_DIR}/src/util/
+)
 
 add_library(${LIB_USH} STATIC ${SRC_USH})
 
