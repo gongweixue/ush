@@ -5,81 +5,39 @@
 extern "C" {
 #endif
 
-
-typedef enum USH_SIGNAL_CONTENT_TY {
-    USH_CONTENT_TY_STR = 0,
-    USH_CONTENT_TY_S8,
-    USH_CONTENT_TY_U8,
-    USH_CONTENT_TY_S16,
-    USH_CONTENT_TY_U16,
-    USH_CONTENT_TY_S32,
-    USH_CONTENT_TY_U32,
-    USH_CONTENT_TY_S64,
-    USH_CONTENT_TY_U64,
-    USH_CONTENT_TY_FLT,
-    USH_CONTENT_TY_DBL,
-    USH_CONTENT_TY_RAW,
-    USH_CONTENT_TY_ADDR,
-} USH_SIGNAL_CONTENT_TY;
-
-
-
-/* Events */
-typedef enum USH_EVENT_TY {
-    USH_EVENT_TY_PP_STATE     = 0x1000, // use the high 4bits, mask with others.
-    USH_EVENT_TY_PP_ATTR      = 0x2000,
-    USH_EVENT_TY_SIG_REG      = 0x3000,
-    USH_EVENT_TY_SIG_LIST_REG = 0x3100,
-    USH_EVENT_TY_SIG_RCV      = 0x4000,
-} USH_EVENT_TY;
-
-
 /*
  * Binding CB for events
  * sync call: y
  * thread safe: n
  * ret: OK FAILED WRONG_PARAM
  * restriction: every new binding will be performed, use NULL to remove CB
- * Todo: callback function list(maybe not needed)
 */
-////////////////////////////////////// pipe state changed //////////////////////
-typedef ush_ret_t *ush_cb_pp_state_chg_t(ush_pp_hdl_t hdl,
-                                         USH_PIPE_STATE st,
-                                         const ush_vptr_t *pParams);
-ush_ret_t ush_bind_pp_state_chg(ush_pp_hdl_t hdl, ush_cb_pp_state_chg_t pFunc);
+// typedef ush_ret_t *ush_cb_pp_state_chg_t(ush_pp_hdl_t hdl,
+//                                          USH_PIPE_STATE st,
+//                                          const ush_pvoid_t *pParams);
 
+// typedef ush_ret_t *ush_cb_pp_attr_chg_t(ush_pp_hdl_t hdl,
+//                                         USH_PIPE_ATTR attrType,
+//                                         const ush_pvoid_t pVal,
+//                                         const ush_pvoid_t *pParams);
 
-////////////////////////////////// pipe attr value changed /////////////////////
-typedef ush_ret_t *ush_cb_pp_attr_chg_t(ush_pp_hdl_t hdl,
-                                        USH_PIPE_ATTR attrType,
-                                        const ush_vptr_t pVal,
-                                        const ush_vptr_t *pParams);
-ush_ret_t ush_bind_pp_attr_chg(ush_pp_hdl_t hdl, ush_cb_pp_attr_chg_t pFunc);
-
-
-/////////////////// signal register operation finished on service(really needed?
 typedef ush_ret_t *ush_cb_sig_reg_done_t(ush_pp_hdl_t hdl,
                                          ush_u32_t sigId,
                                          ush_bool_t success,
-                                         const ush_vptr_t *pParams);
-ush_ret_t ush_bind_sig_reg_done(ush_pp_hdl_t hdl, ush_cb_sig_reg_done_t pFunc);
+                                         const ush_pvoid_t *pParams);
 
-
-
-/////////////// signals in the list register operation finished.(really needed?)
-typedef ush_ret_t *ush_cb_sig_lst_reg_done_t(ush_pp_hdl_t,
-                                             const ush_u32_t *pFailList,
-                                             ush_size_t cnt,
-                                             const ush_vptr_t *pParams);
-ush_ret_t ush_bind_sig_list_reg_done(ush_pp_hdl_t hdl,
-                                     ush_cb_sig_lst_reg_done_t pFunc);
+// implement with burst reg mode
+// typedef ush_ret_t *ush_cb_sig_lst_reg_done_t(ush_pp_hdl_t,
+//                                              const ush_u32_t *pFailList,
+//                                              ush_size_t cnt,
+//                                              const ush_pvoid_t *pParams);
 
 
 /////////////////////////////////////// signal reached /////////////////////////
 typedef ush_ret_t *ush_cb_sig_rcv_t(ush_pp_hdl_t hdl,
                                     ush_u32_t sigId,
-                                    const ush_vptr_t pVal,
-                                    const ush_vptr_t *pParams);
+                                    const ush_pvoid_t pVal,
+                                    const ush_pvoid_t *pParams);
 /*
  * ADT for sigal-received event register configuration
  * verbose: 0 for a new val trigger only,
@@ -108,10 +66,10 @@ ush_ret_t ush_register_sig_rcv(ush_pp_hdl_t hdl,
  * restriction: value may be out of date when arrived.
  *     0 of Timeout means block for ever.
 */
-ush_ret_t ush_sig_query(ush_pp_hdl_t hdl,
-                        ush_u32_t sigId,
-                        ush_vptr_t pVal,
-                        ush_u16_t msTimeout);
+// ush_ret_t ush_sig_query(ush_pp_hdl_t hdl,
+//                         ush_u32_t sigId,
+//                         ush_pvoid_t pVal,
+//                         ush_u16_t msTimeout);
 
 /*
  * Todo:
@@ -120,7 +78,7 @@ ush_ret_t ush_sig_query(ush_pp_hdl_t hdl,
 // ush_ret_t ush_sig_send();
 
 
-ush_ret_t ush_bind_convert_func(ush_id_convert_func_t pFunc);
+// ush_ret_t ush_bind_convert_func(ush_id_convert_func_t pFunc);
 
 
 

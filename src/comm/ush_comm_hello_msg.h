@@ -19,7 +19,7 @@ ush_ret_t         ush_comm_hello_msg_destroy(ush_comm_hello_msg_t *pHello);
 
 size_t            ush_comm_hello_msg_sizeof();
 const ush_char_t *ush_comm_hello_msg_name_of(const ush_comm_hello_msg_t msg);
-const ush_vptr_t  ush_comm_hello_msg_ack_of(const ush_comm_hello_msg_t msg);
+const ush_pvoid_t ush_comm_hello_msg_ack_of(const ush_comm_hello_msg_t msg);
 ush_s32_t         ush_comm_hello_msg_cert_of(const ush_comm_hello_msg_t msg);
 
 void ush_comm_hello_msg_testpoint(const ush_comm_hello_msg_t msg);

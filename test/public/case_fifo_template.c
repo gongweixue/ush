@@ -27,7 +27,7 @@ void write_elem(msg_t *dst, const ush_s32_t *src, ush_size_t sz) {
     cnt++;
 }
 
-ush_size_t read_elem(ush_vptr_t dst, const msg_t *src, ush_size_t sz) {
+ush_size_t read_elem(ush_pvoid_t dst, const msg_t *src, ush_size_t sz) {
     ush_assert(src->flag == 1);
     (void)dst;
     ush_s32_t data = src->data;

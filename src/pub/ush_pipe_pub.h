@@ -70,7 +70,7 @@ ush_ret_t ush_pipe_create(
     USH_PIPE_MODE     mode,          // std / bunch
     ush_u32_t         flag,          // bit-mask for indicating tracing/wdg/logging/statistics and so on.
     ush_u16_t         timeout,       // the unit is 1s at least, and 0 is forever.
-    ush_vptr_t       *pParams,       // 2-level ptrs for all params, conf-file, etc.
+    ush_pvoid_t      *pParams,       // 2-level ptrs for all params, conf-file, etc.
     ush_size_t        paramCnt,
     ush_pp_hdl_t     *pHdl);
 
@@ -129,7 +129,7 @@ ush_ret_t ush_pipe_stop(ush_pp_hdl_t hdl, ush_u8_t flush, ush_u16_t msTimeout);
 */
 ush_ret_t ush_pipe_query(ush_pp_hdl_t hdl,
                          USH_PIPE_ATTR attr,
-                         ush_vptr_t ptr);
+                         ush_pvoid_t ptr);
 
 /*
  * Update the attr value of a pipe.
@@ -141,7 +141,7 @@ ush_ret_t ush_pipe_query(ush_pp_hdl_t hdl,
 */
 ush_ret_t ush_pipe_update(ush_pp_hdl_t hdl,
                           USH_PIPE_ATTR attr,
-                          const ush_vptr_t ptr);
+                          const ush_pvoid_t ptr);
 
 
 #ifdef __cplusplus

@@ -102,7 +102,7 @@ static void test_hello_ack_of() {
     ush_assert(OK == ret);
     ush_assert(NULL != msg);
 
-    const ush_vptr_t *result = ush_comm_hello_msg_ack_of(msg);
+    const ush_pvoid_t *result = ush_comm_hello_msg_ack_of(msg);
     ush_assert((ush_sync_hello_ack_t)result == ack);
 
     ret = ush_comm_hello_msg_destroy(&msg);
@@ -128,7 +128,7 @@ static void test_hello_cert_of() {
         ush_assert(OK == ret);
         ush_assert(NULL != msg);
 
-        const ush_vptr_t *result = ush_comm_hello_msg_ack_of(msg);
+        const ush_pvoid_t *result = ush_comm_hello_msg_ack_of(msg);
         ush_assert((ush_sync_hello_ack_t)result == ack);
 
         ret = ush_comm_hello_msg_destroy(&msg);
@@ -143,7 +143,7 @@ static void test_hello_cert_of() {
         ush_assert(OK == ret);
         ush_assert(NULL != msg);
 
-        const ush_vptr_t *result = ush_comm_hello_msg_ack_of(msg);
+        const ush_pvoid_t *result = ush_comm_hello_msg_ack_of(msg);
         ush_assert((ush_sync_hello_ack_t)result == ack);
 
         ret = ush_comm_hello_msg_destroy(&msg);
@@ -158,7 +158,7 @@ static void test_hello_cert_of() {
         ush_assert(OK == ret);
         ush_assert(NULL != msg);
 
-        const ush_vptr_t *result = ush_comm_hello_msg_ack_of(msg);
+        const ush_pvoid_t *result = ush_comm_hello_msg_ack_of(msg);
         ush_assert((ush_sync_hello_ack_t)result == ack);
 
         ret = ush_comm_hello_msg_destroy(&msg);

@@ -22,7 +22,7 @@ typedef double             ush_fp64_t;
 typedef char               ush_char_t;
 typedef size_t             ush_size_t;
 typedef long               ush_ssize_t;
-typedef void *             ush_vptr_t;
+typedef void *             ush_pvoid_t;
 
 
 typedef ush_bool_t         BOOL;

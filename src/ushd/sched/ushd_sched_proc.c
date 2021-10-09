@@ -12,21 +12,21 @@
 #include "ushd_dist_thread.h"
 #include "ushd_sched_proc.h"
 
-typedef void (*proc_func_t)(const ush_vptr_t ptr);
+typedef void (*proc_func_t)(const ush_pvoid_t ptr);
 
 typedef struct {
     // USH_COMM_TOUCH_MSG_CATALOG catelog;
     proc_func_t                func;
 } proc_function;
 
-void proc_func_hello(const ush_vptr_t msg);
+void proc_func_hello(const ush_pvoid_t msg);
 
 // pair by STL? so catalog could be index the function directly.concurrency?
 static proc_function func_tbl[] = {
     {/*USH_COMM_TOUCH_MSG_CATALOG_HELLO,*/ proc_func_hello}
 };
 
-void ushd_sched_proc(const ush_vptr_t ptr) {
+void ushd_sched_proc(const ush_pvoid_t ptr) {
     ush_assert(ptr);
     if (!ptr) {
         ushd_log(LOG_LVL_ERROR, "ptr is NULL!!!");
@@ -40,7 +40,7 @@ void ushd_sched_proc(const ush_vptr_t ptr) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void proc_func_hello(const ush_vptr_t msg) {
+void proc_func_hello(const ush_pvoid_t msg) {
     ush_assert(msg);
     if (!msg) {
         ushd_log(LOG_LVL_ERROR, "msg is NULL!!!");
@@ -50,7 +50,7 @@ void proc_func_hello(const ush_vptr_t msg) {
     const ush_comm_hello_msg_t hello = (const ush_comm_hello_msg_t)msg;
 
     const ush_char_t *name    = ush_comm_hello_msg_name_of(hello);
-    const ush_vptr_t  ackSync = ush_comm_hello_msg_ack_of(hello);
+    const ush_pvoid_t ackSync = ush_comm_hello_msg_ack_of(hello);
     ush_s32_t         cert    = ush_comm_hello_msg_cert_of(hello);
 
     // create dist thread

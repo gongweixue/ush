@@ -41,7 +41,7 @@ ush_pipe_create(
     USH_PIPE_MODE     mode,
     ush_u32_t         flag,
     ush_u16_t         timeout,
-    ush_vptr_t       *pParams,
+    ush_pvoid_t      *pParams,
     ush_size_t        paramCnt,
     ush_pp_hdl_t     *pHdl)
 {

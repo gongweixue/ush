@@ -14,7 +14,7 @@ typedef struct howareyou_msg {
 
 
 ush_comm_howareyou_msg_t
-ush_comm_howareyou_msg_create(ush_vptr_t sync, ush_s32_t idx, ush_s32_t cert) {
+ush_comm_howareyou_msg_create(ush_pvoid_t sync, ush_s32_t idx, ush_s32_t cert) {
     if (!sync || idx < 0) {
         return NULL;
     }

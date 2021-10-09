@@ -33,7 +33,7 @@ typedef struct ushd_conn_record {
 // ush_ret_t
 // ushd_conn_record_attr_set(ushd_conn_record_t         record,
 //                           USHD_CONN_RECORD_ATTR_TYPE ty,
-//                           const ush_vptr_t           ptr,
+//                           const ush_pvoid_t           ptr,
 //                           ush_size_t                 sz) {
 //     ush_assert(record && ptr);
 
@@ -43,7 +43,7 @@ typedef struct ushd_conn_record {
 // ush_s32_t
 // ushd_conn_record_attr_get(const ushd_conn_record_t   record,
 //                           USHD_CONN_RECORD_ATTR_TYPE ty,
-//                           ush_vptr_t                 ptr,
+//                           ush_pvoid_t                 ptr,
 //                           ush_size_t                 sz) {
 //     ush_assert(record && ptr);
 

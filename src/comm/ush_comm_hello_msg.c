@@ -11,7 +11,7 @@
 typedef struct hello_msg {
     ush_touch_msg_description desc;
     ush_char_t         name[USH_COMM_CONN_NAME_LEN_MAX];
-    ush_vptr_t        *ackSync;
+    ush_pvoid_t       *ackSync;
     ush_s32_t          cert;
 } USH_COMM_MSG_PACKED * ush_comm_hello_msg_t;
 
@@ -53,7 +53,7 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
 
     strcpy(tmp->name, name);
 
-    tmp->ackSync = (ush_vptr_t)ack;
+    tmp->ackSync = (ush_pvoid_t)ack;
     tmp->cert = cert;
 
     *pHello = tmp;
@@ -90,7 +90,7 @@ ush_comm_hello_msg_name_of(const ush_comm_hello_msg_t msg) {
     return msg->name;
 }
 
-const ush_vptr_t
+const ush_pvoid_t
 ush_comm_hello_msg_ack_of(const ush_comm_hello_msg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
