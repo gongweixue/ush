@@ -10,9 +10,9 @@
 // be carefulto to manipulate the ack, maybe free already.
 typedef struct hello_msg {
     ush_touch_msg_description desc;
-    ush_char_t         name[USH_COMM_CONN_NAME_LEN_MAX];
-    ush_pvoid_t       *ackSync;
-    ush_s32_t          cert;
+    ush_char_t                name[USH_COMM_CONN_NAME_LEN_MAX];
+    ush_pvoid_t              *ackSync;
+    ush_s32_t                 cert;
 } USH_COMM_MSG_PACKED * ush_comm_hello_msg_t;
 
 ush_ret_t
@@ -22,7 +22,7 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
                           ush_s32_t                cert) {
 
     if (!pHello || !name || !ack) {
-        if (pHello) *pHello = NULL;
+        if (pHello) {*pHello = NULL;}
         ush_log(LOG_LVL_FATAL, "param NULL");
         return USH_RET_WRONG_PARAM;
     }

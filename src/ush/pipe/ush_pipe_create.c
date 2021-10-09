@@ -48,7 +48,7 @@ ush_pipe_create(
     // params valid
     if (!pName || !pPipe || USH_PP_MODE_MAX_GUARD <= mode) {
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
-        if (pPipe) *pPipe = 0;
+        if (pPipe) {*pPipe = 0;}
         return USH_RET_WRONG_PARAM;
     }
 
