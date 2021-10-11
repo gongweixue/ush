@@ -126,11 +126,21 @@ ush_ret_t
 ush_connect_set_remote_idx(ush_connect_t conn, ush_s32_t idx) {
     ush_assert(conn);
     if (!conn) {
-        return USH_RET_FAILED;
+        return USH_RET_WRONG_PARAM;
     }
 
     conn->remote_idx = idx;
     return USH_RET_OK;
+}
+
+ush_ret_t
+ush_connect_get_remote_idx(const ush_connect_t conn, ush_s32_t *ptr) {
+    ush_assert(conn && ptr);
+    if (!conn) {
+        *ptr = 0;
+        return USH_RET_WRONG_PARAM;
+    }
+    return conn->remote_idx;
 }
 
 ush_ret_t

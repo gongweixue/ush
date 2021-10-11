@@ -7,6 +7,9 @@ typedef struct ush_touch *  ush_touch_t;
 
 #include "ush_comm_hello_msg.h"
 
+ush_ret_t ush_touch_send(const ush_touch_t touch,
+                         const ush_char_t *ptr,
+                         ush_size_t        sz);
 
 ush_ret_t ush_touch_send_hello(const ush_touch_t          touch,
                                const ush_comm_hello_msg_t hello,

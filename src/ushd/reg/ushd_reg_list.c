@@ -3,7 +3,7 @@
 
 #include "ush_type_pub.h"
 
-#include "ush_signal_enum.h"
+#include "ush_sig_enum.h"
 
 #include "ushd_reg_list.h"
 
@@ -33,7 +33,7 @@ typedef enum {
 } INTERVAL_FCTR;
 
 typedef struct ushd_reg_list {
-    REG_LIST_ELEM_TYPE bitmap[USH_SIGNAL_IDX_MAX];
+    REG_LIST_ELEM_TYPE bitmap[USH_SIG_ID_MAX];
 } * ushd_reg_list_t;
 
 #define SHFT_SUBSCRIBE            (0)

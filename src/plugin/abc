@@ -1,2 +1,2 @@
 
-USH_ADD_SIGNAL(ABC, abc, FP32)
+USH_ADD_SIG(ABC, abc, FP32)

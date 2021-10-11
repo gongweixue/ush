@@ -10,10 +10,12 @@ set(SRC_USH
     listener/ush_listener_routine.c
     pipe/ush_pipe_create.c
     pipe/ush_pipe_attr.c
+    sig/ush_sig_reg.c
 )
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
+    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/ush/
     ${PROJECT_SOURCE_DIR}/src/util/

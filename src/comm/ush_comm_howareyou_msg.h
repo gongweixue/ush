@@ -4,8 +4,6 @@
 #include "ush_comm_listener.h"
 #include "ush_type_pub.h"
 
-#define USH_COMM_HOWAREYOU_MSG_PRIO         (0)
-
 typedef struct ush_hello_ack * ush_sync_hello_ack_t;
 
 typedef struct howareyou_msg * ush_comm_howareyou_msg_t;

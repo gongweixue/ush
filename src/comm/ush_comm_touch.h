@@ -6,7 +6,8 @@
 #include "ush_comm_def.h"
 
 typedef enum USH_COMM_TOUCH_MSG_CATALOG {
-    USH_COMM_TOUCH_MSG_CATALOG_HELLO = 0
+    USH_COMM_TOUCH_MSG_CATALOG_HELLO,
+    USH_COMM_TOUCH_MSG_CATALOG_SIG
 } USH_COMM_TOUCH_MSG_CATALOG;
 
 typedef struct touch_msg_desc {

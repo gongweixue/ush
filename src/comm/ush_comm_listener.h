@@ -1,6 +1,7 @@
 #ifndef USH_COMM_LISTENER_H
 #define USH_COMM_LISTENER_H
 
+#include "ush_def_pub.h"
 #include "ush_type_pub.h"
 
 #include "ush_comm_def.h"

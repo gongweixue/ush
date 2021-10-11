@@ -34,7 +34,7 @@ ushd_dist_thread_create(const ush_char_t *name) {
         return NULL;
     }
     thread->tid  = USH_INVALID_TID; // invalid tid
-    thread->mq   = USH_MQD_INVALID_VALUE;
+    thread->mq   = USH_INVALID_MQD_VALUE;
     thread->fifo = NULL;
 
     if (USH_RET_OK != dist_mq_open(thread, name)) {
@@ -115,14 +115,14 @@ void * ushd_dist_thread_entry(void *arg) {
 
 static ush_ret_t
 dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
-    if (!name || USH_MQD_INVALID_VALUE != thread->mq) {
+    if (!name || USH_INVALID_MQD_VALUE != thread->mq) {
         return USH_RET_WRONG_PARAM;
     }
 
     ushd_log(LOG_LVL_DETAIL, "open dist %p mq %s", thread, name);
     for (int counter = 0; counter < MQ_OPEN_RETRY_CNT; ++counter) {
         thread->mq = mq_open(name, O_WRONLY);
-        if (USH_MQD_INVALID_VALUE != thread->mq) { // done
+        if (USH_INVALID_MQD_VALUE != thread->mq) { // done
             ush_log(LOG_LVL_INFO, "dist %p open done.", thread);
             return USH_RET_OK;
 

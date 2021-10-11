@@ -21,7 +21,7 @@ void dist_proc_send_howareyou(mqd_t mq, dist_fifo_msg_howareyou *msg) {
     ushd_log(LOG_LVL_DETAIL, "sending msg from %p ......", howareyou);
     int tmp = mq_send(mq, (char*)howareyou,
                       ush_comm_howareyou_msg_sizeof(),
-                      USH_COMM_HOWAREYOU_MSG_PRIO);
+                      USH_COMM_SEND_PRIO_HOWAREYOU);
     if (-1 == tmp) {
         ushd_log(LOG_LVL_FATAL, "send howareyou %p failed.", howareyou);
     }

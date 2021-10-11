@@ -1,2 +1,2 @@
 
-USH_ADD_SIGNAL(XYZ, xyz, U64)
+USH_ADD_SIG(XYZ, xyz, U64)

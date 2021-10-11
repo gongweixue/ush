@@ -16,6 +16,23 @@ typedef struct ush_touch {
     mqd_t mq;
 } * ush_touch_t;
 
+
+ush_ret_t
+ush_touch_send(const ush_touch_t touch, const ush_char_t *ptr, ush_size_t sz) {
+    ush_assert(touch && ptr && sz > 0);
+    ush_ret_t ret = USH_RET_OK;
+    const ush_char_t *pMsg = (const ush_char_t *)ptr;
+
+    int i = mq_send(touch->mq, pMsg, sz, USH_COMM_SEND_PRIO_SIG_REG);
+    if (-1 == i) {
+        ush_log(LOG_LVL_FATAL, "send msg failed.");
+        ret = USH_RET_FAILED;
+    }
+    ush_log(LOG_LVL_DETAIL, "send return");
+
+    return ret;
+}
+
 ush_ret_t
 ush_touch_send_hello(const ush_touch_t          touch,
                      const ush_comm_hello_msg_t hello,
@@ -26,7 +43,7 @@ ush_touch_send_hello(const ush_touch_t          touch,
 
     ush_size_t sz = ush_comm_hello_msg_sizeof();
     if (pDL) { // with timeout
-        int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_HELLO_MSG_PRIO, pDL);
+        int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_SEND_PRIO_HELLO, pDL);
         if (-1 == i) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
                 ush_log(LOG_LVL_FATAL, "send hello timeout");
@@ -38,12 +55,7 @@ ush_touch_send_hello(const ush_touch_t          touch,
         }
         ush_log(LOG_LVL_DETAIL, "timedsend return");
     } else {
-        int i = mq_send(touch->mq, pMsg, sz, USH_COMM_HELLO_MSG_PRIO);
-        if (-1 == i) {
-            ush_log(LOG_LVL_FATAL, "send hello failed.");
-            ret = USH_RET_FAILED;
-        }
-        ush_log(LOG_LVL_DETAIL, "send return");
+        ret = ush_touch_send(touch, pMsg, sz);
     }
 
     return ret;
@@ -52,7 +64,7 @@ ush_touch_send_hello(const ush_touch_t          touch,
 ush_ret_t
 ush_touch_close(ush_touch_t touch) {
     ush_assert(touch);
-    if (USH_MQD_INVALID_VALUE == touch->mq) {
+    if (USH_INVALID_MQD_VALUE == touch->mq) {
         ush_log(LOG_LVL_INFO, "touch already closed");
         return USH_RET_OK;
     }
@@ -63,7 +75,7 @@ ush_touch_close(ush_touch_t touch) {
         return USH_RET_FAILED;
     }
 
-    touch->mq = USH_MQD_INVALID_VALUE;
+    touch->mq = USH_INVALID_MQD_VALUE;
 
     return USH_RET_OK;
 }
@@ -71,7 +83,7 @@ ush_touch_close(ush_touch_t touch) {
 ush_ret_t
 ush_touch_open(ush_touch_t touch) {
     ush_assert(touch);
-    if (USH_MQD_INVALID_VALUE != touch->mq) { // maybe already opened
+    if (USH_INVALID_MQD_VALUE != touch->mq) { // maybe already opened
         ush_log(LOG_LVL_INFO, "touch already open");
         return USH_RET_OK;
     }
@@ -79,7 +91,7 @@ ush_touch_open(ush_touch_t touch) {
     ush_log(LOG_LVL_DETAIL, "try to open touch, addr %p", touch);
     for (int counter = 0; counter < USH_TOUCH_OPEN_RETRY_CNT; ++counter) {
         touch->mq = mq_open(USH_COMM_TOUCH_Q_PATH, O_WRONLY);
-        if (USH_MQD_INVALID_VALUE != touch->mq) { // done
+        if (USH_INVALID_MQD_VALUE != touch->mq) { // done
             ush_log(LOG_LVL_INFO, "listener open done.");
             return USH_RET_OK;
         } else { // failed
@@ -109,7 +121,7 @@ ush_touch_alloc(ush_touch_t *pTouch) {
     }
     ush_log(LOG_LVL_DETAIL, "touch mem allocate, addr %p", tmp);
 
-    tmp->mq = USH_MQD_INVALID_VALUE;
+    tmp->mq = USH_INVALID_MQD_VALUE;
     *pTouch = tmp;
 
     return USH_RET_OK;

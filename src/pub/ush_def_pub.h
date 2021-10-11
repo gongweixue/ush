@@ -5,6 +5,11 @@
 
 #define USH_INVALID_TID  (0xFFFFFFFF)
 
-#define USH_MQD_INVALID_VALUE (-1)
+#define USH_INVALID_MQD_VALUE (-1)
+
+#define USH_COMM_SEND_PRIO_HELLO             (0)
+#define USH_COMM_SEND_PRIO_HOWAREYOU         (0)
+
+#define USH_COMM_SEND_PRIO_SIG_REG           (1)
 
 #endif // USH_DEF_PUB_H

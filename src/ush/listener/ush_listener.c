@@ -48,7 +48,7 @@ ush_listener_open_start(ush_listener_t *pPtr, const ush_char_t *name) {
     attr.mq_maxmsg  = USH_COMM_LISTENER_Q_MSG_MAX_CNT;
     attr.mq_msgsize = USH_COMM_LISTENER_Q_MSG_MAX_LEN;
     tmp->mq = mq_open(name, O_RDONLY | O_CREAT, S_IRWXU | S_IRWXG, &attr);
-    if (USH_MQD_INVALID_VALUE == tmp->mq) {
+    if (USH_INVALID_MQD_VALUE == tmp->mq) {
         ush_log(LOG_LVL_FATAL, "%s can not open, errno:%d", name, errno);
         free(tmp);
         return USH_RET_FAILED;
@@ -90,9 +90,9 @@ ush_listener_stop_close(ush_listener_t *pPtr) {
         ush_log(LOG_LVL_INFO, "listener thread %lu cancel", (*pPtr)->tid);
     }
 
-    if (USH_MQD_INVALID_VALUE != (*pPtr)->mq) {
+    if (USH_INVALID_MQD_VALUE != (*pPtr)->mq) {
         mq_close((*pPtr)->mq);
-        (*pPtr)->mq = USH_MQD_INVALID_VALUE;
+        (*pPtr)->mq = USH_INVALID_MQD_VALUE;
         ush_log(LOG_LVL_INFO, "listener mq closed.");
     }
 
@@ -126,7 +126,7 @@ listener_thread_entry(void *arg) {
 static ush_ret_t
 ushd_listener_receive(mqd_t mq, ush_char_t *dest, size_t sz) {
     ush_assert(sz >= USH_COMM_LISTENER_Q_MSG_MAX_LEN);
-    if (USH_MQD_INVALID_VALUE == mq || !dest) {
+    if (USH_INVALID_MQD_VALUE == mq || !dest) {
         ushd_log(LOG_LVL_ERROR, "ushd touch not open");
         return USH_RET_WRONG_PARAM;
     }

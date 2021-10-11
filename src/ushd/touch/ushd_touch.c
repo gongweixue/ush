@@ -28,7 +28,7 @@ ushd_touch_create(ushd_touch_t *pTouch) {
     }
     ush_log(LOG_LVL_DETAIL, "alloc mem for touch, addr %p", tmp);
 
-    tmp->mq = USH_MQD_INVALID_VALUE;
+    tmp->mq = USH_INVALID_MQD_VALUE;
     *pTouch = tmp;
 
     return USH_RET_OK;
@@ -37,7 +37,7 @@ ushd_touch_create(ushd_touch_t *pTouch) {
 ush_ret_t
 ushd_touch_open(ushd_touch_t touch) {
     ush_assert(touch);
-    if (USH_MQD_INVALID_VALUE != touch->mq) { // maybe already opened
+    if (USH_INVALID_MQD_VALUE != touch->mq) { // maybe already opened
         ushd_log(LOG_LVL_INFO, "touch already opened");
         return USH_RET_OK;
     }
@@ -51,7 +51,7 @@ ushd_touch_open(ushd_touch_t touch) {
                         S_IRWXU  | S_IRWXG, // 0770
                         &qAttr);
 
-    if (USH_MQD_INVALID_VALUE == touch->mq) {
+    if (USH_INVALID_MQD_VALUE == touch->mq) {
         ushd_log(LOG_LVL_ERROR, "ushd touch open returns invalid value");
         return USH_RET_FAILED;
     }
@@ -64,7 +64,7 @@ ushd_touch_open(ushd_touch_t touch) {
 ush_ret_t
 ushd_touch_close(ushd_touch_t touch) {
     ush_assert(touch);
-    if (!touch || USH_MQD_INVALID_VALUE == touch->mq) {
+    if (!touch || USH_INVALID_MQD_VALUE == touch->mq) {
         ushd_log(LOG_LVL_INFO, "ushd touch already closed");
         return USH_RET_OK;
     }
@@ -76,7 +76,7 @@ ushd_touch_close(ushd_touch_t touch) {
         return USH_RET_FAILED;
     }
 
-    touch->mq = USH_MQD_INVALID_VALUE;
+    touch->mq = USH_INVALID_MQD_VALUE;
 
     return USH_RET_OK;
 }
@@ -84,7 +84,7 @@ ushd_touch_close(ushd_touch_t touch) {
 ush_ret_t
 ushd_touch_receive(ushd_touch_t touch, ush_char_t *dest, ush_size_t sz) {
     ush_assert(sz >= USH_COMM_TOUCH_Q_MSG_MAX_LEN);
-    if (USH_MQD_INVALID_VALUE == touch->mq || !dest) {
+    if (USH_INVALID_MQD_VALUE == touch->mq || !dest) {
         ushd_log(LOG_LVL_ERROR, "ushd touch not open");
         return USH_RET_FAILED;
     }
