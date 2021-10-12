@@ -96,7 +96,6 @@ ushd_touch_thread_entry(void *arg) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
             continue;
         }
-        ush_comm_hello_msg_testpoint((ush_comm_hello_msg_t)buf);
 
         // push msg
         ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();

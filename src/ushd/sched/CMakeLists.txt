@@ -8,6 +8,7 @@ set(SRC_USHD_SCHED
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
+    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/ushd/
     ${PROJECT_SOURCE_DIR}/src/util/

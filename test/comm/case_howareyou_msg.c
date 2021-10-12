@@ -1,6 +1,6 @@
 #include "test-common.h"
 
-#include "ush_comm_howareyou_msg.h"
+#include "ush_comm.h"
 
 static void test_howareyou_create() {
     ush_ret_t ret = USH_RET_OK;

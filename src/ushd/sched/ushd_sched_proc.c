@@ -1,8 +1,7 @@
 
 
 #include "ush_assert.h"
-#include "ush_comm_hello_msg.h"
-#include "ush_comm_touch.h"
+#include "ush_comm.h"
 #include "ush_log.h"
 #include "ush_string.h"
 
@@ -12,19 +11,10 @@
 #include "dist/ushd_dist_thread.h"
 #include "ushd_sched_proc.h"
 
-typedef void (*proc_func_t)(const ush_pvoid_t ptr);
-
-typedef struct {
-    // USH_COMM_TOUCH_MSG_CATALOG catelog;
-    proc_func_t                func;
-} proc_function;
-
 void proc_func_hello(const ush_pvoid_t msg);
+void proc_func_sig(const ush_pvoid_t msg);
 
-// pair by STL? so catalog could be index the function directly.concurrency?
-static proc_function func_tbl[] = {
-    {/*USH_COMM_TOUCH_MSG_CATALOG_HELLO,*/ proc_func_hello}
-};
+
 
 void ushd_sched_proc(const ush_pvoid_t ptr) {
     ush_assert(ptr);
@@ -35,10 +25,21 @@ void ushd_sched_proc(const ush_pvoid_t ptr) {
     const ush_touch_msg_description *pDescription =
         (const ush_touch_msg_description *)ptr;
 
-    func_tbl[pDescription->catalog].func(ptr);
+    switch (pDescription->catalog) {
+    case USH_COMM_TOUCH_MSG_CATALOG_HELLO:
+        proc_func_hello(ptr);
+        break;
+    case USH_COMM_TOUCH_MSG_CATALOG_SIG:
+        proc_func_sig(ptr);
+        break;
+    default:
+        ushd_log(LOG_LVL_FATAL, "wrong catalog #%d", pDescription->catalog);
+        break;
+    }
+
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////// hello msg proc ///////////////////////////
 
 void proc_func_hello(const ush_pvoid_t msg) {
     ush_assert(msg);
@@ -84,4 +85,16 @@ void proc_func_hello(const ush_pvoid_t msg) {
     }
 
     return; // return anyway
+}
+
+//////////////////////////////////// sig msg proc ////////////////////////////
+
+void proc_func_sig(const ush_pvoid_t msg) {
+    ush_assert(msg);
+    if (!msg) {
+        ushd_log(LOG_LVL_ERROR, "msg is NULL!!!");
+        return;
+    }
+
+    const ush_comm_sig_msg_reg_t *regmsg = (const ush_comm_sig_msg_reg_t *)msg;
 }

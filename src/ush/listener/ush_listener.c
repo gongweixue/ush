@@ -9,9 +9,7 @@
 #include "ush_def_pub.h"
 #include "ush_log.h"
 
-#include "ush_comm_hello_msg.h"
-#include "ush_comm_howareyou_msg.h"
-#include "ush_comm_listener.h"
+#include "ush_comm.h"
 
 #include "ush_listener.h"
 #include "ush_listener_deal.h"

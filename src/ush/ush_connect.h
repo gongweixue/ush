@@ -14,7 +14,9 @@ ush_ret_t ush_connect_destroy(ush_connect_t *pConn);
 ush_ret_t ush_connect_get_cert(ush_connect_t conn, ush_s32_t *ptr);
 
 ush_ret_t ush_connect_set_remote_idx(ush_connect_t conn, ush_s32_t idx);
+
 ush_ret_t ush_connect_get_remote_idx(const ush_connect_t conn, ush_s32_t *ptr);
+
 ush_ret_t ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr);
 
 ush_ret_t ush_connect_get_listener(ush_connect_t conn, ush_listener_t *ptr);

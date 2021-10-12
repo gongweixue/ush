@@ -1,7 +1,7 @@
 #ifndef USH_LISTENER_ROUTINE_H
 #define USH_LISTENER_ROUTINE_H
 
-#include "ush_comm_howareyou_msg.h"
+#include "ush_comm.h"
 
 void ush_listener_routine_howareyou(ush_comm_howareyou_msg_t msg);
 

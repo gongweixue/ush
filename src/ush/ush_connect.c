@@ -5,7 +5,7 @@
 
 #include "ush_assert.h"
 #include "ush_def_pub.h"
-#include "ush_comm_touch.h"
+#include "ush_comm.h"
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
@@ -137,10 +137,13 @@ ush_ret_t
 ush_connect_get_remote_idx(const ush_connect_t conn, ush_s32_t *ptr) {
     ush_assert(conn && ptr);
     if (!conn) {
-        *ptr = 0;
+        if (ptr) {*ptr = 0;}
+
         return USH_RET_WRONG_PARAM;
     }
-    return conn->remote_idx;
+
+    *ptr = conn->remote_idx;
+    return USH_RET_OK;
 }
 
 ush_ret_t
