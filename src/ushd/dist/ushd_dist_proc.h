@@ -5,6 +5,6 @@
 
 #include "ushd_dist_fifo_msg.h"
 
-void dist_proc_send_howareyou(mqd_t mq, dist_fifo_msg_howareyou *msg);
+void dist_proc_send_hay(mqd_t mq, dist_fifo_msg_hay *msg);
 
 #endif // USHD_DIST_PROC_H

@@ -1,8 +1,8 @@
 #include "case_hello_msg.c"
-#include "case_howareyou_msg.c"
+#include "case_hay_msg.c"
 
 int main() {
     test_hello();
-    test_howareyou();
+    test_hay();
     return 0;
 }

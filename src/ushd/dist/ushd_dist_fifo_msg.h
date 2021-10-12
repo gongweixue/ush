@@ -16,11 +16,11 @@ typedef struct dist_fifo_msg_desc {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct dist_fifo_msg_howareyou {
+typedef struct dist_fifo_msg_hay {
     dist_fifo_msg_desc         desc;
     ush_pvoid_t                ack_sync;
     ush_s32_t                  idx;
     ush_s32_t                  cert;
-} dist_fifo_msg_howareyou;
+} dist_fifo_msg_hay;
 
 #endif // USHD_DIST_FIFO_MSG_H

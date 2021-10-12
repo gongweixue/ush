@@ -7,14 +7,14 @@ set(SRC_LIST test-ush-pipe.c)
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/ushd/sched/
-    ${PROJECT_SOURCE_DIR}/src/ushd/touch/
+    ${PROJECT_SOURCE_DIR}/src/ushd/tch/
     ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/test/
 )
 
 add_executable(${EXE_NAME} ${SRC_LIST})
 
-target_link_libraries(${EXE_NAME} ush ush_comm ushd_sched ushd_touch)
+target_link_libraries(${EXE_NAME} ush ush_comm ushd_sched ushd_tch)
 
 
 set_target_properties(${EXE_NAME}

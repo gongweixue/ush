@@ -6,7 +6,7 @@
 #include "ush_string.h"
 
 #include "ushd_sched_proc.h"
-#include "touch/ushd_sched_proc_touch.h"
+#include "tch/ushd_sched_proc_tch.h"
 
 void ushd_sched_proc(const ush_pvoid_t ptr) {
     ush_assert(ptr);
@@ -15,9 +15,9 @@ void ushd_sched_proc(const ush_pvoid_t ptr) {
         return;
     }
 
-    switch (((const ush_comm_port_description *)ptr)->port) {
-    case USH_COMM_PORT_TOUCH:
-        ushd_sched_proc_touch(ptr);
+    switch (((const ush_comm_port_d *)ptr)->port) {
+    case USH_COMM_PORT_TCH:
+        ushd_sched_proc_tch(ptr);
         break;
     default:
         ushd_log(LOG_LVL_ERROR, "wrong ush_comm_port");

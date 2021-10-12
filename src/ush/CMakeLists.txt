@@ -3,11 +3,11 @@ set(LIB_USH ush)
 set(SRC_USH
     ush_connect.c
     ush_sync.c
-    ush_touch.c
+    ush_tch.c
     ush_version.c
-    listener/ush_listener.c
-    listener/proc/ush_listener_proc.c
-    listener/proc/ush_listener_proc_howareyou.c
+    lstnr/ush_lstnr.c
+    lstnr/proc/ush_lstnr_proc.c
+    lstnr/proc/ush_lstnr_proc_hay.c
     pipe/ush_pipe_create.c
     pipe/ush_pipe_attr.c
     sig/ush_sig_reg.c

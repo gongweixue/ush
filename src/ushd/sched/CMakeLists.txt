@@ -4,9 +4,9 @@ set(SRC_USHD_SCHED
     ushd_sched_thread.c
     ushd_sched_fifo.c
     proc/ushd_sched_proc.c
-    proc/touch/ushd_sched_proc_touch.c
-    proc/touch/ushd_sched_proc_touch_hello.c
-    proc/touch/ushd_sched_proc_touch_sig.c
+    proc/tch/ushd_sched_proc_tch.c
+    proc/tch/ushd_sched_proc_tch_hello.c
+    proc/tch/ushd_sched_proc_tch_sig.c
 )
 
 include_directories(

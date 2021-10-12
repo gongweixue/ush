@@ -3,7 +3,7 @@
 #include "ush_log.h"
 #include "ush_sig_pub.h"
 
-#include "ush_comm_sig_msg.h"
+#include "ush_comm_tch_sig.h"
 
 ush_ret_t
 ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
@@ -25,8 +25,8 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
         return USH_RET_WRONG_SEQ;
     }
 
-    ush_touch_t touch = NULL;
-    if (USH_RET_OK != ush_connect_get_touch(conn, &touch)) {
+    ush_tch_t touch = NULL;
+    if (USH_RET_OK != ush_connect_get_tch(conn, &touch)) {
         ush_log(LOG_LVL_ERROR, "conn's touch getting failed");
         return USH_RET_FAILED;
     }
@@ -36,18 +36,18 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
         return USH_RET_WRONG_PARAM;
     }
 
-    ush_comm_sig_msg_reg_t msg = {
+    ush_comm_tch_sig_reg_t msg = {
         {
             {
                 {
-                    USH_COMM_PORT_TOUCH
+                    USH_COMM_PORT_TCH
                 },
-                USH_COMM_TOUCH_MSG_CATALOG_SIG
+                USH_COMM_TCH_MSG_CATALOG_SIG
             },
-            USH_COMM_TOUCH_SIG_INTENT_REG
+            USH_COMM_TCH_SIG_INTENT_REG
         },
         idx, cert, pconf->sigid, pconf->done, pconf->rcv, pipe
     };
 
-    return ush_touch_send(touch, (const ush_char_t*)(&msg), sizeof(msg));
+    return ush_tch_send(touch, (const ush_char_t*)(&msg), sizeof(msg));
 }

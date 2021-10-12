@@ -101,10 +101,10 @@ void * ushd_dist_thread_entry(void *arg) {
 
         DIST_FIFO_MSG_TYPE ty = ((dist_fifo_msg_desc*)buf)->type;
         if (USHD_DIST_FIFO_CMD_HOWAREYOU == ty) {
-            dist_fifo_msg_howareyou *ptr = (dist_fifo_msg_howareyou *)buf;
+            dist_fifo_msg_hay *ptr = (dist_fifo_msg_hay *)buf;
 
             ushd_log(LOG_LVL_INFO, "sending msg %p to the mq", ptr);
-            dist_proc_send_howareyou(thread->mq, ptr);
+            dist_proc_send_hay(thread->mq, ptr);
         }
     };
 }

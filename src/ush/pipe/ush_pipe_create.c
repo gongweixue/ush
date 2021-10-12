@@ -16,7 +16,7 @@
 #include "ush_random.h"
 #include "ush_string.h"
 #include "ush_sync.h"
-#include "ush_touch.h"
+#include "ush_tch.h"
 #include "ush_type_pub.h"
 
 
@@ -53,9 +53,9 @@ ush_pipe_create(
 
     *pPipe = 0; // NULL for error return;
 
-    if (USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
+    if (USH_COMM_LSTNR_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
         ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
-                USH_COMM_LISTENER_Q_SHORTNAME_LEN_MAX);
+                USH_COMM_LSTNR_Q_SHORTNAME_LEN_MAX);
         return USH_RET_NOT_SUPPORT;
     }
 
@@ -122,17 +122,17 @@ send_hello_and_wait(const ush_char_t *pName,
     }
 
     // prepare hello msg
-    ush_comm_hello_msg_t hello;
+    ush_comm_tch_hello_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
     int cert = USH_INVALID_CERT_VALUE_DEFAULT;
     ush_connect_get_cert(conn, &cert);
-    ush_comm_hello_msg_create(&hello, pName, ack, cert);
-    ush_comm_hello_msg_testpoint(hello);
+    ush_comm_tch_hello_create(&hello, pName, ack, cert);
+    ush_comm_tch_hello_testpoint(hello);
 
     // send with or without timeout
-    ush_touch_t touch = NULL;
-    ush_connect_get_touch(conn, &touch);
-    ret = ush_touch_send_hello(touch, hello, pDL);
+    ush_tch_t touch = NULL;
+    ush_connect_get_tch(conn, &touch);
+    ret = ush_tch_send_hello(touch, hello, pDL);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "sending hello failed");
     } else {
@@ -152,7 +152,7 @@ send_hello_and_wait(const ush_char_t *pName,
 
     ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
     ush_sync_hello_ack_destroy(&ack); // ack not needed any more.
-    ush_comm_hello_msg_destroy(&hello);
+    ush_comm_tch_hello_destroy(&hello);
 
     return ret;
 }
@@ -184,12 +184,12 @@ get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
 
 static void
 gen_prefix_name(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
-    if (strlen(USH_COMM_LISTENER_Q_PATH_PREFIX) >= sz) {
+    if (strlen(USH_COMM_LSTNR_Q_PATH_PREFIX) >= sz) {
         ush_log(LOG_LVL_ERROR, "name too long, name gen failed");
         return;
     }
     // prefix
-    strcpy(name, USH_COMM_LISTENER_Q_PATH_PREFIX);
+    strcpy(name, USH_COMM_LSTNR_Q_PATH_PREFIX);
 
     if (strlen(name) + strlen(shortname) >= sz) {
         ush_log(LOG_LVL_INFO, "name too long, but only gen prefix.");

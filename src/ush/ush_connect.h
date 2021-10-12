@@ -3,8 +3,8 @@
 
 typedef struct ush_connect * ush_connect_t;
 
-#include "listener/ush_listener.h"
-#include "ush_touch.h"
+#include "lstnr/ush_lstnr.h"
+#include "ush_tch.h"
 #include "ush_type_pub.h"
 
 ush_ret_t ush_connect_create(ush_connect_t *pConn, const ush_char_t *name);
@@ -17,9 +17,9 @@ ush_ret_t ush_connect_set_remote_idx(ush_connect_t conn, ush_s32_t idx);
 
 ush_ret_t ush_connect_get_remote_idx(const ush_connect_t conn, ush_s32_t *ptr);
 
-ush_ret_t ush_connect_get_touch(ush_connect_t conn, ush_touch_t *ptr);
+ush_ret_t ush_connect_get_tch(ush_connect_t conn, ush_tch_t *ptr);
 
-ush_ret_t ush_connect_get_listener(ush_connect_t conn, ush_listener_t *ptr);
+ush_ret_t ush_connect_get_lstnr(ush_connect_t conn, ush_lstnr_t *ptr);
 
 ush_ret_t ush_connect_cs_enter(ush_connect_t conn);
 

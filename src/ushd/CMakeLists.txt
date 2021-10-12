@@ -1,6 +1,6 @@
 add_subdirectory(conn)
 add_subdirectory(sched)
-add_subdirectory(touch)
+add_subdirectory(tch)
 add_subdirectory(dist)
 add_subdirectory(reg)
 
@@ -23,7 +23,7 @@ add_executable(${EXE_USHD} ${SRC_USHD})
 target_link_libraries(${EXE_USHD}
     rt
     pthread
-    ushd_touch
+    ushd_tch
     ushd_sched
     ushd_dist
     ush_util

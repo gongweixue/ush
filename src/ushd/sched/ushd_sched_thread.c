@@ -1,8 +1,8 @@
 #include "pthread.h"
 #include "stdlib.h"
 
-#include "ush_comm_hello_msg.h"
-#include "ush_comm_touch.h"
+#include "ush_comm_tch.h"
+#include "ush_comm_tch_hello.h"
 
 #include "ush_log.h"
 #include "ush_time.h"
