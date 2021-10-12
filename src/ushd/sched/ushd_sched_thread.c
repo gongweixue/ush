@@ -9,7 +9,7 @@
 
 #include "conn/ushd_conn_record_tbl.h"
 #include "ushd_sched_fifo.h"
-#include "ushd_sched_proc.h"
+#include "proc/ushd_sched_proc.h"
 #include "ushd_sched_thread.h"
 
 void *

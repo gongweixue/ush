@@ -12,7 +12,7 @@
 #include "ush_comm.h"
 
 #include "ush_listener.h"
-#include "ush_listener_deal.h"
+#include "proc/ush_listener_proc.h"
 #include "ush_sync.h"
 
 typedef struct ush_listener {
@@ -115,7 +115,12 @@ listener_thread_entry(void *arg) {
             continue;
         }
         ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
-        ush_listener_deal((ush_listener_msg_description *)buf);
+
+        if (USH_COMM_PORT_LISTENER != ((ush_comm_port_description*)buf)->port) {
+            continue;
+        }
+
+        ush_listener_proc((ush_listener_msg_description *)buf);
     }
 
     return 0;

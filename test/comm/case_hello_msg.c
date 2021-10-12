@@ -61,10 +61,6 @@ static void test_hello_destroy() {
     ush_assert(OK == ret);
 }
 
-static void test_hello_sizeof() {
-    ush_assert(80 == ush_comm_hello_msg_sizeof());
-}
-
 static void test_hello_name_of() {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
@@ -173,7 +169,6 @@ static void test_hello_cert_of() {
 void test_hello() {
     test_hello_create();
     test_hello_destroy();
-    test_hello_sizeof();
     test_hello_name_of();
     test_hello_ack_of();
     test_hello_cert_of();

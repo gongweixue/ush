@@ -12,6 +12,7 @@ typedef enum USH_COMM_LISTENER_MSG_CATALOG {
 } USH_COMM_LISTENER_MSG_CATALOG;
 
 typedef struct listener_msg_desc {
+    ush_comm_port_description      desc;
     USH_COMM_LISTENER_MSG_CATALOG  catalog;
 } USH_COMM_MSG_PACKED ush_listener_msg_description;
 

@@ -54,10 +54,6 @@ static void test_howareyou_destroy() {
     ush_assert(NULL == msg);
 }
 
-static void test_howareyou_sizeof() {
-    ush_assert(20 == ush_comm_howareyou_msg_sizeof());
-}
-
 static void test_howareyou_ack_of() {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
@@ -119,7 +115,6 @@ static void test_howareyou_cert_of() {
 void test_howareyou() {
     test_howareyou_create();
     test_howareyou_destroy();
-    test_howareyou_sizeof();
     test_howareyou_ack_of();
     test_howareyou_idx_of();
     test_howareyou_cert_of();

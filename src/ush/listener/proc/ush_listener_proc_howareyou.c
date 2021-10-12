@@ -1,10 +1,10 @@
 #include "ush_log.h"
 #include "ush_sync.h"
 
-#include "ush_listener_routine.h"
+#include "ush_listener_proc_howareyou.h"
 
 void
-ush_listener_routine_howareyou(ush_comm_howareyou_msg_t msg) {
+ush_listener_proc_howareyou(const ush_comm_howareyou_msg_t msg) {
         ush_sync_hello_ack_t ack = ush_comm_howareyou_msg_ack_of(msg);
 
         ush_s32_t idx  = ush_comm_howareyou_msg_remote_idx_of(msg);

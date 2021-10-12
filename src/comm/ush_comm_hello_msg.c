@@ -49,7 +49,8 @@ ush_comm_hello_msg_create(ush_comm_hello_msg_t    *pHello,
     }
     ush_log(LOG_LVL_DETAIL, "allocate memory for msg %p", tmp);
 
-    tmp->desc.catalog = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
+    tmp->desc.desc.port = USH_COMM_PORT_TOUCH;
+    tmp->desc.catalog   = USH_COMM_TOUCH_MSG_CATALOG_HELLO;
 
     strcpy(tmp->name, name);
 

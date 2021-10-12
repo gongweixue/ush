@@ -37,7 +37,15 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
     }
 
     ush_comm_sig_msg_reg_t msg = {
-        {{USH_COMM_TOUCH_MSG_CATALOG_SIG}, USH_COMM_TOUCH_SIG_INTENT_REG},
+        {
+            {
+                {
+                    USH_COMM_PORT_TOUCH
+                },
+                USH_COMM_TOUCH_MSG_CATALOG_SIG
+            },
+            USH_COMM_TOUCH_SIG_INTENT_REG
+        },
         idx, cert, pconf->sigid, pconf->done, pconf->rcv, pipe
     };
 

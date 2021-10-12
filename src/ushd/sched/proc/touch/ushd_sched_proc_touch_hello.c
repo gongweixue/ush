@@ -1,47 +1,10 @@
 
-
-#include "ush_assert.h"
 #include "ush_comm.h"
-#include "ush_log.h"
 #include "ush_string.h"
-
 #include "conn/ushd_conn_record_tbl.h"
-#include "dist/ushd_dist_fifo.h"
-#include "dist/ushd_dist_fifo_msg.h"
 #include "dist/ushd_dist_thread.h"
-#include "ushd_sched_proc.h"
 
-void proc_func_hello(const ush_pvoid_t msg);
-void proc_func_sig(const ush_pvoid_t msg);
-
-
-
-void ushd_sched_proc(const ush_pvoid_t ptr) {
-    ush_assert(ptr);
-    if (!ptr) {
-        ushd_log(LOG_LVL_ERROR, "ptr is NULL!!!");
-        return;
-    }
-    const ush_touch_msg_description *pDescription =
-        (const ush_touch_msg_description *)ptr;
-
-    switch (pDescription->catalog) {
-    case USH_COMM_TOUCH_MSG_CATALOG_HELLO:
-        proc_func_hello(ptr);
-        break;
-    case USH_COMM_TOUCH_MSG_CATALOG_SIG:
-        proc_func_sig(ptr);
-        break;
-    default:
-        ushd_log(LOG_LVL_FATAL, "wrong catalog #%d", pDescription->catalog);
-        break;
-    }
-
-}
-
-///////////////////////////////////// hello msg proc ///////////////////////////
-
-void proc_func_hello(const ush_pvoid_t msg) {
+void ushd_sched_proc_touch_hello(const ush_pvoid_t msg) {
     ush_assert(msg);
     if (!msg) {
         ushd_log(LOG_LVL_ERROR, "msg is NULL!!!");
@@ -85,16 +48,4 @@ void proc_func_hello(const ush_pvoid_t msg) {
     }
 
     return; // return anyway
-}
-
-//////////////////////////////////// sig msg proc ////////////////////////////
-
-void proc_func_sig(const ush_pvoid_t msg) {
-    ush_assert(msg);
-    if (!msg) {
-        ushd_log(LOG_LVL_ERROR, "msg is NULL!!!");
-        return;
-    }
-
-    const ush_comm_sig_msg_reg_t *regmsg = (const ush_comm_sig_msg_reg_t *)msg;
 }

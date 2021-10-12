@@ -26,10 +26,11 @@ ush_comm_howareyou_msg_create(ush_pvoid_t sync, ush_s32_t idx, ush_s32_t cert) {
         return NULL;
     }
 
-    ret->desc.catalog = USH_COMM_LISTENER_MSG_CATALOG_HOWAREYOU;
-    ret->sync         = (ush_sync_hello_ack_t)sync;
-    ret->remote_idx   = idx;
-    ret->cert         = cert;
+    ret->desc.desc.port = USH_COMM_PORT_LISTENER;
+    ret->desc.catalog   = USH_COMM_LISTENER_MSG_CATALOG_HOWAREYOU;
+    ret->sync           = (ush_sync_hello_ack_t)sync;
+    ret->remote_idx     = idx;
+    ret->cert           = cert;
 
     return ret;
 }
