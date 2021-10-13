@@ -54,7 +54,8 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
     return USH_RET_OK;
 }
 
-ush_ret_t ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *pMsg) {
+ush_ret_t
+ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *pMsg) {
     if (!pMsg) {
         return USH_RET_OK;
     }
@@ -68,4 +69,9 @@ ush_ret_t ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *pMsg) {
     *pMsg = NULL;
 
     return USH_RET_OK;
+}
+
+ush_size_t
+ush_comm_tch_sig_reg_sizeof() {
+    return sizeof(struct comm_tch_sig_reg);
 }

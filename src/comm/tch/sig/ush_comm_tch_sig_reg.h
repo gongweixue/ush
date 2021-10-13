@@ -15,6 +15,9 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
                             const ush_pvoid_t       rcv,
                             ush_pipe_t              pipe);
 
+ush_size_t
+ush_comm_tch_sig_reg_sizeof();
+
 ush_ret_t
 ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *msg);
 

@@ -52,7 +52,7 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
         return ret;
     }
 
-    ret = ush_tch_send(touch, (const ush_char_t*)(&msg), sizeof(msg));
+    ret = ush_tch_send(touch, (const char*)msg, ush_comm_tch_sig_reg_sizeof());
 
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sent sig reg msg failed");

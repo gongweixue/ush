@@ -42,6 +42,4 @@ void test_ush_sig_reg() {
     ush_sig_reg_conf_t conf2 ={ABC_abc_FP32, NULL, NULL};
     ret = ush_sig_reg(pipe, &conf2);
     ush_assert(OK == ret);
-
-
 }
