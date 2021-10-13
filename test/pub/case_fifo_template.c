@@ -7,7 +7,7 @@
 
 
 static unsigned int cnt = 0;
-static const unsigned int max = 4096;
+static const unsigned int max = 1024;
 void init() {
 }
 

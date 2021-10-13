@@ -9,9 +9,6 @@ ush_ret_t onReg(ush_pipe_t         pipe,
                 ush_bool_t         success,
                 const ush_pvoid_t *pParams)
 {
-    ush_pipe_t pp = pipe;
-    ush_sig_id_t sigid = id;
-    ush_bool_t ok = success;
     return USH_RET_OK;
 }
 
@@ -25,7 +22,26 @@ void test_ush_sig_reg() {
     ush_assert(OK == ret);
 
 
-    ush_sig_reg_conf_t conf ={ABC_abc_FP32, onReg, NULL};
-    ret = ush_sig_reg(pipe, &conf);
+    ush_sig_reg_conf_t conf0 ={ABC_abc_FP32, onReg, NULL};
+    ret = ush_sig_reg(pipe, &conf0);
     ush_assert(OK == ret);
+
+    ret = ush_sig_reg(0, &conf0);
+    ush_assert(OK != ret);
+
+    ret = ush_sig_reg(pipe, NULL);
+    ush_assert(OK != ret);
+
+    ret = ush_sig_reg(0, NULL);
+    ush_assert(OK != ret);
+
+    ush_sig_reg_conf_t conf1 ={USH_SIG_ID_MAX, onReg, NULL};
+    ret = ush_sig_reg(pipe, &conf1);
+    ush_assert(OK != ret);
+
+    ush_sig_reg_conf_t conf2 ={ABC_abc_FP32, NULL, NULL};
+    ret = ush_sig_reg(pipe, &conf2);
+    ush_assert(OK == ret);
+
+
 }
