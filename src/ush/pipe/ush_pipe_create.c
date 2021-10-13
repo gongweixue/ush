@@ -8,7 +8,7 @@
 #include "time.h"
 
 #include "ush_assert.h"
-#include "ush_comm.h"
+#include "ush_comm_port.h"
 #include "ush_connect.h"
 #include "ush_def_pub.h"
 #include "ush_log.h"

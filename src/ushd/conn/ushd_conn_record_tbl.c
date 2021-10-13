@@ -2,10 +2,12 @@
 #include "string.h"
 
 #include "ush_assert.h"
-#include "ush_comm_tch_hello.h"
 #include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
+
+#include "ush_comm_port.h"
+#include "tch/ush_comm_tch_hello.h"
 
 #include "ushd_conn_record_tbl.h"
 

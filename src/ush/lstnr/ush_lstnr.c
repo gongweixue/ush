@@ -9,10 +9,10 @@
 #include "ush_def_pub.h"
 #include "ush_log.h"
 
-#include "ush_comm.h"
+#include "ush_comm_port.h"
 
-#include "ush_lstnr.h"
 #include "proc/ush_lstnr_proc.h"
+#include "ush_lstnr.h"
 #include "ush_sync.h"
 
 typedef struct ush_lstnr {

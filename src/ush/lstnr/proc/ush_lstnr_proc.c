@@ -1,8 +1,9 @@
 
 #include "ush_assert.h"
 #include "ush_log.h"
+#include "ush_type_pub.h"
 
-#include "ush_comm.h"
+#include "ush_comm_port.h"
 #include "ush_lstnr_proc.h"
 #include "ush_lstnr_proc_hay.h"
 

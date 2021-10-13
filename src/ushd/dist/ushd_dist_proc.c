@@ -2,7 +2,8 @@
 #include "ush_assert.h"
 #include "ush_log.h"
 
-#include "ush_comm_lstnr_hay.h"
+#include "ush_def_pub.h"
+#include "lstnr/ush_comm_lstnr_hay.h"
 
 #include "ushd_dist_proc.h"
 

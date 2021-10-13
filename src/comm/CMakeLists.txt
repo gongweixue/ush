@@ -1,11 +1,14 @@
 set(LIB_USH_COMM ush_comm)
 
 set(SRC_USH_COMM
-    ush_comm_tch_hello.c
-    ush_comm_lstnr_hay.c
+    lstnr/ush_comm_lstnr_hay.c
+    tch/ush_comm_tch_hello.c
+    tch/sig/ush_comm_tch_sig_reg.c
 )
 
 include_directories(
+    ${PROJECT_SOURCE_DIR}/src/comm/
+    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/util/
 )

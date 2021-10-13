@@ -8,6 +8,7 @@
 #define USH_ADD_SIG(GRP, NAME, TY) GRP##_##NAME##_##TY,
 
 
+#include "ush_type_pub.h"
 
 #ifdef __cplusplus
 extern "C" {

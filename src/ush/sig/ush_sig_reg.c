@@ -3,7 +3,10 @@
 #include "ush_log.h"
 #include "ush_sig_pub.h"
 
-#include "ush_comm_tch_sig.h"
+#include "ush_comm_port.h"
+#include "tch/ush_comm_tch.h"
+#include "tch/sig/ush_comm_tch_sig.h"
+#include "tch/sig/ush_comm_tch_sig_reg.h"
 
 ush_ret_t
 ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
@@ -36,18 +39,25 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
         return USH_RET_WRONG_PARAM;
     }
 
-    ush_comm_tch_sig_reg_t msg = {
-        {
-            {
-                {
-                    USH_COMM_PORT_TCH
-                },
-                USH_COMM_TCH_MSG_CATALOG_SIG
-            },
-            USH_COMM_TCH_SIG_INTENT_REG
-        },
-        idx, cert, pconf->sigid, pconf->done, pconf->rcv, pipe
-    };
+    ush_comm_tch_sig_reg_t msg = NULL;
+    ush_ret_t ret = ush_comm_tch_sig_reg_create(&msg,
+                                                idx,
+                                                cert,
+                                                pconf->sigid,
+                                                pconf->done,
+                                                pconf->rcv,
+                                                pipe);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "sig reg msg create failed");
+        return ret;
+    }
 
-    return ush_tch_send(touch, (const ush_char_t*)(&msg), sizeof(msg));
+    ret = ush_tch_send(touch, (const ush_char_t*)(&msg), sizeof(msg));
+
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "sent sig reg msg failed");
+    }
+    ush_comm_tch_sig_reg_destroy(&msg); // destroy in any case
+
+    return ret;
 }

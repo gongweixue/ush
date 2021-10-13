@@ -1,7 +1,6 @@
 #ifndef USHD_TCH_H
 #define USHD_TCH_H
 
-#include "ush_comm_tch_hello.h"
 #include "ush_type_pub.h"
 
 typedef struct ushd_tch  * ushd_tch_t;

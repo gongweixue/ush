@@ -1,4 +1,5 @@
-#include "ush_comm.h"
+#include "ush_comm_port.h"
+#include "tch/ush_comm_tch.h"
 #include "ush_log.h"
 #include "ushd_sched_proc_tch.h"
 #include "ushd_sched_proc_tch_hello.h"

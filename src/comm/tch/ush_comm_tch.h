@@ -4,6 +4,7 @@
 #include "ush_type_pub.h"
 
 #include "ush_comm_def.h"
+#include "ush_comm_port.h"
 
 typedef enum USH_COMM_TCH_MSG_CATALOG {
     USH_COMM_TCH_MSG_CATALOG_HELLO,
@@ -13,7 +14,7 @@ typedef enum USH_COMM_TCH_MSG_CATALOG {
 
 typedef struct comm_tch_msg_desc {
     ush_comm_port_d             desc;
-    USH_COMM_TCH_MSG_CATALOG  catalog;
+    USH_COMM_TCH_MSG_CATALOG    catalog;
 } USH_COMM_MSG_PACKED ush_comm_tch_msg_d;
 
 

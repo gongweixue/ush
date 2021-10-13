@@ -5,7 +5,8 @@ typedef struct ush_tch *  ush_tch_t;
 
 #include "time.h"
 
-#include "ush_comm.h"
+#include "ush_type_pub.h"
+#include "tch/ush_comm_tch_hello.h"
 
 ush_ret_t ush_tch_send(const ush_tch_t   touch,
                        const ush_char_t *ptr,

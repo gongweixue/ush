@@ -2,8 +2,8 @@
 #include "string.h"
 
 #include "ush_assert.h"
-#include "ush_comm_tch.h"
-#include "ush_comm_tch_hello.h"
+#include "tch/ush_comm_tch.h"
+#include "tch/ush_comm_tch_hello.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
 #include "ush_time.h"

@@ -1,9 +1,10 @@
 
 
 #include "ush_assert.h"
-#include "ush_comm.h"
 #include "ush_log.h"
 #include "ush_string.h"
+
+#include "ush_comm_port.h"
 
 #include "ushd_sched_proc.h"
 #include "tch/ushd_sched_proc_tch.h"

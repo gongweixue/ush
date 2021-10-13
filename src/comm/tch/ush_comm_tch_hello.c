@@ -2,6 +2,7 @@
 #include "string.h"
 
 #include "ush_assert.h"
+#include "ush_comm_tch.h"
 #include "ush_comm_tch_hello.h"
 #include "ush_log.h"
 
@@ -9,7 +10,7 @@
 // ack contains the pointers should not be free at destroy function
 // be carefulto to manipulate the ack, maybe free already.
 typedef struct tch_hello {
-    ush_comm_tch_msg_d      desc;
+    ush_comm_tch_msg_d        desc;
     ush_char_t                name[USH_COMM_CONN_NAME_LEN_MAX];
     ush_pvoid_t              *ackSync;
     ush_s32_t                 cert;

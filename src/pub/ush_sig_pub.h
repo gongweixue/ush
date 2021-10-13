@@ -1,9 +1,9 @@
 #ifndef USH_SIG_PUB_H
 #define USH_SIG_PUB_H
 
+#include "ush_sig_enum.h"
 #include "ush_type_pub.h"
 
-#include "ush_sig_enum.h"
 
 #ifdef __cplusplus
 extern "C" {

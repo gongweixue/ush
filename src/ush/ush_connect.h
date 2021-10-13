@@ -3,9 +3,9 @@
 
 typedef struct ush_connect * ush_connect_t;
 
+#include "ush_type_pub.h"
 #include "lstnr/ush_lstnr.h"
 #include "ush_tch.h"
-#include "ush_type_pub.h"
 
 ush_ret_t ush_connect_create(ush_connect_t *pConn, const ush_char_t *name);
 

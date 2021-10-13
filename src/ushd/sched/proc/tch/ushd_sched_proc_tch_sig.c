@@ -1,6 +1,11 @@
 #include "ush_assert.h"
-#include "ush_comm.h"
 #include "ush_log.h"
+
+#include "ush_comm_port.h"
+#include "tch/ush_comm_tch.h"
+#include "tch/sig/ush_comm_tch_sig.h"
+#include "tch/sig/ush_comm_tch_sig_reg.h"
+
 #include "ushd_sched_proc_tch_sig.h"
 
 static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t *msg) {

@@ -1,6 +1,8 @@
 #ifndef USH_STRING_H
 #define USH_STRING_H
 
+#include "stddef.h"
+
 void ush_itoa(char *str, int num);
 
 // conbine a string to a num

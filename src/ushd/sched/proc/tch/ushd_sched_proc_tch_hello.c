@@ -1,8 +1,11 @@
 
-#include "ush_comm.h"
+#include "ush_comm_port.h"
+#include "tch/ush_comm_tch_hello.h"
 #include "ush_string.h"
 #include "conn/ushd_conn_record_tbl.h"
 #include "dist/ushd_dist_thread.h"
+
+#include "ushd_sched_proc_tch_hello.h"
 
 void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     ush_assert(msg);
