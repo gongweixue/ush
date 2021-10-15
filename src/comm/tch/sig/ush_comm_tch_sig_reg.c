@@ -9,8 +9,8 @@
 
 typedef struct comm_tch_sig_reg {
     ush_comm_tch_sig_d           desc;
-    ush_s32_t                    remote_idx;
-    ush_s32_t                    cert;
+    ush_connidx_t                connidx;
+    ush_cert_t                   cert;
     ush_sig_id_t                 sigid;
     ush_pvoid_t                  done;
     ush_pvoid_t                  rcv;
@@ -20,8 +20,8 @@ typedef struct comm_tch_sig_reg {
 
 ush_ret_t
 ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
-                            ush_s32_t               idxconn,
-                            ush_s32_t               cert,
+                            ush_connidx_t           connidx,
+                            ush_cert_t              cert,
                             ush_sig_id_t            sigid,
                             const ush_pvoid_t       done,
                             const ush_pvoid_t       rcv,
@@ -42,7 +42,7 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
     tmp->desc.desc.desc.port = USH_COMM_PORT_TCH;
     tmp->desc.desc.catalog   = USH_COMM_TCH_MSG_CATALOG_SIG;
     tmp->desc.intent         = USH_COMM_TCH_SIG_INTENT_REG;
-    tmp->remote_idx          = idxconn;
+    tmp->connidx             = connidx;
     tmp->cert                = cert;
     tmp->sigid               = sigid;
     tmp->done                = done;
@@ -55,7 +55,7 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
 }
 
 
-ush_s32_t
+ush_cert_t
 ush_comm_tch_sig_reg_get_cert(ush_comm_tch_sig_reg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
@@ -65,12 +65,12 @@ ush_comm_tch_sig_reg_get_cert(ush_comm_tch_sig_reg_t msg) {
 }
 
 ush_s32_t
-ush_comm_tch_sig_reg_get_remote_idx(ush_comm_tch_sig_reg_t msg) {
+ush_comm_tch_sig_reg_get_connidx(ush_comm_tch_sig_reg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return 0;
     }
-    return msg->remote_idx;
+    return msg->connidx;
 }
 
 ush_sig_id_t

@@ -20,14 +20,12 @@ extern "C" {
 // when register done
 typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
                                       ush_sig_id_t       id,      // signal id
-                                      ush_bool_t         success, // done flag
-                                      const ush_pvoid_t *pParams);// reserved
+                                      ush_bool_t         success);
 
 // when signal receive
 typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_pipe_t         pipe,    // pipe handle
-                                      ush_u32_t          id,      // signal id
-                                      const ush_pvoid_t  pVal,    // data
-                                      const ush_pvoid_t *pParams);// reserved
+                                      ush_sig_id_t       id,      // signal id
+                                      const ush_pvoid_t  data);
 
 
 

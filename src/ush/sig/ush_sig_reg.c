@@ -16,14 +16,14 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
     }
 
     ush_connect_t conn = (ush_connect_t)pipe;
-    ush_s32_t cert = USH_INVALID_CERT_VALUE;
+    ush_cert_t cert = USH_INVALID_CERT_VALUE;
     if (USH_RET_OK != ush_connect_get_cert(conn, &cert)) {
         ush_log(LOG_LVL_ERROR, "invalid pipe");
         return USH_RET_WRONG_SEQ;
     }
 
-    ush_s32_t idx = 0;
-    if (USH_RET_OK != ush_connect_get_remote_idx(conn, &idx)) {
+    ush_connidx_t idx = 0;
+    if (USH_RET_OK != ush_connect_get_connidx(conn, &idx)) {
         ush_log(LOG_LVL_ERROR, "remote conn idx getting failed");
         return USH_RET_WRONG_SEQ;
     }

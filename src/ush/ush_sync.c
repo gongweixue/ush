@@ -104,8 +104,8 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
 
 ush_ret_t
 ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
-                          ush_s32_t            idx,
-                          ush_s32_t            cert) {
+                          ush_connidx_t        idx,
+                          ush_cert_t           cert) {
     ush_assert(ack);
     if (!ack) {
         return USH_RET_OK;
@@ -114,7 +114,7 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
     pthread_mutex_lock(&ack->mutex);
     ush_ret_t ret = USH_RET_OK;
 
-    ush_s32_t local_cert = USH_INVALID_CERT_VALUE;
+    ush_cert_t local_cert = USH_INVALID_CERT_VALUE;
     ret = ush_connect_get_cert(ack->conn, &local_cert);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect cert get failed");
@@ -127,7 +127,7 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
     }
 
     // set the ident from ushd back to the conn
-    ret = ush_connect_set_remote_idx(ack->conn, idx);
+    ret = ush_connect_set_connidx(ack->conn, idx);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect remote idx can not set");
         goto BAILED;

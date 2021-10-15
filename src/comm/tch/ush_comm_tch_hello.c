@@ -13,14 +13,14 @@ typedef struct tch_hello {
     ush_comm_tch_msg_d        desc;
     ush_char_t                name[USH_COMM_CONN_NAME_LEN_MAX];
     ush_pvoid_t              *ackSync;
-    ush_s32_t                 cert;
+    ush_cert_t                cert;
 } USH_COMM_MSG_PACKED * ush_comm_tch_hello_t;
 
 ush_ret_t
 ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
                           const ush_char_t        *name,
                           ush_sync_hello_ack_t     ack,
-                          ush_s32_t                cert) {
+                          ush_cert_t               cert) {
 
     if (!pHello || !name || !ack) {
         if (pHello) {*pHello = NULL;}
@@ -101,7 +101,7 @@ ush_comm_tch_hello_ack_of(const ush_comm_tch_hello_t msg) {
     return msg->ackSync;
 }
 
-ush_s32_t
+ush_cert_t
 ush_comm_tch_hello_cert_of(const ush_comm_tch_hello_t msg) {
     ush_assert(msg);
     return msg->cert;

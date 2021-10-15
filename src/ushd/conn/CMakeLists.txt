@@ -1,7 +1,8 @@
 set(LIB_USHD_CONN ushd_conn)
 
 set(SRC_USHD_CONN
-    ushd_conn_record_tbl.c
+    ushd_conn_tbl.c
+    ushd_conn_reglist.c
 )
 
 include_directories(
@@ -19,7 +20,6 @@ target_link_libraries(${LIB_USHD_CONN}
     pthread
     ush_util
     ush_comm
-    ushd_reg
 )
 
 set_target_properties(${LIB_USHD_CONN}

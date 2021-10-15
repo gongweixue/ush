@@ -11,7 +11,7 @@ ush_ret_t
 ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
                           const ush_char_t        *name,
                           ush_sync_hello_ack_t     ack,
-                          ush_s32_t                cert);
+                          ush_cert_t               cert);
 
 ush_ret_t
 ush_comm_tch_hello_destroy(ush_comm_tch_hello_t *pHello);
@@ -25,7 +25,7 @@ ush_comm_tch_hello_name_of(const ush_comm_tch_hello_t msg);
 const ush_pvoid_t
 ush_comm_tch_hello_ack_of(const ush_comm_tch_hello_t msg);
 
-ush_s32_t
+ush_cert_t
 ush_comm_tch_hello_cert_of(const ush_comm_tch_hello_t msg);
 
 void

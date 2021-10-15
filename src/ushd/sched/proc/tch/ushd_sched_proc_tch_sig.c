@@ -1,7 +1,8 @@
 #include "ush_assert.h"
 #include "ush_log.h"
 
-#include "conn/ushd_conn_record_tbl.h"
+#include "conn/ushd_conn_tbl.h"
+#include "conn/ushd_conn_reglist.h"
 
 #include "ush_comm_desc.h"
 #include "tch/ush_comm_tch.h"
@@ -20,15 +21,15 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
     }
 
     // check idx
-    ush_s32_t idx = ush_comm_tch_sig_reg_get_remote_idx(msg);
-    if (!ushd_conn_table_get_record_valid(idx)) {
+    ush_connidx_t idx = ush_comm_tch_sig_reg_get_connidx(msg);
+    if (!ushd_conn_tbl_get_valid(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
 
     // check cert
-    const ush_s32_t cert = ush_comm_tch_sig_reg_get_cert(msg);
-    const ush_s32_t ref  = ushd_conn_table_get_record_cert(idx);
+    const ush_cert_t cert = ush_comm_tch_sig_reg_get_cert(msg);
+    const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
     if (ref != cert) {
         ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
         return;
@@ -51,14 +52,14 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
 
     // add cb func to the sigid domain of conn in the idx.
     ush_pvoid_t rcv  = ush_comm_tch_sig_reg_get_cb_rcv(msg);
-    if (USH_RET_OK != ushd_conn_table_set_cb_rcv(idx, sigid, rcv)) {
+    if (USH_RET_OK != ushd_conn_reglist_set_rcv(idx, sigid, rcv)) {
         ack.success = 0;
         ushd_log(LOG_LVL_ERROR, "callback register failed");
     } else {
         ack.success = 1;
     }
 
-    ushd_dist_thread_t dist = ushd_conn_table_get_record_dist(idx);
+    ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(idx);
     ushd_dist_fifo_t   fifo = ushd_dist_thread_get_fifo(dist);
     if (!fifo) {
         ushd_log(LOG_LVL_ERROR, "no dist fifo to push");

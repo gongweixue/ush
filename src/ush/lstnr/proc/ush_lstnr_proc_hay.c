@@ -7,8 +7,8 @@ void
 ush_lstnr_proc_hay(const ush_comm_lstnr_hay_t msg) {
         ush_sync_hello_ack_t ack = ush_comm_lstnr_hay_ack_of(msg);
 
-        ush_s32_t idx  = ush_comm_lstnr_hay_remote_idx_of(msg);
-        ush_s32_t cert = ush_comm_lstnr_hay_cert_of(msg);
+        ush_connidx_t idx  = ush_comm_lstnr_hay_connidx_of(msg);
+        ush_cert_t cert = ush_comm_lstnr_hay_cert_of(msg);
 
         if (ack) {
             ush_log(LOG_LVL_INFO, "signal the ack for hello");

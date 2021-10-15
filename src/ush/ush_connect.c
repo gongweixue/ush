@@ -14,8 +14,8 @@
 
 
 typedef struct ush_connect {
-    ush_s32_t            cert;
-    ush_s32_t            remote_idx;
+    ush_cert_t           cert;
+    ush_connidx_t        connidx;
     ush_tch_t            touch;
     ush_lstnr_t          listener;
     pthread_mutex_t      mutex;
@@ -53,7 +53,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
     }
 
     ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
-    ush_s32_t cert = ush_random_generate_cert(certname);
+    ush_cert_t cert = ush_random_generate_cert(certname);
     ush_string_certname(certname, sizeof(certname), name, cert);
 
     ret = ush_lstnr_open_start(&(newMem->listener), certname);
@@ -66,7 +66,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
 // NORMAL:
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
     newMem->cert = cert;
-    newMem->remote_idx = USHD_INVALID_CONN_IDX_VALUE;
+    newMem->connidx = USHD_INVALID_CONN_IDX_VALUE;
     *pConn = newMem;
     return USH_RET_OK;
 
@@ -109,7 +109,7 @@ ush_connect_destroy(ush_connect_t *pConn) {
 }
 
 ush_ret_t
-ush_connect_get_cert(ush_connect_t conn, ush_s32_t *ptr) {
+ush_connect_get_cert(ush_connect_t conn, ush_cert_t *ptr) {
     ush_assert(conn && ptr);
     if (!conn || !ptr) {
         *ptr = USH_INVALID_CERT_VALUE;
@@ -122,18 +122,18 @@ ush_connect_get_cert(ush_connect_t conn, ush_s32_t *ptr) {
 }
 
 ush_ret_t
-ush_connect_set_remote_idx(ush_connect_t conn, ush_s32_t idx) {
+ush_connect_set_connidx(ush_connect_t conn, ush_connidx_t idx) {
     ush_assert(conn);
     if (!conn) {
         return USH_RET_WRONG_PARAM;
     }
 
-    conn->remote_idx = idx;
+    conn->connidx = idx;
     return USH_RET_OK;
 }
 
 ush_ret_t
-ush_connect_get_remote_idx(const ush_connect_t conn, ush_s32_t *ptr) {
+ush_connect_get_connidx(const ush_connect_t conn, ush_connidx_t *ptr) {
     ush_assert(conn && ptr);
     if (!conn) {
         if (ptr) {*ptr = 0;}
@@ -141,7 +141,7 @@ ush_connect_get_remote_idx(const ush_connect_t conn, ush_s32_t *ptr) {
         return USH_RET_WRONG_PARAM;
     }
 
-    *ptr = conn->remote_idx;
+    *ptr = conn->connidx;
     return USH_RET_OK;
 }
 

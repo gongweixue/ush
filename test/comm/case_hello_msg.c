@@ -68,7 +68,7 @@ static void test_hello_name_of() {
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
     char name[] = "testname";
-    ush_s32_t cert = 123456;
+    ush_cert_t cert = 123456;
 
     ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
     ush_assert(OK == ret);
@@ -92,7 +92,7 @@ static void test_hello_ack_of() {
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
     char name[] = "testname";
-    ush_s32_t cert = 123456;
+    ush_cert_t cert = 123456;
 
     ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
     ush_assert(OK == ret);
@@ -118,7 +118,7 @@ static void test_hello_cert_of() {
     char name[] = "testname";
 
     { // case 1
-        ush_s32_t cert = 123456;
+        ush_cert_t cert = 123456;
 
         ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
         ush_assert(OK == ret);
@@ -133,7 +133,7 @@ static void test_hello_cert_of() {
     }
 
     { // case 2
-        ush_s32_t cert = 0;
+        ush_cert_t cert = 0;
 
         ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
         ush_assert(OK == ret);
@@ -148,7 +148,7 @@ static void test_hello_cert_of() {
     }
 
     { // case 3
-        ush_s32_t cert = 0xFFFFFFFF;
+        ush_cert_t cert = 0xFFFFFFFF;
 
         ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
         ush_assert(OK == ret);

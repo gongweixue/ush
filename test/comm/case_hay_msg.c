@@ -81,17 +81,17 @@ static void test_hay_idx_of() {
 
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
-    ush_s32_t idx = 1;
-    ush_s32_t cert = 123456;
+    ush_connidx_t idx = 1;
+    ush_cert_t cert = 123456;
 
     msg = ush_comm_lstnr_hay_create(ack, idx, cert);
     ush_assert(NULL != msg);
 
-    ush_s32_t result = ush_comm_lstnr_hay_remote_idx_of(msg);
+    ush_connidx_t result = ush_comm_lstnr_hay_connidx_of(msg);
     ush_assert(idx == result);
 
     // from NULL
-    ush_assert(0 == ush_comm_lstnr_hay_remote_idx_of(NULL));
+    ush_assert(0 == ush_comm_lstnr_hay_connidx_of(NULL));
 }
 
 static void test_hay_cert_of() {
@@ -101,13 +101,13 @@ static void test_hay_cert_of() {
 
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
-    ush_s32_t idx = 1;
-    ush_s32_t cert = 123456;
+    ush_connidx_t idx = 1;
+    ush_cert_t cert = 123456;
 
     msg = ush_comm_lstnr_hay_create(ack, idx, cert);
     ush_assert(NULL != msg);
 
-    ush_s32_t result = ush_comm_lstnr_hay_cert_of(msg);
+    ush_cert_t result = ush_comm_lstnr_hay_cert_of(msg);
     ush_assert(cert == result);
 
     // from NULL

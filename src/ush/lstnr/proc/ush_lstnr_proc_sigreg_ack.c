@@ -18,5 +18,5 @@ void ush_lstnr_proc_sigreg_ack(const ush_comm_lstnr_sigreg_ack_t msg) {
                 "'registe done' callback invoke, pipe:%llu, sigid:%d, succ:%d",
                 pipe, sigid, success);
 
-        done_cb(pipe, sigid, success, NULL);
+        done_cb(pipe, sigid, success);
 }

@@ -123,7 +123,7 @@ send_hello_and_wait(const ush_char_t *pName,
     // prepare hello msg
     ush_comm_tch_hello_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    int cert = USH_INVALID_CERT_VALUE;
+    ush_cert_t cert = USH_INVALID_CERT_VALUE;
     ush_connect_get_cert(conn, &cert);
     ush_comm_tch_hello_create(&hello, pName, ack, cert);
 

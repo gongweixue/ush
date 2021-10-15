@@ -4,7 +4,7 @@
 #include "ush_comm_desc.h"
 #include "tch/ush_comm_tch_hello.h"
 
-#include "conn/ushd_conn_record_tbl.h"
+#include "conn/ushd_conn_tbl.h"
 #include "dist/ushd_dist_thread.h"
 
 #include "ushd_sched_proc_tch_hello.h"
@@ -20,7 +20,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
 
     const ush_char_t *name    = ush_comm_tch_hello_name_of(hello);
     const ush_pvoid_t ackSync = ush_comm_tch_hello_ack_of(hello);
-    ush_s32_t         cert    = ush_comm_tch_hello_cert_of(hello);
+    ush_cert_t        cert    = ush_comm_tch_hello_cert_of(hello);
 
     // create dist thread
     ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
@@ -34,7 +34,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     ushd_log(LOG_LVL_INFO, "dist thread created %p.", dist);
 
     // add the info to the conn table
-    ush_s32_t record_idx = ushd_conn_table_add_record(name, cert, dist);
+    ush_connidx_t record_idx = ushd_conn_tbl_add(name, cert, dist);
     if (USHD_INVALID_CONN_IDX_VALUE == record_idx) {
         ushd_log(LOG_LVL_ERROR, "conn can not add to the table");
         return;

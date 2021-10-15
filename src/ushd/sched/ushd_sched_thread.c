@@ -7,7 +7,7 @@
 #include "ush_log.h"
 #include "ush_time.h"
 
-#include "conn/ushd_conn_record_tbl.h"
+#include "conn/ushd_conn_tbl.h"
 #include "proc/ushd_sched_proc.h"
 #include "ushd_sched_fifo.h"
 #include "ushd_sched_thread.h"
@@ -24,8 +24,14 @@ ushd_sched_thread_entry(void *arg) {
     }
 
     ushd_log(LOG_LVL_DETAIL, "conn table init");
-    if (USH_RET_OK != ushd_conn_table_init()) {
+    if (USH_RET_OK != ushd_conn_tbl_init()) {
         ushd_log(LOG_LVL_FATAL, "conn-table init failed.");
+        goto TERMINATE;
+    }
+
+    ushd_log(LOG_LVL_DETAIL, "reg-list init");
+    if (USH_RET_OK != ushd_conn_reglist_init()) {
+        ushd_log(LOG_LVL_FATAL, "reglist init failed.");
         goto TERMINATE;
     }
 
