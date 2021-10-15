@@ -8,9 +8,10 @@ typedef struct ush_tch *  ush_tch_t;
 #include "ush_type_pub.h"
 #include "tch/ush_comm_tch_hello.h"
 
-ush_ret_t ush_tch_send(const ush_tch_t   touch,
+ush_ret_t ush_tch_send(const ush_tch_t touch,
                        const ush_char_t *ptr,
-                       ush_size_t        sz);
+                       ush_size_t sz,
+                       ush_u32_t prio);
 
 ush_ret_t ush_tch_send_hello(const ush_tch_t              touch,
                              const ush_comm_tch_hello_t   hello,

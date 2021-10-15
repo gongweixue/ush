@@ -2,11 +2,10 @@
 #include "string.h"
 
 #include "ush_assert.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_type_pub.h"
 
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 #include "tch/ush_comm_tch_hello.h"
 
 #include "ushd_conn_record_tbl.h"
@@ -53,8 +52,6 @@ typedef struct ushd_conn_record {
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-#define CONN_INVALID_IDX (0)
-
 typedef pthread_mutex_t conn_tbl_cs_guard_t;
 
 typedef struct {
@@ -75,10 +72,10 @@ static void conn_tbl_cs_exit() {
 
 static void move_cursor_to_next_empty_record() {
     int pos = tbl.cursor;
-    while (tbl.records[pos].valid || CONN_INVALID_IDX == pos) {
+    while (tbl.records[pos].valid || USHD_INVALID_CONN_IDX_VALUE == pos) {
         pos = (pos + 1) % RECORD_TABLE_MAX_COUNT; // move to next
         if (pos == tbl.cursor) { // empty slot not found
-            tbl.cursor = CONN_INVALID_IDX;
+            tbl.cursor = USHD_INVALID_CONN_IDX_VALUE;
             goto BAILED;
         }
     }
@@ -86,7 +83,7 @@ static void move_cursor_to_next_empty_record() {
     if (!tbl.records[pos].valid) {
             tbl.cursor = pos;
     } else {
-        tbl.cursor = CONN_INVALID_IDX;
+        tbl.cursor = USHD_INVALID_CONN_IDX_VALUE;
     }
 
 BAILED:
@@ -98,11 +95,11 @@ ushd_conn_table_init() {
     //make idx 0 invalid
     tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';
-    tbl.records[0].cert      = USH_INVALID_CERT_VALUE_DEFAULT;
+    tbl.records[0].cert      = USH_INVALID_CERT_VALUE;
     tbl.records[0].dist      = NULL;
     tbl.records[0].regs      = NULL;
 
-    tbl.cursor = CONN_INVALID_IDX;
+    tbl.cursor = USHD_INVALID_CONN_IDX_VALUE;
 
     pthread_mutex_init(&tbl.cs, NULL);
 
@@ -115,21 +112,21 @@ ush_s32_t
 ushd_conn_table_add_record(const ush_char_t           *name,
                            ush_s32_t                   cert,
                            const ushd_dist_thread_t    dist) {
-    ush_assert(name && (USH_INVALID_CERT_VALUE_DEFAULT!=cert) && dist);
+    ush_assert(name && (USH_INVALID_CERT_VALUE!=cert) && dist);
 
-    ush_s32_t idx = CONN_INVALID_IDX;
+    ush_s32_t idx = USHD_INVALID_CONN_IDX_VALUE;
 
     conn_tbl_cs_entry();
 
     move_cursor_to_next_empty_record();
-    if (CONN_INVALID_IDX == tbl.cursor) {
-        idx = CONN_INVALID_IDX;
+    if (USHD_INVALID_CONN_IDX_VALUE == tbl.cursor) {
+        idx = USHD_INVALID_CONN_IDX_VALUE;
         goto BAILED;
     }
 
     ushd_reg_list_t regs = ushd_reg_list_create();
     if (!regs) {
-        idx = CONN_INVALID_IDX;
+        idx = USHD_INVALID_CONN_IDX_VALUE;
         goto BAILED;
     }
     tbl.records[tbl.cursor].regs      = regs;
@@ -149,16 +146,28 @@ BAILED:
     return idx;
 }
 
+ush_bool_t
+ushd_conn_table_get_record_valid(ush_s32_t idx) {
+    if (idx <= 0 || idx >= RECORD_TABLE_MAX_COUNT) {
+        return 0;
+    }
+
+    conn_tbl_cs_entry();
+    ush_bool_t ret = tbl.records[idx].valid;
+    conn_tbl_cs_exit();
+    return ret;
+}
+
 ush_s32_t
 ushd_conn_table_get_record_cert(ush_s32_t idx) {
-    ush_s32_t ret = USH_INVALID_CERT_VALUE_DEFAULT;
+    ush_s32_t ret = USH_INVALID_CERT_VALUE;
 
     conn_tbl_cs_entry();
 
     if (idx <= 0 && idx >= RECORD_TABLE_MAX_COUNT) {
-        ret = USH_INVALID_CERT_VALUE_DEFAULT;
+        ret = USH_INVALID_CERT_VALUE;
     } else  if (0 == tbl.records[idx].valid) {
-        ret = USH_INVALID_CERT_VALUE_DEFAULT;
+        ret = USH_INVALID_CERT_VALUE;
     } else {
         ret = tbl.records[idx].cert;
     }
@@ -182,6 +191,31 @@ ushd_conn_table_get_record_reglist(ush_s32_t idx) {
     }
 
     conn_tbl_cs_exit();
-    return ret;
 
+    return ret;
+}
+
+ushd_dist_thread_t
+ushd_conn_table_get_record_dist(ush_s32_t idx) {
+    ushd_dist_thread_t ret = NULL;
+
+    conn_tbl_cs_entry();
+
+    if (idx <= 0 && idx >= RECORD_TABLE_MAX_COUNT) {
+        ushd_log(LOG_LVL_ERROR, "out of bound");
+    } else if (0 == tbl.records[idx].valid) {
+        ushd_log(LOG_LVL_ERROR, "record not valid");
+    } else {
+        ret = tbl.records[idx].dist;
+    }
+
+    conn_tbl_cs_exit();
+
+    return ret;
+}
+
+ush_ret_t
+ushd_conn_table_set_cb_rcv(ush_s32_t idx, ush_sig_id_t sigid, ush_pvoid_t rcv) {
+    ushd_reg_list_t reglist = ushd_conn_table_get_record_reglist(idx);
+    return ushd_reg_list_set_cb_rcv(reglist, sigid, rcv);
 }

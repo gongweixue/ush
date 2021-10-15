@@ -15,6 +15,24 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
                             const ush_pvoid_t       rcv,
                             ush_pipe_t              pipe);
 
+ush_s32_t
+ush_comm_tch_sig_reg_get_cert(ush_comm_tch_sig_reg_t msg);
+
+ush_s32_t
+ush_comm_tch_sig_reg_get_remote_idx(ush_comm_tch_sig_reg_t msg);
+
+ush_sig_id_t
+ush_comm_tch_sig_reg_get_sigid(ush_comm_tch_sig_reg_t msg);
+
+ush_pvoid_t
+ush_comm_tch_sig_reg_get_cb_done(ush_comm_tch_sig_reg_t msg);
+
+ush_pvoid_t
+ush_comm_tch_sig_reg_get_cb_rcv(ush_comm_tch_sig_reg_t msg);
+
+ush_pipe_t
+ush_comm_tch_sig_reg_get_pipe(ush_comm_tch_sig_reg_t msg);
+
 ush_size_t
 ush_comm_tch_sig_reg_sizeof();
 

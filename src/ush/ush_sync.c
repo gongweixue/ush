@@ -5,7 +5,6 @@
 
 #include "ush_assert.h"
 #include "ush_connect.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
 #include "ush_sync.h"
@@ -79,10 +78,12 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
     switch (wait) {
     case 0:
         break;
+
     case ETIMEDOUT:
         ush_log(LOG_LVL_ERROR, "cond wait timeout");
         ret = USH_RET_TIMEOUT;
         break;
+
     default :
         ush_log(LOG_LVL_ERROR, "cond wait failed");
         ret = USH_RET_FAILED;
@@ -113,7 +114,7 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
     pthread_mutex_lock(&ack->mutex);
     ush_ret_t ret = USH_RET_OK;
 
-    ush_s32_t local_cert = USH_INVALID_CERT_VALUE_DEFAULT;
+    ush_s32_t local_cert = USH_INVALID_CERT_VALUE;
     ret = ush_connect_get_cert(ack->conn, &local_cert);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect cert get failed");

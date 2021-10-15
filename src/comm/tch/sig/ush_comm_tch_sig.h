@@ -4,7 +4,7 @@
 #include "ush_type_pub.h"
 
 #include "ush_sig_pub.h"
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 
 typedef enum USH_COMM_TCH_SIG_INTENT {
     USH_COMM_TCH_SIG_INTENT_REG,

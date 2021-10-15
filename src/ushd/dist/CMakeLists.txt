@@ -3,13 +3,17 @@ set(LIB_USHD_DIST ushd_dist)
 set(SRC_USHD_DIST
     ushd_dist_thread.c
     ushd_dist_fifo.c
-    ushd_dist_proc.c
+    proc/ushd_dist_proc.c
+    proc/ushd_dist_proc_hay.c
+    proc/ushd_dist_proc_sig.c
 )
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
     ${PROJECT_SOURCE_DIR}/src/pub/
+    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/util/
+    ${PROJECT_SOURCE_DIR}/src/ushd/
 )
 
 add_library(${LIB_USHD_DIST} STATIC ${SRC_USHD_DIST})

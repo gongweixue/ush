@@ -15,12 +15,13 @@ extern "C" {
 #endif
 
 typedef enum {
+    USH_SIG_ID_INVALID,
 #include "ush_sig_conf"
     USH_SIG_ID_MAX
 } ush_sig_id_t;
 
 static inline ush_bool_t ush_sig_id_valid(ush_sig_id_t id) {
-    return (id >= 0 && id < USH_SIG_ID_MAX);
+    return (id > USH_SIG_ID_INVALID && id < USH_SIG_ID_MAX);
 }
 
 

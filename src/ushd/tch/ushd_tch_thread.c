@@ -4,7 +4,6 @@
 #include "stdlib.h"
 
 #include "tch/ush_comm_tch.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 
 #include "sched/ushd_sched_fifo.h"

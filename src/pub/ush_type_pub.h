@@ -7,6 +7,9 @@
 extern "C" {
 #endif
 
+
+#include "ush_define.h"
+
 typedef unsigned char      ush_bool_t;
 typedef unsigned char      ush_u8_t;
 typedef signed char        ush_s8_t;
@@ -56,7 +59,7 @@ typedef enum ush_ret {
 } ush_ret_t;
 
 // handle type for pipe, just a number, no meaning on client.
-typedef ush_s64_t          ush_pipe_t;
+typedef ush_u64_t          ush_pipe_t;
 
 
 #ifdef __cplusplus

@@ -3,7 +3,6 @@
 #include "ush_assert.h"
 #include "ush_comm_lstnr.h"
 #include "ush_comm_lstnr_hay.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 
 typedef struct lstnr_hay {
@@ -18,19 +17,20 @@ ush_comm_lstnr_hay_t
 ush_comm_lstnr_hay_create(ush_pvoid_t sync,
                           ush_s32_t idx,
                           ush_s32_t cert) {
-    if (!sync || idx < 0) {
+    if (!sync || idx <= USHD_INVALID_CONN_IDX_VALUE) {
+        ush_log(LOG_LVL_ERROR, "null ptr of sync or invalid idx");
         return NULL;
     }
     ush_comm_lstnr_hay_t ret =
         (ush_comm_lstnr_hay_t)malloc(sizeof(struct lstnr_hay));
 
     if (!ret) {
-        ush_log(LOG_LVL_ERROR, "howareyou msg mem alloc failed.");
+        ush_log(LOG_LVL_ERROR, "hay msg mem alloc failed.");
         return NULL;
     }
 
     ret->desc.desc.port = USH_COMM_PORT_LSTNR;
-    ret->desc.catalog   = USH_COMM_LSTNR_MSG_CATALOG_HOWAREYOU;
+    ret->desc.catalog   = USH_COMM_LSTNR_MSG_CATALOG_HAY;
     ret->sync           = (ush_sync_hello_ack_t)sync;
     ret->remote_idx     = idx;
     ret->cert           = cert;
@@ -61,7 +61,7 @@ ush_s32_t
 ush_comm_lstnr_hay_cert_of(ush_comm_lstnr_hay_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_INFO, "get idx from NULL, return 0xFFFFFFFF(invald)");
-        return USH_INVALID_CERT_VALUE_DEFAULT;
+        return USH_INVALID_CERT_VALUE;
     }
 
     return msg->cert;
@@ -89,6 +89,6 @@ ush_comm_lstnr_hay_destroy(ush_comm_lstnr_hay_t *pMsg) {
 }
 
 void
-ush_comm_lstnr_hay_testpoint(ush_comm_lstnr_hay_t msg) {
+ush_comm_lstnr_hay_testpoint(const ush_comm_lstnr_hay_t msg) {
     (void)msg;
 }

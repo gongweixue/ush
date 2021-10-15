@@ -6,14 +6,6 @@
 #include "dist/ushd_dist_thread.h"
 #include "reg/ushd_reg_list.h"
 
-// typedef enum {
-//     USHD_CONN_RECORD_ATTR_NAME,
-//     USHD_CONN_RECORD_ATTR_CERT,
-//     USHD_CONN_RECORD_ATTR_IDX,
-//     USHD_CONN_RECORD_ATTR_VALID
-// } USHD_CONN_RECORD_ATTR_TYPE;
-
-
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////     conn record                   /////////////////////
 typedef struct ushd_conn_record * ushd_conn_record_t;
@@ -29,9 +21,14 @@ ush_s32_t ushd_conn_table_add_record(const ush_char_t           *name,
                                      ush_s32_t                   cert,
                                      const ushd_dist_thread_t    dist);
 
-ush_s32_t ushd_conn_table_get_record_cert(ush_s32_t idx);
+ush_bool_t ushd_conn_table_get_record_valid(ush_s32_t idx);
+ush_s32_t  ushd_conn_table_get_record_cert(ush_s32_t idx);
 
 ushd_reg_list_t ushd_conn_table_get_record_reglist(ush_s32_t idx);
 
+ushd_dist_thread_t ushd_conn_table_get_record_dist(ush_s32_t idx);
+
+ush_ret_t
+ushd_conn_table_set_cb_rcv(ush_s32_t idx, ush_sig_id_t sigid, ush_pvoid_t rcv);
 
 #endif // USHD_CONN_RECORD_TBL_H

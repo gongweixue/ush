@@ -11,7 +11,7 @@ typedef struct comm_tch_sig_reg {
     ush_comm_tch_sig_d           desc;
     ush_s32_t                    remote_idx;
     ush_s32_t                    cert;
-    ush_sig_id_t                 sig;
+    ush_sig_id_t                 sigid;
     ush_pvoid_t                  done;
     ush_pvoid_t                  rcv;
     ush_pipe_t                   pipe;
@@ -44,7 +44,7 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
     tmp->desc.intent         = USH_COMM_TCH_SIG_INTENT_REG;
     tmp->remote_idx          = idxconn;
     tmp->cert                = cert;
-    tmp->sig                 = sigid;
+    tmp->sigid               = sigid;
     tmp->done                = done;
     tmp->rcv                 = rcv;
     tmp->pipe                = pipe;
@@ -53,6 +53,65 @@ ush_comm_tch_sig_reg_create(ush_comm_tch_sig_reg_t *pMsg,
 
     return USH_RET_OK;
 }
+
+
+ush_s32_t
+ush_comm_tch_sig_reg_get_cert(ush_comm_tch_sig_reg_t msg) {
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return USH_INVALID_CERT_VALUE;
+    }
+    return msg->cert;
+}
+
+ush_s32_t
+ush_comm_tch_sig_reg_get_remote_idx(ush_comm_tch_sig_reg_t msg) {
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return 0;
+    }
+    return msg->remote_idx;
+}
+
+ush_sig_id_t
+ush_comm_tch_sig_reg_get_sigid(ush_comm_tch_sig_reg_t msg) {
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return USH_SIG_ID_INVALID;
+    }
+    return msg->sigid;
+}
+
+ush_pvoid_t
+ush_comm_tch_sig_reg_get_cb_done(ush_comm_tch_sig_reg_t msg) {
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: null")
+        return NULL;
+    }
+
+    return msg->done;
+}
+
+ush_pvoid_t
+ush_comm_tch_sig_reg_get_cb_rcv(ush_comm_tch_sig_reg_t msg) {
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: null")
+        return NULL;
+    }
+
+    return msg->rcv;
+}
+
+ush_pipe_t
+ush_comm_tch_sig_reg_get_pipe(ush_comm_tch_sig_reg_t msg) {
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: null")
+        return USH_INVALID_PIPE;
+    }
+
+    return msg->pipe;
+}
+
 
 ush_ret_t
 ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *pMsg) {

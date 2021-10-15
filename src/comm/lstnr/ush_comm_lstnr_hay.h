@@ -1,5 +1,5 @@
-#ifndef USH_COMM_LSTNR_HOWAREYOU_H
-#define USH_COMM_LSTNR_HOWAREYOU_H
+#ifndef USH_COMM_LSTNR_HAY_H
+#define USH_COMM_LSTNR_HAY_H
 
 #include "ush_type_pub.h"
 
@@ -28,6 +28,6 @@ ush_ret_t
 ush_comm_lstnr_hay_destroy(ush_comm_lstnr_hay_t *pMsg);
 
 void
-ush_comm_lstnr_hay_testpoint(ush_comm_lstnr_hay_t msg);
+ush_comm_lstnr_hay_testpoint(const ush_comm_lstnr_hay_t msg);
 
-#endif // USH_COMM_LSTNR_HOWAREYOU_H
+#endif // USH_COMM_LSTNR_HAY_H

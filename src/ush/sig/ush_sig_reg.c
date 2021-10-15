@@ -1,9 +1,9 @@
-#include "ush_def_pub.h"
+
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_sig_pub.h"
 
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 #include "tch/ush_comm_tch.h"
 #include "tch/sig/ush_comm_tch_sig.h"
 #include "tch/sig/ush_comm_tch_sig_reg.h"
@@ -16,7 +16,7 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
     }
 
     ush_connect_t conn = (ush_connect_t)pipe;
-    ush_s32_t cert = USH_INVALID_CERT_VALUE_DEFAULT;
+    ush_s32_t cert = USH_INVALID_CERT_VALUE;
     if (USH_RET_OK != ush_connect_get_cert(conn, &cert)) {
         ush_log(LOG_LVL_ERROR, "invalid pipe");
         return USH_RET_WRONG_SEQ;
@@ -35,7 +35,7 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
     }
 
     if (!ush_sig_id_valid(pconf->sigid)) {
-        ush_log(LOG_LVL_ERROR, "wrong sig id");
+        ush_log(LOG_LVL_ERROR, "wrong sigid id");
         return USH_RET_WRONG_PARAM;
     }
 
@@ -48,14 +48,16 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
                                                 pconf->rcv,
                                                 pipe);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "sig reg msg create failed");
+        ush_log(LOG_LVL_ERROR, "sigid reg msg create failed");
         return ret;
     }
 
-    ret = ush_tch_send(touch, (const char*)msg, ush_comm_tch_sig_reg_sizeof());
+    ret = ush_tch_send(touch, (const ush_char_t*)msg,
+                       ush_comm_tch_sig_reg_sizeof(),
+                       USH_COMM_TCH_SEND_PRIO_SIG_REG);
 
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "sent sig reg msg failed");
+        ush_log(LOG_LVL_ERROR, "sent sigid reg msg failed");
     }
     ush_comm_tch_sig_reg_destroy(&msg); // destroy in any case
 

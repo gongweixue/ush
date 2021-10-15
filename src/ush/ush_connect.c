@@ -4,8 +4,7 @@
 #include "stdlib.h"
 
 #include "ush_assert.h"
-#include "ush_def_pub.h"
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
@@ -67,7 +66,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
 // NORMAL:
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
     newMem->cert = cert;
-    newMem->remote_idx = 0xFFFFFFFF;
+    newMem->remote_idx = USHD_INVALID_CONN_IDX_VALUE;
     *pConn = newMem;
     return USH_RET_OK;
 
@@ -113,7 +112,7 @@ ush_ret_t
 ush_connect_get_cert(ush_connect_t conn, ush_s32_t *ptr) {
     ush_assert(conn && ptr);
     if (!conn || !ptr) {
-        *ptr = USH_INVALID_CERT_VALUE_DEFAULT;
+        *ptr = USH_INVALID_CERT_VALUE;
         return USH_RET_FAILED;
     }
 

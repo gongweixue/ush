@@ -4,13 +4,14 @@
 #include "stdlib.h"
 
 #include "ush_assert.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_time.h"
 
+#include "ush_comm_def.h"
+
 #include "ushd_dist_fifo.h"
-#include "ushd_dist_proc.h"
 #include "ushd_dist_thread.h"
+#include "proc/ushd_dist_proc.h"
 
 
 typedef struct dist_thread {
@@ -99,13 +100,7 @@ void * ushd_dist_thread_entry(void *arg) {
         }
         ushd_log(LOG_LVL_INFO, "pop msg from dist fifo");
 
-        DIST_FIFO_MSG_TYPE ty = ((dist_fifo_msg_desc*)buf)->type;
-        if (USHD_DIST_FIFO_CMD_HOWAREYOU == ty) {
-            dist_fifo_msg_hay *ptr = (dist_fifo_msg_hay *)buf;
-
-            ushd_log(LOG_LVL_INFO, "sending msg %p to the mq", ptr);
-            dist_proc_send_hay(thread->mq, ptr);
-        }
+        ushd_dist_proc(thread, buf);
     };
 }
 
@@ -116,6 +111,7 @@ void * ushd_dist_thread_entry(void *arg) {
 static ush_ret_t
 dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
     if (!name || USH_INVALID_MQD_VALUE != thread->mq) {
+        ush_log(LOG_LVL_ERROR, "wrong param");
         return USH_RET_WRONG_PARAM;
     }
 
@@ -140,4 +136,27 @@ dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
         }
     }
     return USH_RET_FAILED;
+}
+
+ush_ret_t
+ushd_dist_thread_send_msg(ushd_dist_thread_t thread,
+                          const ush_pvoid_t  buf,
+                          ush_size_t         sz,
+                          ush_u32_t          prio) {
+    if (!thread || !buf || !sz || USH_INVALID_MQD_VALUE == thread->mq) {
+        ush_log(LOG_LVL_ERROR, "wrong param");
+        return USH_RET_WRONG_PARAM;
+    }
+
+    if (sz >= USH_COMM_LSTNR_Q_MSG_MAX_LEN) {
+        ush_log(LOG_LVL_ERROR, "msg tooooooooooooo long!!!!!");
+        return USH_RET_FAILED;
+    }
+
+    if (0 != mq_send(thread->mq, (const char *)buf, sz, prio)) {
+        ush_log(LOG_LVL_ERROR, "dist thread sending msg failed");
+        return USH_RET_FAILED;
+    }
+
+    return USH_RET_OK;
 }

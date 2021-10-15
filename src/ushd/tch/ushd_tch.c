@@ -6,7 +6,6 @@
 
 #include "ush_assert.h"
 #include "tch/ush_comm_tch.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 
 #include "ushd_tch.h"
@@ -97,11 +96,15 @@ ushd_tch_receive(ushd_tch_t touch, ush_char_t *dest, ush_size_t sz) {
         case EMSGSIZE:
             ush_log(LOG_LVL_ERROR, "massage too long from touch pipe");
             break;
+
         case EBADF:
             ush_log(LOG_LVL_ERROR, "bad mqd_t for touch");
             break;
+
         case EINVAL:
             ush_log(LOG_LVL_ERROR, "invalid ptr of buffer for receiving.");
+            break;
+
         default:
             break;
         }

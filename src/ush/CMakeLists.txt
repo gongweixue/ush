@@ -8,6 +8,7 @@ set(SRC_USH
     lstnr/ush_lstnr.c
     lstnr/proc/ush_lstnr_proc.c
     lstnr/proc/ush_lstnr_proc_hay.c
+    lstnr/proc/ush_lstnr_proc_sigreg_ack.c
     pipe/ush_pipe_create.c
     pipe/ush_pipe_attr.c
     sig/ush_sig_reg.c

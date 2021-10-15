@@ -5,7 +5,6 @@
 
 #include "ush_assert.h"
 #include "ush_comm_def.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_time.h"
 #include "ush_tch.h"
@@ -19,12 +18,21 @@ typedef struct ush_tch {
 
 
 ush_ret_t
-ush_tch_send(const ush_tch_t touch, const ush_char_t *ptr, ush_size_t sz) {
+ush_tch_send(const ush_tch_t   touch,
+             const ush_char_t *ptr,
+             ush_size_t        sz,
+             ush_u32_t         prio) {
     ush_assert(touch && ptr && sz > 0);
+
+    if (sz >= USH_COMM_TCH_Q_MSG_MAX_LEN) {
+        ush_log(LOG_LVL_FATAL, "msg tooooooooo long!!!!");
+        return USH_RET_FAILED;
+    }
+
     ush_ret_t ret = USH_RET_OK;
     const ush_char_t *pMsg = (const ush_char_t *)ptr;
 
-    int i = mq_send(touch->mq, pMsg, sz, USH_COMM_SEND_PRIO_SIG_REG);
+    int i = mq_send(touch->mq, pMsg, sz, prio);
     if (-1 == i) {
         ush_log(LOG_LVL_FATAL, "send msg failed.");
         ret = USH_RET_FAILED;
@@ -44,7 +52,7 @@ ush_tch_send_hello(const ush_tch_t                touch,
 
     ush_size_t sz = ush_comm_tch_hello_sizeof();
     if (pDL) { // with timeout
-        int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_SEND_PRIO_HELLO, pDL);
+        int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_TCH_SEND_PRIO_HELLO, pDL);
         if (-1 == i) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
                 ush_log(LOG_LVL_FATAL, "send hello timeout");
@@ -56,7 +64,7 @@ ush_tch_send_hello(const ush_tch_t                touch,
         }
         ush_log(LOG_LVL_DETAIL, "timedsend return");
     } else {
-        ret = ush_tch_send(touch, pMsg, sz);
+        ret = ush_tch_send(touch, pMsg, sz, USH_COMM_TCH_SEND_PRIO_HELLO);
     }
 
     return ret;

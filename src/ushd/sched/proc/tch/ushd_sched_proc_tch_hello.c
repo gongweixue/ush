@@ -1,7 +1,9 @@
 
-#include "ush_comm_port.h"
-#include "tch/ush_comm_tch_hello.h"
 #include "ush_string.h"
+
+#include "ush_comm_desc.h"
+#include "tch/ush_comm_tch_hello.h"
+
 #include "conn/ushd_conn_record_tbl.h"
 #include "dist/ushd_dist_thread.h"
 
@@ -33,7 +35,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
 
     // add the info to the conn table
     ush_s32_t record_idx = ushd_conn_table_add_record(name, cert, dist);
-    if (-1 == record_idx) {
+    if (USHD_INVALID_CONN_IDX_VALUE == record_idx) {
         ushd_log(LOG_LVL_ERROR, "conn can not add to the table");
         return;
     }
@@ -42,12 +44,12 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     ushd_log(LOG_LVL_INFO, "starting dist thread %p", dist);
     if (USH_RET_OK == ushd_dist_thread_start(dist)) {
         dist_fifo_msg_hay msg = {
-            {USHD_DIST_FIFO_CMD_HOWAREYOU}, ackSync, record_idx, cert};
+            {USHD_DIST_FIFO_MSG_TYPE_HAY}, ackSync, record_idx, cert};
 
         ushd_dist_fifo_t fifo = ushd_dist_thread_get_fifo(dist);
 
         ushd_log(LOG_LVL_INFO, "push data to the dist fifo");
-        ushd_dist_fifo_push(fifo, (dist_fifo_msg_desc*)&msg, sizeof(msg));
+        ushd_dist_fifo_push(fifo, (dist_fifo_msg_d*)&msg, sizeof(msg));
     }
 
     return; // return anyway

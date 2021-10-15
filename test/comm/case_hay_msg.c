@@ -1,6 +1,6 @@
 #include "test-common.h"
 
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 #include "lstnr/ush_comm_lstnr.h"
 #include "lstnr/ush_comm_lstnr_hay.h"
 
@@ -19,7 +19,7 @@ static void test_hay_create() {
     ush_assert(NULL == msg);
 
     msg = ush_comm_lstnr_hay_create(ack, 0, 123456);
-    ush_assert(NULL != msg);
+    ush_assert(NULL == msg);
 
     msg = ush_comm_lstnr_hay_create(ack, -1, 123456);
     ush_assert(NULL == msg);
@@ -111,7 +111,7 @@ static void test_hay_cert_of() {
     ush_assert(cert == result);
 
     // from NULL
-    ush_assert(0xFFFFFFFF == ush_comm_lstnr_hay_cert_of(NULL));
+    ush_assert(USH_INVALID_CERT_VALUE == ush_comm_lstnr_hay_cert_of(NULL));
 }
 
 void test_hay() {

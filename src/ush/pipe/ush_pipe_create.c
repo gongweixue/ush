@@ -8,9 +8,8 @@
 #include "time.h"
 
 #include "ush_assert.h"
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 #include "ush_connect.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
 #include "ush_random.h"
@@ -47,11 +46,11 @@ ush_pipe_create(
     // params valid
     if (!pName || !pPipe || USH_PP_MODE_MAX_GUARD <= mode) {
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");
-        if (pPipe) {*pPipe = 0;}
+        if (pPipe) {*pPipe = USH_INVALID_PIPE;}
         return USH_RET_WRONG_PARAM;
     }
 
-    *pPipe = 0; // NULL for error return;
+    *pPipe = USH_INVALID_PIPE; // NULL for error return;
 
     if (USH_COMM_LSTNR_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
         ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
@@ -91,10 +90,10 @@ ush_pipe_create(
     ret = send_hello_and_wait(name, pDL, conn);
 
     if (USH_RET_OK == ret) {
-        *pPipe = (ush_s64_t)conn;
+        *pPipe = (ush_u64_t)conn;
         ush_log(LOG_LVL_INFO, "set conn's ptr to handle returned");
     } else {
-        ush_log(LOG_LVL_FATAL, "hello and howareyou failed");
+        ush_log(LOG_LVL_FATAL, "hello and hay failed");
     }
 
 RET:
@@ -124,10 +123,9 @@ send_hello_and_wait(const ush_char_t *pName,
     // prepare hello msg
     ush_comm_tch_hello_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    int cert = USH_INVALID_CERT_VALUE_DEFAULT;
+    int cert = USH_INVALID_CERT_VALUE;
     ush_connect_get_cert(conn, &cert);
     ush_comm_tch_hello_create(&hello, pName, ack, cert);
-    ush_comm_tch_hello_testpoint(hello);
 
     // send with or without timeout
     ush_tch_t touch = NULL;

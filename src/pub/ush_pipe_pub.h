@@ -100,7 +100,7 @@ ush_ret_t ush_pipe_delete(ush_pipe_t   pipe,
  * thread safe: y
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ
  * detail: flush all the data(triger the events) in the indicated pipe.
- * this call may trigger the event 'sig receive'
+ * this call may trigger the event 'sigid receive'
 */
 ush_ret_t ush_pipe_flush(ush_pipe_t pipe);
 

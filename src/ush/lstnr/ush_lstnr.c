@@ -6,10 +6,9 @@
 #include "string.h"
 
 #include "ush_assert.h"
-#include "ush_def_pub.h"
 #include "ush_log.h"
 
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 
 #include "proc/ush_lstnr_proc.h"
 #include "ush_lstnr.h"
@@ -116,7 +115,7 @@ lstnr_thread_entry(void *arg) {
         }
         ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
 
-        if (USH_COMM_PORT_LSTNR != ((ush_comm_port_d*)buf)->port) {
+        if (USH_COMM_PORT_LSTNR != ((ush_comm_d*)buf)->port) {
             continue;
         }
 
@@ -142,11 +141,15 @@ ushd_lstnr_receive(mqd_t mq, ush_char_t *dest, size_t sz) {
         case EMSGSIZE:
             ush_log(LOG_LVL_ERROR, "massage too long from listener");
             break;
+
         case EBADF:
             ush_log(LOG_LVL_ERROR, "bad mqd_t for listener");
             break;
+
         case EINVAL:
             ush_log(LOG_LVL_ERROR, "invalid ptr of buffer for receiving.");
+            break;
+
         default:
             break;
         }

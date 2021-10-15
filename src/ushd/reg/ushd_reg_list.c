@@ -1,3 +1,4 @@
+#include "pthread.h"
 #include "stdlib.h"
 #include "string.h"
 
@@ -7,24 +8,13 @@
 
 #include "ushd_reg_list.h"
 
-//   | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-//             ^   ^   ^   ^   ^   ^
-//             |   |   |   |   |   |____ subscribe flg
-//             |   |   |   |   |________ verbose flg
-//             |   |   |___|
-//             |   |     |______________ interval timeslice base
-//             |___|                     0: none, 1: 10ms, 2: 100ms, 3: 1sec
-//               |
-//               |______________________ interval timeslice factor
-//                                       0: none, 1: x1,  2: x2,  3: x5
-
-typedef unsigned char REG_LIST_ELEM_TYPE;
 typedef enum {
     INTERVAL_BASE_NONE,
     INTERVAL_BASE_10ms,
     INTERVAL_BASE_100ms,
     INTERVAL_BASE_1s,
 } INTERVAL_BASE;
+
 typedef enum {
     INTERVAL_FCTR_NONE,
     INTERVAL_FCTR_x1,
@@ -32,34 +22,17 @@ typedef enum {
     INTERVAL_FCTR_x5,
 } INTERVAL_FCTR;
 
+typedef struct signal_record {
+    ush_pvoid_t    cb_rcv; // null for 'not subscribe'
+    INTERVAL_BASE  intervalbase;
+    INTERVAL_FCTR  intervalfactor;
+} signal_record;
+
+
 typedef struct ushd_reg_list {
-    REG_LIST_ELEM_TYPE bitmap[USH_SIG_ID_MAX];
+    pthread_mutex_t  mutex;
+    signal_record elems[USH_SIG_ID_MAX];
 } * ushd_reg_list_t;
-
-#define SHFT_SUBSCRIBE            (0)
-#define MASK_SUBSCRIBE            (0x01) // 00000001b
-
-#define SHFT_VERBOSE              (1)
-#define MASK_VERBOSE              (0x02) // 00000010b
-
-#define SHFT_INTERVALBASE         (2)
-#define MASK_INTERVALBASE         (0x0C) // 00001100b
-
-#define SHFT_INTERVALFCTR         (4)
-#define MASK_INTERVALFCTR         (0x30) // 00110000b
-
-#define DEFINE_RW_FUNC_OF(NAME)                                             \
-static inline void SET_##NAME##_OF(REG_LIST_ELEM_TYPE *ptr, ush_u8_t val) { \
-    *ptr = ((*ptr) & (~MASK_##NAME)) | (val << SHFT_##NAME);                \
-}                                                                           \
-static inline ush_u8_t GET_##NAME##_OF(REG_LIST_ELEM_TYPE *ptr) {           \
-    return (*ptr & MASK_##NAME) >> SHFT_##NAME;                             \
-}
-
-DEFINE_RW_FUNC_OF(SUBSCRIBE);
-DEFINE_RW_FUNC_OF(VERBOSE);
-DEFINE_RW_FUNC_OF(INTERVALBASE);
-DEFINE_RW_FUNC_OF(INTERVALFCTR);
 
 
 ushd_reg_list_t
@@ -68,7 +41,37 @@ ushd_reg_list_create() {
     if (!ret) {
         return NULL;
     }
-    memset(ret->bitmap, 0, sizeof(ret->bitmap));
+    memset(ret->elems, 0, sizeof(ret->elems));
+    if (0 != pthread_mutex_init(&(ret->mutex), NULL)) {
+        free(ret);
+        ret = NULL;
+    }
 
     return ret;
+}
+
+static inline void ushd_reg_list_cs_enter(ushd_reg_list_t reglist) {
+    pthread_mutex_lock(&reglist->mutex);
+}
+static inline void ushd_reg_list_cs_exit(ushd_reg_list_t reglist) {
+    pthread_mutex_unlock(&reglist->mutex);
+}
+
+
+ush_ret_t ushd_reg_list_set_cb_rcv(ushd_reg_list_t reglist,
+                                   ush_sig_id_t    sigid,
+                                   ush_pvoid_t     rcv) {
+    if (!reglist) {
+        return USH_RET_FAILED;
+    }
+
+    if (!ush_sig_id_valid(sigid)) {
+        return USH_RET_FAILED;
+    }
+
+    ushd_reg_list_cs_enter(reglist);
+    reglist->elems[sigid].cb_rcv = rcv;
+    ushd_reg_list_cs_exit(reglist);
+
+    return USH_RET_OK;
 }

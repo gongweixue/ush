@@ -12,7 +12,10 @@ ush_ret_t          ushd_dist_thread_start(ushd_dist_thread_t thread);
 
 ushd_dist_fifo_t   ushd_dist_thread_get_fifo(ushd_dist_thread_t thread);
 
-
-
+ush_ret_t
+ushd_dist_thread_send_msg(ushd_dist_thread_t thread,
+                          const ush_pvoid_t  buf,
+                          ush_size_t         sz,
+                          ush_u32_t          prio);
 
 #endif // USHD_DIST_THREAD_H

@@ -4,8 +4,8 @@
 #include "mqueue.h"
 
 #include "ush_type_pub.h"
-#include "ushd_dist_fifo_msg.h"
+#include "dist/ushd_dist_thread.h"
 
-void dist_proc_send_hay(mqd_t mq, dist_fifo_msg_hay *msg);
+void ushd_dist_proc(ushd_dist_thread_t thread, const ush_char_t *buf);
 
 #endif // USHD_DIST_PROC_H

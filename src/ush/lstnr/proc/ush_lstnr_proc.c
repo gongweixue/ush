@@ -3,17 +3,22 @@
 #include "ush_log.h"
 #include "ush_type_pub.h"
 
-#include "ush_comm_port.h"
+#include "ush_comm_desc.h"
 #include "ush_lstnr_proc.h"
 #include "ush_lstnr_proc_hay.h"
+#include "ush_lstnr_proc_sigreg_ack.h"
 
 ush_ret_t
-ush_lstnr_proc(const ush_comm_lstnr_msg_d *desc) {
-    ush_assert(desc);
-    switch (desc->catalog)
+ush_lstnr_proc(const ush_comm_lstnr_msg_d *msgd) {
+    ush_assert(msgd);
+    switch (msgd->catalog)
     {
-    case USH_COMM_LSTNR_MSG_CATALOG_HOWAREYOU:
-        ush_lstnr_proc_hay((const ush_comm_lstnr_hay_t)desc);
+    case USH_COMM_LSTNR_MSG_CATALOG_HAY:
+        ush_lstnr_proc_hay((const ush_comm_lstnr_hay_t)msgd);
+        break;
+
+    case USH_COMM_LSTNR_MSG_CATALOG_SIGREG_ACK:
+        ush_lstnr_proc_sigreg_ack((const ush_comm_lstnr_sigreg_ack_t)msgd);
         break;
 
     default:
