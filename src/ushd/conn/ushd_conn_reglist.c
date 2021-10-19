@@ -2,7 +2,7 @@
 
 #include "ush_log.h"
 #include "ush_type_pub.h"
-#include "ush_sig_enum.h"
+#include "ush_sig_id.h"
 
 #include "ushd_conn_tbl.h"
 #include "ushd_conn_reglist.h"
@@ -10,21 +10,6 @@
 //////////////////////////////////////////////////////////////////////
 // CAUTION: all member of reglist are static, and be initialized by 0.
 //////////////////////////////////////////////////////////////////////
-
-typedef union ush_reglist_sig_latest_val_t {
-    BOOL    dataBOOL;
-    U8      dataU8;
-    S8      dataS8;
-    U16     dataU16;
-    S16     dataS16;
-    U32     dataU32;
-    S32     dataS32;
-    U64     dataU64;
-    S64     dataS64;
-    FP32    dataFP32;
-    FP64    dataFP64;
-    CHAR    dataCHAR;
-} ush_reglist_sig_latest_val_t;
 
 typedef struct ush_reglist_sig_node_t {
     ush_pvoid_t    rcv;

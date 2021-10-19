@@ -1,7 +1,7 @@
 #ifndef USH_SIG_PUB_H
 #define USH_SIG_PUB_H
 
-#include "ush_sig_enum.h"
+#include "ush_sig_id.h"
 #include "ush_type_pub.h"
 
 #include "ush_cb_pub.h"
@@ -17,6 +17,8 @@ typedef struct ush_sig_reg_conf_t {
 } ush_sig_reg_conf_t;
 
 ush_ret_t ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf);
+
+ush_ret_t ush_sig_set(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval);
 
 
 // implement with burst reg mode

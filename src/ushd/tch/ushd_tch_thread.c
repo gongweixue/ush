@@ -20,7 +20,7 @@ typedef struct ushd_tch_thread {
 static ushd_tch_thread_t s_tch_thread = NULL;
 
 
-static ush_ret_t ushd_tch_thread_cs_enter();
+static ush_ret_t ushd_tch_thread_cs_entry();
 static ush_ret_t ushd_tch_thread_cs_exit();
 
 static ushd_tch_thread_t tch_thread_create();
@@ -28,7 +28,7 @@ static ushd_tch_thread_t tch_thread_create();
 ushd_tch_thread_t
 ushd_tch_thread_singleton() {
     if (!s_tch_thread) { // null test without lock
-        ushd_tch_thread_cs_enter();
+        ushd_tch_thread_cs_entry();
         // ushd_tch_thread_t tmp;
         if (!s_tch_thread) {
             ushd_log(LOG_LVL_INFO, "touch thread create first time");
@@ -48,7 +48,7 @@ ushd_tch_thread_set_id(pthread_t tid) {
         return USH_RET_FAILED;
     }
 
-    ushd_tch_thread_cs_enter();
+    ushd_tch_thread_cs_entry();
 
     ushd_log(LOG_LVL_DETAIL, "set tid 0x%08lx and tid flag", tid);
     tch_thread->tid    = tid;
@@ -76,7 +76,7 @@ ushd_tch_thread_entry(void *arg) {
     }
     ushd_log(LOG_LVL_DETAIL, "set touch thread tid, 0x%08lx", pthread_self());
 
-    ushd_tch_thread_cs_enter();
+    ushd_tch_thread_cs_entry();
     if (USH_RET_OK != ushd_tch_open(tch_thread->touch)) {
         goto TERMINATE;
     }
@@ -156,8 +156,8 @@ tch_thread_create() {
 /////////////////////// critical section, just for touch thread singleton
 pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 ush_ret_t
-ushd_tch_thread_cs_enter() {
-    ushd_log(LOG_LVL_DETAIL, "enter cs of touch thread entity");
+ushd_tch_thread_cs_entry() {
+    ushd_log(LOG_LVL_DETAIL, "entry cs of touch thread entity");
     return !pthread_mutex_lock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }
 ush_ret_t

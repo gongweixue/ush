@@ -21,10 +21,6 @@ ush_ret_t ush_connect_get_tch(ush_connect_t conn, ush_tch_t *ptr);
 
 ush_ret_t ush_connect_get_lstnr(ush_connect_t conn, ush_lstnr_t *ptr);
 
-ush_ret_t ush_connect_cs_enter(ush_connect_t conn);
-
-ush_ret_t ush_connect_cs_exit(ush_connect_t conn);
-
 // ush_ret_t ush_connect_listen_start(ush_connect_t conn, const ush_char_t *path);
 
 

@@ -2,7 +2,7 @@
 
 pthread_mutex_t cs = PTHREAD_MUTEX_INITIALIZER;
 
-void ush_log_cs_enter() {
+void ush_log_cs_entry() {
     pthread_mutex_lock(&cs);
 }
 

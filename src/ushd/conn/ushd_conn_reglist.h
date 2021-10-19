@@ -2,7 +2,7 @@
 #define USHD_CONN_REGLIST_H
 
 #include "ush_type_pub.h"
-#include "ush_sig_enum.h"
+#include "ush_sig_id.h"
 
 ush_ret_t ushd_conn_reglist_init();
 

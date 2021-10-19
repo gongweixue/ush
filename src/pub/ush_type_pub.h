@@ -11,6 +11,7 @@ extern "C" {
 #include "ush_define.h"
 
 typedef unsigned char      ush_bool_t;
+typedef char               ush_char_t;
 typedef unsigned char      ush_u8_t;
 typedef signed char        ush_s8_t;
 typedef unsigned short     ush_u16_t;
@@ -22,13 +23,13 @@ typedef unsigned long long ush_u64_t;
 typedef signed long long   ush_s64_t;
 typedef float              ush_fp32_t;
 typedef double             ush_fp64_t;
-typedef char               ush_char_t;
 typedef size_t             ush_size_t;
 typedef long               ush_ssize_t;
 typedef void *             ush_pvoid_t;
 
 
 typedef ush_bool_t         BOOL;
+typedef ush_char_t         CHAR;
 typedef ush_u8_t           U8;
 typedef ush_s8_t           S8;
 typedef ush_u16_t          U16;
@@ -39,7 +40,6 @@ typedef ush_u64_t          U64;
 typedef ush_s64_t          S64;
 typedef ush_fp32_t         FP32;
 typedef ush_fp64_t         FP64;
-typedef ush_char_t         CHAR;
 
 
 #ifndef NULL
@@ -63,6 +63,23 @@ typedef ush_u64_t          ush_pipe_t;
 
 typedef ush_s32_t          ush_connidx_t;
 typedef ush_s32_t          ush_cert_t;
+
+
+// union for signal value
+typedef union ush_sig_val_t {
+    BOOL    dataBOOL;
+    CHAR    dataCHAR;
+    U8      dataU8;
+    S8      dataS8;
+    U16     dataU16;
+    S16     dataS16;
+    U32     dataU32;
+    S32     dataS32;
+    U64     dataU64;
+    S64     dataS64;
+    FP32    dataFP32;
+    FP64    dataFP64;
+} ush_sig_val_t;
 
 
 #ifdef __cplusplus

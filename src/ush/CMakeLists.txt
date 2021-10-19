@@ -12,6 +12,7 @@ set(SRC_USH
     pipe/ush_pipe_create.c
     pipe/ush_pipe_attr.c
     sig/ush_sig_reg.c
+    sig/ush_sig_set.c
 )
 
 include_directories(

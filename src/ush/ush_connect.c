@@ -21,6 +21,21 @@ typedef struct ush_connect {
     pthread_mutex_t      mutex;
 } * ush_connect_t;
 
+
+static ush_ret_t
+connect_cs_entry(const ush_connect_t conn) {
+    ush_assert(conn);
+    ush_log(LOG_LVL_DETAIL, "entry cs of %p conn", conn);
+    // 0 for locked, others for not
+    return !pthread_mutex_lock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
+}
+static ush_ret_t
+connect_cs_exit(const ush_connect_t conn) {
+    ush_assert(conn);
+    ush_log(LOG_LVL_DETAIL, "exit cs of %p conn", conn);
+    return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
+}
+
 ush_ret_t
 ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
     ush_assert(pConn && name);
@@ -93,11 +108,13 @@ ush_connect_destroy(ush_connect_t *pConn) {
         return USH_RET_OK;
     }
 
+    connect_cs_entry(*pConn);
     ush_lstnr_stop_close(&((*pConn)->listener));
 
     ush_log(LOG_LVL_DETAIL, "destory touch/listener/mutext");
     ush_tch_destroy_with_closing(&((*pConn)->touch));
 
+    connect_cs_exit(*pConn);
     pthread_mutex_destroy(&((*pConn)->mutex));
 
     ush_log(LOG_LVL_DETAIL, "and free conn mem %p", *pConn);
@@ -116,7 +133,9 @@ ush_connect_get_cert(ush_connect_t conn, ush_cert_t *ptr) {
         return USH_RET_FAILED;
     }
 
+    connect_cs_entry(conn);
     *ptr = conn->cert;
+    connect_cs_exit(conn);
 
     return USH_RET_OK;
 }
@@ -128,7 +147,10 @@ ush_connect_set_connidx(ush_connect_t conn, ush_connidx_t idx) {
         return USH_RET_WRONG_PARAM;
     }
 
+    connect_cs_entry(conn);
     conn->connidx = idx;
+    connect_cs_exit(conn);
+
     return USH_RET_OK;
 }
 
@@ -141,7 +163,10 @@ ush_connect_get_connidx(const ush_connect_t conn, ush_connidx_t *ptr) {
         return USH_RET_WRONG_PARAM;
     }
 
+    connect_cs_entry(conn);
     *ptr = conn->connidx;
+    connect_cs_exit(conn);
+
     return USH_RET_OK;
 }
 
@@ -152,23 +177,11 @@ ush_connect_get_tch(ush_connect_t conn, ush_tch_t *ptr) {
         return USH_RET_WRONG_PARAM;
     }
 
+    connect_cs_entry(conn);
     *ptr = conn->touch;
+    connect_cs_exit(conn);
+
     ush_log(LOG_LVL_DETAIL, "get touch successful, addr %p", *ptr);
 
     return USH_RET_OK;
-}
-
-ush_ret_t
-ush_connect_cs_enter(ush_connect_t conn) {
-    ush_assert(conn);
-    ush_log(LOG_LVL_DETAIL, "enter cs of %p conn", conn);
-    // 0 for locked, others for not
-    return !pthread_mutex_lock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
-}
-
-ush_ret_t
-ush_connect_cs_exit(ush_connect_t conn) {
-    ush_assert(conn);
-    ush_log(LOG_LVL_DETAIL, "exit cs of %p conn", conn);
-    return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }

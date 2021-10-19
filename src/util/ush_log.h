@@ -18,14 +18,14 @@ typedef enum USH_LOG_LVL {
     #define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
 #endif
 
-void ush_log_cs_enter();
+void ush_log_cs_entry();
 void ush_log_cs_exit();
 
 #if !USH_LOG_ON
     #define log_def(owner, lvl, ...)
 #else
     #define log_def(owner, lvl, ...)   {                                        \
-        ush_log_cs_enter();                                                     \
+        ush_log_cs_entry();                                                     \
         if (lvl <= USH_LOG_LVL_SELECTOR) {                                      \
             printf("*****" #owner"-"#lvl":\n");                                 \
             printf("---- At :%s:%s:%d\n", __FILE__, __FUNCTION__, __LINE__);    \

@@ -18,7 +18,7 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
     ush_connect_t conn = (ush_connect_t)pipe;
     ush_cert_t cert = USH_INVALID_CERT_VALUE;
     if (USH_RET_OK != ush_connect_get_cert(conn, &cert)) {
-        ush_log(LOG_LVL_ERROR, "invalid pipe");
+        ush_log(LOG_LVL_ERROR, "invalid cert");
         return USH_RET_WRONG_SEQ;
     }
 

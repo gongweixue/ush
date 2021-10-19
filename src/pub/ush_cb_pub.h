@@ -2,7 +2,7 @@
 #define USH_CB_PUB_H
 
 #include "ush_type_pub.h"
-#include "ush_sig_enum.h"
+#include "ush_sig_id.h"
 
 #ifdef __cplusplus
 extern "C" {

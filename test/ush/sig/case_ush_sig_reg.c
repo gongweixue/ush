@@ -1,7 +1,7 @@
 #include "test-common.h"
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
-#include "ush_sig_enum.h"
+#include "ush_sig_id.h"
 #include "ush_string.h"
 
 #include "pthread.h"
@@ -37,7 +37,7 @@ void test_ush_sig_reg() {
     ush_assert(OK == ret);
 
 
-    ush_sig_reg_conf_t conf0 ={ABC_abc_FP32, onReg, NULL};
+    ush_sig_reg_conf_t conf0 ={USH_SIG_ID_ABC_abc_FP32, onReg, NULL};
     ret = ush_sig_reg(pipe, &conf0);
     ush_assert(OK == ret);
     pthread_mutex_lock(&mutex);
@@ -72,7 +72,7 @@ void test_ush_sig_reg() {
     ret = ush_sig_reg(pipe, &conf2);
     ush_assert(OK != ret);
 
-    ush_sig_reg_conf_t conf3 ={ABC_abc_FP32, NULL, NULL};
+    ush_sig_reg_conf_t conf3 ={USH_SIG_ID_ABC_abc_FP32, NULL, NULL};
     ret = ush_sig_reg(pipe, &conf3);
     ush_assert(OK == ret);
 }
