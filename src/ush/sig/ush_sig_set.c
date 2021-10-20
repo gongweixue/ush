@@ -3,6 +3,8 @@
 #include "ush_log.h"
 #include "ush_sig_pub.h"
 
+#include "tch/sig/ush_comm_tch_sig_set.h"
+
 // define set function prototype
 #define DEFINE_SIG_ID_SET_FUNC(TY)                                              \
 static inline void ush_sig_id_set_##TY(ush_sig_val_t *pVal, ush_pvoid_t pSrc) { \
@@ -21,21 +23,18 @@ DEFINE_SIG_ID_SET_FUNC(S64)
 DEFINE_SIG_ID_SET_FUNC(FP32)
 DEFINE_SIG_ID_SET_FUNC(FP64)
 
-typedef void (*FOO)(ush_sig_val_t *, ush_pvoid_t);
+typedef void (*ush_sig_set_func_t)(ush_sig_val_t *, ush_pvoid_t);
 
 #ifdef USH_ADD_SIG_ID
 #undef USH_ADD_SIG_ID
 #endif
 #define USH_ADD_SIG_ID(GRP, NAME, TY) ush_sig_id_set_##TY,
 
-static FOO foo[] = {
+static ush_sig_set_func_t set_functions[] = {
     NULL,
 #include "ush_sig_conf"
     NULL
 };
-
-
-
 
 
 ush_ret_t
@@ -66,30 +65,24 @@ ush_sig_set(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval) {
 
     ush_sig_val_t val;
 
-    foo[sigid](&val, pval);
+    set_functions[sigid](&val, pval);
 
+    ush_comm_tch_sig_set_t msg = NULL;
+    ush_ret_t ret =
+        ush_comm_tch_sig_set_create(&msg, idx, cert, sigid, val, pipe);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "sig_set_msg create failed");
+        return ret;
+    }
 
-    // ush_comm_tch_sig_set_t msg = NULL;
-    // ush_ret_t ret = ush_comm_tch_sig_set_create(&msg,
-    //                                             idx,
-    //                                             cert,
-    //                                             pconf->sigid,
-    //                                             pconf->done,
-    //                                             pconf->rcv,
-    //                                             pipe);
-    // if (USH_RET_OK != ret) {
-    //     ush_log(LOG_LVL_ERROR, "sigid reg msg create failed");
-    //     return ret;
-    // }
+    ret = ush_tch_send(touch, (const ush_char_t*)msg,
+                       ush_comm_tch_sig_set_sizeof(),
+                       USH_COMM_TCH_SEND_PRIO_SIG_SET);
 
-    // ret = ush_tch_send(touch, (const ush_char_t*)msg,
-    //                    ush_comm_tch_sig_reg_sizeof(),
-    //                    USH_COMM_TCH_SEND_PRIO_SIG_REG);
-
-    // if (USH_RET_OK != ret) {
-    //     ush_log(LOG_LVL_ERROR, "sent sigid reg msg failed");
-    // }
-    // ush_comm_tch_sig_reg_destroy(&msg); // destroy in any case
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "sent sigid reg msg failed");
+    }
+    ush_comm_tch_sig_set_destroy(&msg); // destroy in any case
 
     return 1;
 }
