@@ -3,29 +3,31 @@ project(USH)
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
 set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_C_FLAGS "-Wall \
-                   -Werror \
-                   -Wextra \
-                   -Wsequence-point \
-                   -Wswitch-default \
-                   -Wswitch-enum \
-                   -Wbool-compare \
-                   -Wtautological-compare \
-                   -Wfloat-equal \
-                   -Wpointer-arith \
-                   -Wcast-align \
-                   -Wcast-qual \
-                   -Wwrite-strings \
-                   -Wlogical-op \
-                   -Wconversion \
-                   -Wshadow \
-                   -Winline \
-                   -Wunreachable-code \
-                   -Wundef \
-                   -Wstrict-prototypes \
-                   -finline-functions \
-                   -Wmissing-prototypes \
-                   -Wnested-externs")
+set(CMAKE_C_FLAGS  "-Wall \
+                    -Wbool-compare \
+                    -Wcast-align \
+                    -Wcast-qual \
+                    -Wcomments \
+                    -Wconversion \
+                    -Wendif-labels \
+                    -Werror \
+                    -Wextra \
+                    -Wfloat-equal \
+                    -Winline \
+                    -Wlogical-op \
+                    -Wmissing-prototypes \
+                    -Wnested-externs \
+                    -Wpointer-arith \
+                    -Wsequence-point \
+                    -Wshadow \
+                    -Wstrict-prototypes \
+                    -Wswitch-default \
+                    -Wswitch-enum \
+                    -Wunreachable-code \
+                    -Wundef \
+                    -Wwrite-strings \
+                    -finline-functions \
+                    -fmax-errors=20")
 
 add_subdirectory(src)
 
