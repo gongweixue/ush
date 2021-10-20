@@ -55,7 +55,6 @@ typedef enum USH_PIPE_MODE {
 /*
  * Create a pipe with hub service
  * sync call: y
- * thread safe: n
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ NO_DATA TIMEOUT
  * restriction: pName/pHdl should not NULL nor too long (less than 20 is fair)
  * detail:
@@ -77,7 +76,6 @@ ush_ret_t ush_pipe_create(
 /*
  * Destory a pipe connection with the hub
  * sync call: n
- * thread safe: n
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ
  * restriction: handle should be not NULL
  * detail: handle be delete with the indicated time by ms.
@@ -97,7 +95,6 @@ ush_ret_t ush_pipe_delete(ush_pipe_t   pipe,
 /*
  * Flush the data already in the pipe before you deleted/stopped the pipe.
  * sync call: n
- * thread safe: y
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ
  * detail: flush all the data(triger the events) in the indicated pipe.
  * this call may trigger the event 'sigid receive'
@@ -108,7 +105,6 @@ ush_ret_t ush_pipe_flush(ush_pipe_t pipe);
 /*
  * Make the pipe work or not.
  * sync call: y
- * thread safe: n
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ
  * restriction: not ensure start in the different threads,
  *     in other words, you should always start/stop the same pipe in the same thread.
@@ -124,7 +120,6 @@ ush_ret_t ush_pipe_stop(ush_pipe_t pipe, ush_u8_t flush, ush_u16_t msTimeout);
 /*
  * Checkout the attr value of a pipe.
  * sync call: y
- * thread safe: n
  * ret: OK FAILED WRONG_PARAM NOT_SUPPORT NO_DATA
 */
 ush_ret_t ush_pipe_query(ush_pipe_t pipe,
@@ -134,7 +129,6 @@ ush_ret_t ush_pipe_query(ush_pipe_t pipe,
 /*
  * Update the attr value of a pipe.
  * sync call: y
- * thread safe: n
  * ret: OK FAILED WRONG_PARAM NOT_SUPPORT WRONG_SEQ
  * restriction: wrong seq once the pipe starts,
  *     need to stop the pipe to update the attr of a pipe

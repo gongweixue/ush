@@ -6,10 +6,12 @@
 #include "tch/sig/ush_comm_tch_sig_set.h"
 
 // define set function prototype
-#define DEFINE_SIG_ID_SET_FUNC(TY)                                              \
-static inline void ush_sig_id_set_##TY(ush_sig_val_t *pVal, ush_pvoid_t pSrc) { \
-    pVal->data##TY = *(TY*)pSrc;                                                \
+#define DEFINE_SIG_ID_SET_FUNC(TY)                                             \
+static inline void ush_sig_id_set_##TY(ush_sig_val_t *pDst,                    \
+                                       const ush_pvoid_t pSrc) {               \
+    pDst->data##TY = *(TY*)pSrc;                                               \
 }
+
 DEFINE_SIG_ID_SET_FUNC(BOOL)
 DEFINE_SIG_ID_SET_FUNC(CHAR)
 DEFINE_SIG_ID_SET_FUNC(U8)
