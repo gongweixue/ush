@@ -60,15 +60,15 @@ typedef struct {
 
 static conn_tbl tbl; // all 0 when init
 
-static void conn_tbl_cs_entry() {
+static void conn_tbl_cs_entry(void) {
     pthread_mutex_lock(&tbl.cs);
 }
 
-static void conn_tbl_cs_exit() {
+static void conn_tbl_cs_exit(void) {
     pthread_mutex_unlock(&tbl.cs);
 }
 
-static void move_cursor_to_next_empty_record() {
+static void move_cursor_to_next_empty_record(void) {
     int pos = tbl.cursor;
     while (tbl.records[pos].valid || USHD_INVALID_CONN_IDX_VALUE == pos) {
         pos = (pos + 1) % USH_CONN_IDX_MAX; // move to next
@@ -89,7 +89,7 @@ BAILED:
 }
 
 ush_ret_t
-ushd_conn_tbl_init() {
+ushd_conn_tbl_init(void) {
     //make idx 0 invalid
     tbl.records[0].valid     = 0;          // 0 means empty slot
     tbl.records[0].name[0]   = '\0';

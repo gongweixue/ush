@@ -12,7 +12,7 @@ ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
                                  ush_pvoid_t  done);
 
 ush_size_t
-ush_comm_lstnr_sigreg_ack_sizeof();
+ush_comm_lstnr_sigreg_ack_sizeof(void);
 
 ush_sig_cb_reg_t
 ush_comm_lstnr_sigreg_ack_get_done(const ush_comm_lstnr_sigreg_ack_t msg);

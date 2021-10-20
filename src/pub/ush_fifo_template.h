@@ -16,7 +16,7 @@
 #define USH_FIFO_DECL_CODE_GEN(NAME)                                            \
 typedef struct NAME##_fifo * NAME##_fifo_t;                                     \
                                                                                 \
-NAME##_fifo_t NAME##_fifo_create();                                             \
+NAME##_fifo_t NAME##_fifo_create(void);                                             \
                                                                                 \
 ush_ret_t NAME##_fifo_push(NAME##_fifo_t fifo, const void *buf, ush_size_t sz); \
                                                                                 \
@@ -48,7 +48,7 @@ typedef struct NAME##_fifo {                                                    
     ush_s32_t       tail;                                                       \
 } * NAME##_fifo_t;                                                              \
                                                                                 \
-static const ush_u32_t fifo_len = (ELEM_NUM + 1);                               \
+static const ush_s32_t fifo_len = (ELEM_NUM + 1);                               \
                                                                                 \
 static ush_ret_t NAME##_fifo_cs_entry(NAME##_fifo_t fifo);                      \
 static ush_ret_t NAME##_fifo_cs_exit(NAME##_fifo_t fifo);                       \
@@ -62,7 +62,7 @@ static ush_size_t NAME##_fifo_curr_num(const NAME##_fifo_t fifo);               
                                                                                 \
                                                                                 \
 NAME##_fifo_t                                                                   \
-NAME##_fifo_create() {                                                          \
+NAME##_fifo_create(void) {                                                          \
     NAME##_fifo_t fifo = (NAME##_fifo_t)malloc(sizeof(struct NAME##_fifo));     \
                                                                                 \
     if (!fifo) {                                                                \
@@ -258,7 +258,7 @@ NAME##_fifo_curr_num(const NAME##_fifo_t fifo) {                                
     if (!fifo) {                                                                \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \
-    return (fifo->tail + fifo_len - fifo->head) % fifo_len;                     \
+    return (ush_size_t)((fifo->tail + fifo_len - fifo->head) % fifo_len);                     \
 }                                                                               \
 
 

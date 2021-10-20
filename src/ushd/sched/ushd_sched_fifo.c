@@ -62,7 +62,7 @@ static ushd_sched_fifo_t s_sched_fifo = NULL;
 static pthread_mutex_t s_mutex_singleton = PTHREAD_MUTEX_INITIALIZER;
 
 ushd_sched_fifo_t
-ushd_sched_fifo_singleton() {
+ushd_sched_fifo_singleton(void) {
     if (!s_sched_fifo) { // null test without lock
         pthread_mutex_lock(&s_mutex_singleton);
         if (!s_sched_fifo) {

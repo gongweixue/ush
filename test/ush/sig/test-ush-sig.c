@@ -1,6 +1,6 @@
 #include "case_ush_sig_reg.c"
 
-int main() {
+int main(void) {
 
     test_ush_sig_reg();
 

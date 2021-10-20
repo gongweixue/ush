@@ -29,7 +29,7 @@ ush_pipe_t
 ush_comm_tch_sig_set_get_pipe(const ush_comm_tch_sig_set_t msg);
 
 ush_size_t
-ush_comm_tch_sig_set_sizeof();
+ush_comm_tch_sig_set_sizeof(void);
 
 ush_ret_t
 ush_comm_tch_sig_set_destroy(ush_comm_tch_sig_set_t *msg);

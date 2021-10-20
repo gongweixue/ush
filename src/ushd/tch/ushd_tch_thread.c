@@ -20,13 +20,13 @@ typedef struct ushd_tch_thread {
 static ushd_tch_thread_t s_tch_thread = NULL;
 
 
-static ush_ret_t ushd_tch_thread_cs_entry();
-static ush_ret_t ushd_tch_thread_cs_exit();
+static ush_ret_t ushd_tch_thread_cs_entry(void);
+static ush_ret_t ushd_tch_thread_cs_exit(void);
 
-static ushd_tch_thread_t tch_thread_create();
+static ushd_tch_thread_t tch_thread_create(void);
 
 ushd_tch_thread_t
-ushd_tch_thread_singleton() {
+ushd_tch_thread_singleton(void) {
     if (!s_tch_thread) { // null test without lock
         ushd_tch_thread_cs_entry();
         // ushd_tch_thread_t tmp;
@@ -60,8 +60,9 @@ ushd_tch_thread_set_id(pthread_t tid) {
 }
 
 
-void *
+static void *
 ushd_tch_thread_entry(void *arg) {
+    (void)arg;
     ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
     ushd_tch_thread_t tch_thread = ushd_tch_thread_singleton();
     if (!tch_thread) {
@@ -113,7 +114,7 @@ TERMINATE:
 
 
 ush_ret_t
-ushd_tch_thread_start() {
+ushd_tch_thread_start(void) {
     pthread_t tid;
     if (0 != pthread_create(&tid, NULL, ushd_tch_thread_entry, NULL)) {
         ushd_log(LOG_LVL_FATAL, "create touch daemon thread: failed.");
@@ -131,7 +132,7 @@ ushd_tch_thread_start() {
 }
 
 ushd_tch_thread_t
-tch_thread_create() {
+tch_thread_create(void) {
     ushd_tch_thread_t newMem =
         (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread));
 
@@ -156,12 +157,12 @@ tch_thread_create() {
 /////////////////////// critical section, just for touch thread singleton
 pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 ush_ret_t
-ushd_tch_thread_cs_entry() {
+ushd_tch_thread_cs_entry(void) {
     ushd_log(LOG_LVL_DETAIL, "entry cs of touch thread entity");
     return !pthread_mutex_lock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }
 ush_ret_t
-ushd_tch_thread_cs_exit() {
+ushd_tch_thread_cs_exit(void) {
     ushd_log(LOG_LVL_DETAIL, "exit cs of touch thread entity");
     return !pthread_mutex_unlock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }

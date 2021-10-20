@@ -83,6 +83,8 @@ void ushd_sched_proc_tch_sig(const ush_pvoid_t msg) {
         ushd_sched_proc_tch_sig_reg((const ush_comm_tch_sig_reg_t)msg);
         break;
 
+    case USH_COMM_TCH_SIG_INTENT_SET:
+    case USH_COMM_TCH_SIG_INTENT_MAX:
     default:
         ushd_log(LOG_LVL_FATAL, "wrong intent #%d", pDesc->intent);
         break;

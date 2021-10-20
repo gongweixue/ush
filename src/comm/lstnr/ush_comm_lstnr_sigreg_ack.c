@@ -28,6 +28,7 @@ ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
 
     ret->desc.desc.port = USH_COMM_PORT_LSTNR;
     ret->desc.catalog   = USH_COMM_LSTNR_MSG_CATALOG_SIGREG_ACK;
+    ret->success        = success;
     ret->sigid          = sigid;
     ret->pipe           = pipe;
     ret->done           = done;
@@ -36,7 +37,7 @@ ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
 }
 
 ush_size_t
-ush_comm_lstnr_sigreg_ack_sizeof() {
+ush_comm_lstnr_sigreg_ack_sizeof(void) {
     return sizeof(struct lstnr_sigreg_ack);
 }
 

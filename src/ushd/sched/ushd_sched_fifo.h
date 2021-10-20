@@ -9,6 +9,6 @@
 
 USH_FIFO_DECL_CODE_GEN(ushd_sched);
 
-ushd_sched_fifo_t ushd_sched_fifo_singleton();
+ushd_sched_fifo_t ushd_sched_fifo_singleton(void);
 
 #endif // USHD_SCHED_FIFO_H

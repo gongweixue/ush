@@ -4,7 +4,7 @@
 #include "lstnr/ush_comm_lstnr.h"
 #include "lstnr/ush_comm_lstnr_hay.h"
 
-static void test_hay_create() {
+static void test_hay_create(void) {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
     ush_comm_lstnr_hay_t msg = NULL;
@@ -27,11 +27,11 @@ static void test_hay_create() {
     msg = ush_comm_lstnr_hay_create(ack, 1, 0);
     ush_assert(NULL != msg);
 
-    msg = ush_comm_lstnr_hay_create(ack, 1, 0xFFFFFFFF);
+    msg = ush_comm_lstnr_hay_create(ack, 1, 0x7FFFFFFF);
     ush_assert(NULL != msg);
 }
 
-static void test_hay_destroy() {
+static void test_hay_destroy(void) {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
 
@@ -56,7 +56,7 @@ static void test_hay_destroy() {
     ush_assert(NULL == msg);
 }
 
-static void test_hay_ack_of() {
+static void test_hay_ack_of(void) {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
     ush_comm_lstnr_hay_t msg = NULL;
@@ -74,7 +74,7 @@ static void test_hay_ack_of() {
     ush_assert(NULL == ush_comm_lstnr_hay_ack_of(NULL));
 }
 
-static void test_hay_idx_of() {
+static void test_hay_idx_of(void) {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
     ush_comm_lstnr_hay_t msg = NULL;
@@ -94,7 +94,7 @@ static void test_hay_idx_of() {
     ush_assert(0 == ush_comm_lstnr_hay_connidx_of(NULL));
 }
 
-static void test_hay_cert_of() {
+static void test_hay_cert_of(void) {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
     ush_comm_lstnr_hay_t msg = NULL;
@@ -114,7 +114,7 @@ static void test_hay_cert_of() {
     ush_assert(USH_INVALID_CERT_VALUE == ush_comm_lstnr_hay_cert_of(NULL));
 }
 
-void test_hay() {
+static void test_hay(void) {
     test_hay_create();
     test_hay_destroy();
     test_hay_ack_of();

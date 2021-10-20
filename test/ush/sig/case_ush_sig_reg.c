@@ -10,7 +10,10 @@ static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
 static int flag_done = 0;
 static int flag_rcv  = 0;
 
-ush_ret_t onReg(ush_pipe_t pipe, ush_sig_id_t id, ush_bool_t uccess) {
+static ush_ret_t onReg(ush_pipe_t pipe, ush_sig_id_t id, ush_bool_t success) {
+    (void)pipe;
+    (void)id;
+    (void)success;
     pthread_mutex_lock(&mutex);
     flag_done = 1;
     pthread_cond_signal(&cond);
@@ -18,7 +21,10 @@ ush_ret_t onReg(ush_pipe_t pipe, ush_sig_id_t id, ush_bool_t uccess) {
     return USH_RET_OK;
 }
 
-ush_ret_t onRcv(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t data) {
+static ush_ret_t onRcv(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t data) {
+    (void)pipe;
+    (void)sigid;
+    (void)data;
     pthread_mutex_lock(&mutex);
     flag_rcv = 1;
     pthread_cond_signal(&cond);
@@ -27,7 +33,7 @@ ush_ret_t onRcv(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t data) {
 
 }
 
-void test_ush_sig_reg() {
+static void test_ush_sig_reg(void) {
 
     ush_pipe_t pipe = USH_INVALID_PIPE; // magic num
     ush_ret_t ret = OK;

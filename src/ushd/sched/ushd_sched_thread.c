@@ -12,8 +12,9 @@
 #include "ushd_sched_fifo.h"
 #include "ushd_sched_thread.h"
 
-void *
+static void *
 ushd_sched_thread_entry(void *arg) {
+    (void)arg;
     ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
 
     ushd_log(LOG_LVL_DETAIL, "sched fifo creating...");
@@ -54,7 +55,7 @@ TERMINATE:
 
 
 ush_ret_t
-ushd_sched_thread_start() {
+ushd_sched_thread_start(void) {
     pthread_t tid;
     ushd_log(LOG_LVL_INFO, "starting sched daemon thread...");
     if (0 != pthread_create(&tid, NULL, ushd_sched_thread_entry, NULL)) {

@@ -4,7 +4,7 @@
 #include "ush_sig_id.h"
 #include "ush_string.h"
 
-void test_ush_sig_reg() {
+static void test_ush_sig_reg(void) {
 
     ush_pipe_t pipe = USH_INVALID_PIPE; // magic num
     ush_ret_t ret = OK;

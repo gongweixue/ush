@@ -131,6 +131,6 @@ ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *pMsg) {
 }
 
 ush_size_t
-ush_comm_tch_sig_reg_sizeof() {
+ush_comm_tch_sig_reg_sizeof(void) {
     return sizeof(struct comm_tch_sig_reg);
 }

@@ -4,7 +4,7 @@
 #include "sched/ushd_sched_thread.h"
 #include "tch/ushd_tch_thread.h"
 
-int main () {
+int main (void) {
 
     ush_ret_t ret = USH_RET_OK;
 

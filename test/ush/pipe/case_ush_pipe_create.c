@@ -3,7 +3,7 @@
 #include "ush_string.h"
 
 
-void test_ush_pipe_create() {
+static void test_ush_pipe_create(void) {
     ush_pipe_t pipe = 0x55AA; // magic num
     ush_ret_t ret = OK;
     ush_char_t name[] = "TEST_USH_PIPE_CREATE";

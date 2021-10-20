@@ -4,11 +4,12 @@
 #include "lstnr/ush_comm_lstnr_hay.h"
 
 #include "dist/ushd_dist_thread.h"
+#include "dist/proc/ushd_dist_proc.h"
 #include "dist/proc/ushd_dist_proc_hay.h"
 #include "dist/proc/ushd_dist_proc_sig.h"
 
 void
-ushd_dist_proc(ushd_dist_thread_t thread, const ush_char_t *buf) {
+ushd_dist_proc(ushd_dist_thread_t thread, ush_char_t *buf) {
     if (!thread || !buf) {
         ushd_log(LOG_LVL_ERROR, "null ptr of parameters");
         return;

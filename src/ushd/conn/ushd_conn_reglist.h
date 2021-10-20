@@ -4,7 +4,7 @@
 #include "ush_type_pub.h"
 #include "ush_sig_id.h"
 
-ush_ret_t ushd_conn_reglist_init();
+ush_ret_t ushd_conn_reglist_init(void);
 
 ush_ret_t ushd_conn_reglist_set_rcv(ush_connidx_t     idx,
                                     ush_sig_id_t      sigid,

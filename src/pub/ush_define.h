@@ -1,7 +1,7 @@
 #ifndef USH_DEFINE_H
 #define USH_DEFINE_H
 
-#define USH_INVALID_CERT_VALUE         (0xFFFFFFFF)
+#define USH_INVALID_CERT_VALUE         (-1)
 
 #define USH_INVALID_TID                (0xFFFFFFFF)
 

@@ -18,8 +18,8 @@ typedef enum USH_LOG_LVL {
     #define USH_LOG_LVL_SELECTOR    LOG_LVL_ERROR
 #endif
 
-void ush_log_cs_entry();
-void ush_log_cs_exit();
+void ush_log_cs_entry(void);
+void ush_log_cs_exit(void);
 
 #if !USH_LOG_ON
     #define log_def(owner, lvl, ...)

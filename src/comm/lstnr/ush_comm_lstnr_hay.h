@@ -22,7 +22,7 @@ ush_cert_t
 ush_comm_lstnr_hay_cert_of(ush_comm_lstnr_hay_t msg);
 
 ush_size_t
-ush_comm_lstnr_hay_sizeof();
+ush_comm_lstnr_hay_sizeof(void);
 
 ush_ret_t
 ush_comm_lstnr_hay_destroy(ush_comm_lstnr_hay_t *pMsg);

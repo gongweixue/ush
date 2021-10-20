@@ -4,13 +4,13 @@
 #include "ush_string.h"
 
 
-void ush_itoa(char *str, int num) {
+void ush_itoa(char *str, long num) {
     char *beg = str;
-    int sign;
+    long sign;
     if ((sign = num) < 0) {num = -num;}
 
     do {
-        *str++ = '0' + num % 10;
+        *str++ = (char)('0' + num % 10);
     } while((num /= 10) > 0);
 
     if (sign < 0) {*str++ = '-';}

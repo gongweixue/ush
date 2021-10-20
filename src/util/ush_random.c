@@ -11,10 +11,12 @@ int ush_random_generate_cert(const char *seed) {
 
     static unsigned int real_seed = 0;
 
-    real_seed += *seed;
+    real_seed += (unsigned int)*seed;
 
-    srand(real_seed + time(NULL));
+    srand(real_seed + (unsigned int)time(NULL));
     int cert = rand();
+
+    cert &= 0x7FFFFFFF; // set the sign-bit to 0
 
     ush_log(LOG_LVL_INFO, "cert gen 0x%08x", cert);
 

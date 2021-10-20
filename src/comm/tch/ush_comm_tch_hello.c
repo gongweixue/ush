@@ -79,7 +79,7 @@ ush_comm_tch_hello_destroy(ush_comm_tch_hello_t *pHello) {
 }
 
 size_t
-ush_comm_tch_hello_sizeof() {
+ush_comm_tch_hello_sizeof(void) {
     return sizeof(struct tch_hello);
 }
 
@@ -92,7 +92,7 @@ ush_comm_tch_hello_name_of(const ush_comm_tch_hello_t msg) {
     return msg->name;
 }
 
-const ush_pvoid_t
+ush_pvoid_t
 ush_comm_tch_hello_ack_of(const ush_comm_tch_hello_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");

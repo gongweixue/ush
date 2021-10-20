@@ -19,6 +19,7 @@ void ushd_sched_proc_tch(const ush_pvoid_t ptr) {
         ushd_sched_proc_tch_sig(ptr);
         break;
 
+    case USH_COMM_TCH_MSG_CATALOG_MAX:
     default:
         ushd_log(LOG_LVL_ERROR, "wrong catalog #%d", pDest->catalog);
         break;

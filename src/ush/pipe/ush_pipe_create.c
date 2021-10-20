@@ -43,6 +43,10 @@ ush_pipe_create(
     ush_size_t        paramCnt,
     ush_pipe_t       *pPipe)
 {
+    (void)flag;
+    (void)pParams;
+    (void)paramCnt;
+
     // params valid
     if (!pName || !pPipe || USH_PP_MODE_MAX_GUARD <= mode) {
         ush_log(LOG_LVL_FATAL, "wrong params for pipe create.");

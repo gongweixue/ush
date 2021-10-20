@@ -27,7 +27,7 @@ typedef struct ush_reglist_t {
 
 static ush_reglist_t reglist;
 
-ush_ret_t ushd_conn_reglist_init() {
+ush_ret_t ushd_conn_reglist_init(void) {
     static ush_bool_t flag = 0;
     if (1 == flag) {
         ushd_log(LOG_LVL_INFO, "reglist has been alreay init.");
@@ -40,10 +40,10 @@ ush_ret_t ushd_conn_reglist_init() {
     return USH_RET_OK;
 }
 
-static inline void reglist_cs_entry() {
+static inline void reglist_cs_entry(void) {
     pthread_mutex_lock(&(reglist.creticalsection));
 }
-static inline void reglist_cs_exit() {
+static inline void reglist_cs_exit(void) {
     pthread_mutex_unlock(&(reglist.creticalsection));
 }
 
