@@ -180,6 +180,7 @@ realize_timeout(timespec *ptr, ush_u16_t timeout) {
 static ush_ret_t
 get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
     ush_assert(ack);
+    (void)ack;
     return USH_RET_OK;
 }
 

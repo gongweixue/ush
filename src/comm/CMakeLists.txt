@@ -8,6 +8,8 @@ set(SRC_USH_COMM
     tch/sig/ush_comm_tch_sig_set.c
 )
 
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS}-Wlarger-than=128)
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
     ${PROJECT_SOURCE_DIR}/src/plugin/

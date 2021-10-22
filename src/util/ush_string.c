@@ -28,6 +28,7 @@ void ush_itoa(char *str, long num) {
 
 void ush_string_certname(char *dst, size_t sz, const char *name, int cert) {
     assert(dst);
+    (void)sz;
 
     char certstr[16];
     ush_itoa(certstr, cert);

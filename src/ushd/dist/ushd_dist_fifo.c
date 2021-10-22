@@ -19,6 +19,7 @@ typedef struct elem {
 static void
 fifo_init(ushd_dist_fifo_t fifo) {
     ush_assert(fifo);
+    (void)fifo;
 }
 
 static void
