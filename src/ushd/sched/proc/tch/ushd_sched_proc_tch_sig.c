@@ -8,6 +8,7 @@
 #include "tch/ush_comm_tch.h"
 #include "tch/sig/ush_comm_tch_sig.h"
 #include "tch/sig/ush_comm_tch_sig_reg.h"
+#include "tch/sig/ush_comm_tch_sig_set.h"
 
 #include "dist/ushd_dist_fifo.h"
 #include "dist/ushd_dist_fifo_msg.h"
@@ -69,6 +70,12 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
     return;
 }
 
+static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {
+    check the parameters
+    set value valid-flag and all the other nesessary items.
+    (lock the tbl or reglist)
+}
+
 void ushd_sched_proc_tch_sig(const ush_pvoid_t msg) {
     ush_assert(msg);
     if (!msg) {
@@ -84,6 +91,7 @@ void ushd_sched_proc_tch_sig(const ush_pvoid_t msg) {
         break;
 
     case USH_COMM_TCH_SIG_INTENT_SET:
+        ushd_sched_proc_tch_sig_set((const ush_comm_tch_sig_set_t)msg);
     case USH_COMM_TCH_SIG_INTENT_MAX:
     default:
         ushd_log(LOG_LVL_FATAL, "wrong intent #%d", pDesc->intent);

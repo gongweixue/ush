@@ -10,4 +10,8 @@ ush_ret_t ushd_conn_reglist_set_rcv(ush_connidx_t     idx,
                                     ush_sig_id_t      sigid,
                                     ush_pvoid_t       rcv);
 
+ush_ret_t ushd_conn_reglist_set_val(ush_connidx_t idx,
+                                    ush_sig_id_t  sigid,
+                                    ush_sig_val_t val);
+
 #endif // USHD_CONN_REGLIST_H

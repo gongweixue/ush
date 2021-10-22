@@ -86,5 +86,5 @@ ush_sig_set(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval) {
     }
     ush_comm_tch_sig_set_destroy(&msg); // destroy in any case
 
-    return 1;
+    return ret;
 }
