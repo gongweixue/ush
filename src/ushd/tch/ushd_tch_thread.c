@@ -1,5 +1,4 @@
 
-#include "mqueue.h"
 #include "pthread.h"
 #include "stdlib.h"
 
@@ -13,7 +12,7 @@
 typedef struct ushd_tch_thread {
     ush_bool_t       tidFlg; // tid initial flag
     pthread_t        tid;    // thread id for the listener
-    ushd_tch_t     touch;     // mq handle
+    ushd_tch_t       touch;  // mq handle
 } * ushd_tch_thread_t;
 
 

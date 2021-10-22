@@ -4,7 +4,6 @@
 
 typedef struct ush_lstnr * ush_lstnr_t;
 
-#include "mqueue.h"
 
 #include "ush_type_pub.h"
 

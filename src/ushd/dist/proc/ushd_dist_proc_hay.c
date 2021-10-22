@@ -1,4 +1,3 @@
-#include "mqueue.h"
 
 #include "lstnr/ush_comm_lstnr_hay.h"
 
@@ -9,7 +8,7 @@ void ushd_dist_proc_hay_send(ushd_dist_thread_t       thread,
                              const dist_fifo_msg_hay *msg) {
     ush_assert(thread && msg);
 
-    // construct msg over mqueue
+    // construct msg
     ush_comm_lstnr_hay_t hay =
         ush_comm_lstnr_hay_create(msg->ack_sync, msg->idx, msg->cert);
     if (!hay) {
