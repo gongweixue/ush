@@ -31,5 +31,5 @@ void ush_lstnr_proc_sig_upd(const ush_comm_lstnr_sig_upd_t msg) {
     ush_sig_id_t  sigid = ush_comm_lstnr_sig_upd_get_sigid(msg);
     ush_sig_val_t value = ush_comm_lstnr_sig_upd_get_value(msg);
 
-    rcv_cb(sigid, &value);
+    rcv_cb(sigid, value);
 }

@@ -26,9 +26,9 @@ static ush_ret_t onReg(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t success) {
     return USH_RET_OK;
 }
 
-static ush_ret_t onRcv(ush_sig_id_t sigid, const ush_pvoid_t data) {
+static ush_ret_t onRcv(ush_sig_id_t sigid, const ush_sig_val_t val) {
     ush_assert(USH_SIG_ID_ABC_abc_FP32 == sigid);
-    (void)data;
+    (void)val;
     pthread_mutex_lock(&mutex);
     flag_rcv = 1;
     pthread_cond_signal(&cond);

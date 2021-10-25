@@ -23,7 +23,7 @@ typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
                                       ush_bool_t         success);
 
 // when signal receive
-typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sig_id_t id, const ush_pvoid_t data);
+typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sig_id_t id, ush_sig_val_t val);
 
 
 

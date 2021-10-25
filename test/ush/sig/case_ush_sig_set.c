@@ -10,9 +10,9 @@
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
 
-static ush_ret_t onRcv_ABC(ush_sig_id_t sigid, const ush_pvoid_t data) {
-    ush_assert(USH_SIG_ID_ABC_abc_FP32 == id);
-    (void)data;
+static ush_ret_t onRcv_ABC(ush_sig_id_t sigid, const ush_sig_val_t val) {
+    ush_assert(USH_SIG_ID_ABC_abc_FP32 == sigid);
+    ush_assert(val.dataFP32 > 6.5f && val.dataFP32 < 6.7f);
     pthread_mutex_lock(&mutex);
     pthread_cond_signal(&cond);
     pthread_mutex_unlock(&mutex);
