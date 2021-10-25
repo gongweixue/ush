@@ -13,8 +13,14 @@ extern "C" {
 #undef USH_ADD_SIG_ID
 #endif
 
-#define USH_ADD_SIG_ID(GRP, NAME, TY) USH_SIG_ID_##GRP##_##NAME##_##TY,
+// test sig-id redeclaration by dropping the type of sigid
+#define USH_ADD_SIG_ID(GRP, NAME, TY) USH_SIG_ID_##GRP##_##NAME,
+enum TEST_SIG_REDECLARATION {
+#include "ush_sig_conf"
+};
+#undef USH_ADD_SIG_ID // disable the macro
 
+#define USH_ADD_SIG_ID(GRP, NAME, TY) USH_SIG_ID_##GRP##_##NAME##_##TY,
 typedef enum {
     USH_SIG_ID_INVALID,
 #include "ush_sig_conf"

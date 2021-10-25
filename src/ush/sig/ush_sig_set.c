@@ -33,9 +33,9 @@ typedef void (*ush_sig_set_func_t)(ush_sig_val_t *, ush_pvoid_t);
 #define USH_ADD_SIG_ID(GRP, NAME, TY) ush_sig_id_set_##TY,
 
 static ush_sig_set_func_t set_functions[] = {
-    NULL,
+    NULL, // for USH_SIG_ID_INVALID,
 #include "ush_sig_conf"
-    NULL
+    NULL // for USH_SIG_ID_MAX
 };
 
 
