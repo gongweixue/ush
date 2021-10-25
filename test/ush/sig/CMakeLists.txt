@@ -5,7 +5,6 @@ set(SRC_LIST test-ush-sig.c)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/pub/
-    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/ushd/sched/
     ${PROJECT_SOURCE_DIR}/src/ushd/tch/
     ${PROJECT_SOURCE_DIR}/src/util/

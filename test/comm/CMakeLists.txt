@@ -7,7 +7,6 @@ set(SRC_LIST test-comm.c)
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
     ${PROJECT_SOURCE_DIR}/src/pub/
-    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/util/
     ${PROJECT_SOURCE_DIR}/test/
 )

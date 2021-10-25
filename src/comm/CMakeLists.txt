@@ -12,7 +12,6 @@ set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS}-Wlarger-than=128)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/comm/
-    ${PROJECT_SOURCE_DIR}/src/plugin/
     ${PROJECT_SOURCE_DIR}/src/pub/
     ${PROJECT_SOURCE_DIR}/src/util/
 )

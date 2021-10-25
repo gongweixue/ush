@@ -3,7 +3,8 @@ project(USH)
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
 set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_C_FLAGS  "-Wall \
+set(CMAKE_C_FLAGS  "-I${PROJECT_SOURCE_DIR}/gen \
+                    -Wall \
                     -Wbad-function-cast \
                     -Wbool-compare \
                     -Wcast-align \
