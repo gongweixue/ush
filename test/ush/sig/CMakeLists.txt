@@ -1,7 +1,11 @@
 
 set(EXE_NAME test-ush-sig)
 
-set(SRC_LIST test-ush-sig.c)
+set(SRC_LIST
+    test-ush-sig.c
+    case_ush_sig_reg.c
+    case_ush_sig_set.c
+)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/pub/

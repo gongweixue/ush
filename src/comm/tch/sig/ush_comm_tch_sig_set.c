@@ -55,7 +55,7 @@ ush_comm_tch_sig_set_create(ush_comm_tch_sig_set_t *pMsg,
     tmp->connidx             = connidx;
     tmp->cert                = cert;
     tmp->sigid               = sigid;
-    memcpy(&(tmp->val), &val, sizeof(ush_sig_val_t));
+    tmp->val.dataMAX         = val.dataMAX;
     tmp->pipe                = pipe;
 
     *pMsg = tmp;

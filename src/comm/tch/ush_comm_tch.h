@@ -13,7 +13,7 @@ typedef enum USH_COMM_TCH_MSG_CATALOG {
 } USH_COMM_TCH_MSG_CATALOG;
 
 typedef struct comm_tch_msg_desc {
-    ush_comm_d             desc;
+    ush_comm_d                  desc;
     USH_COMM_TCH_MSG_CATALOG    catalog;
 } USH_COMM_MSG_PACKED ush_comm_tch_msg_d;
 

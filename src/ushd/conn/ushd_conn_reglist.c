@@ -18,7 +18,7 @@ typedef struct ush_reglist_sig_node_t {
 
 
 typedef struct ush_reglist_sig_ty {
-    ush_reglist_sig_node_t  node[USH_CONN_IDX_MAX];
+    ush_reglist_sig_node_t  nodes[USH_CONN_IDX_MAX];
     ush_sig_val_t           value; // current value of the signal
     ush_bool_t              valid; // is current value valid to use
 } ush_reglist_sig_ty;
@@ -60,25 +60,46 @@ ushd_conn_reglist_set_rcv(ush_connidx_t idx,
     }
 
     reglist_cs_entry();
-    reglist.signals[sigid].node[idx].rcv = rcv;
+    reglist.signals[sigid].nodes[idx].rcv = rcv;
     reglist_cs_exit();
 
     return USH_RET_OK;
 }
 
 ush_ret_t
-ushd_conn_reglist_set_val(ush_connidx_t idx,
-                          ush_sig_id_t  sigid,
-                          ush_sig_val_t val) {
-    if (!ush_conn_tbl_connidx_valid(idx) || !ush_sig_id_valid(sigid)) {
+ushd_conn_reglist_set_val(ush_sig_id_t sigid, ush_sig_val_t val) {
+    if (!ush_sig_id_valid(sigid)) {
         ushd_log(LOG_LVL_ERROR, "idx or sigid is out of bound");
         return USH_RET_FAILED;
     }
 
     reglist_cs_entry();
-    memcpy(&(reglist.signals[sigid].value), &val, sizeof(val));
+    reglist.signals[sigid].value.dataMAX = val.dataMAX;
     reglist.signals[sigid].valid = 1;
     reglist_cs_exit();
+
+    return USH_RET_OK;
+}
+
+ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
+    if (!func || !ush_sig_id_valid(sigid)) {
+        return USH_RET_WRONG_PARAM;
+    }
+
+    if (0 == reglist.signals[sigid].valid) { // signal is meaningful
+        return USH_RET_FAILED;
+    }
+
+    // cb to notify all observers.
+    ush_sig_val_t           val   = reglist.signals[sigid].value;
+    ush_reglist_sig_node_t *nodes = reglist.signals[sigid].nodes;
+    for (ush_connidx_t connidx= 0; connidx < USH_CONN_IDX_MAX; ++connidx) {
+        if (!ushd_conn_tbl_get_valid(connidx) || NULL == nodes[connidx].rcv) {
+            continue;
+        }
+
+        func(connidx, sigid, val, nodes[connidx].rcv);
+    }
 
     return USH_RET_OK;
 }

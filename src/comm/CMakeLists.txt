@@ -2,6 +2,7 @@ set(LIB_USH_COMM ush_comm)
 
 set(SRC_USH_COMM
     lstnr/ush_comm_lstnr_hay.c
+    lstnr/ush_comm_lstnr_sig_upd.c
     lstnr/ush_comm_lstnr_sigreg_ack.c
     tch/ush_comm_tch_hello.c
     tch/sig/ush_comm_tch_sig_reg.c

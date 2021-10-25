@@ -1,5 +1,5 @@
-#include "case_ush_sig_reg.c"
-#include "case_ush_sig_set.c"
+#include "case_ush_sig_reg.h"
+#include "case_ush_sig_set.h"
 
 int main(void) {
 

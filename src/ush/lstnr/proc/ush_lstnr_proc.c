@@ -6,7 +6,7 @@
 #include "ush_comm_desc.h"
 #include "ush_lstnr_proc.h"
 #include "ush_lstnr_proc_hay.h"
-#include "ush_lstnr_proc_sigreg_ack.h"
+#include "ush_lstnr_proc_sig.h"
 
 ush_ret_t
 ush_lstnr_proc(ush_comm_lstnr_msg_d *msgd) {
@@ -19,6 +19,10 @@ ush_lstnr_proc(ush_comm_lstnr_msg_d *msgd) {
 
     case USH_COMM_LSTNR_MSG_CATALOG_SIGREG_ACK:
         ush_lstnr_proc_sigreg_ack((ush_comm_lstnr_sigreg_ack_t)msgd);
+        break;
+
+    case USH_COMM_LSTNR_MSG_CATALOG_SIG_UPD:
+        ush_lstnr_proc_sig_upd((ush_comm_lstnr_sig_upd_t)msgd);
         break;
 
     case USH_COMM_LSTNR_MSG_CATALOG_MAX:

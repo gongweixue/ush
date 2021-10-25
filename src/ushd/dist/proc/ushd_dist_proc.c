@@ -27,6 +27,12 @@ ushd_dist_proc(ushd_dist_thread_t thread, ush_char_t *buf) {
             thread, (const dist_fifo_msg_sig_reg_ack *)buf);
         break;
 
+    case USHD_DIST_FIFO_MSG_TYPE_SIG_UPD:
+        ushd_log(LOG_LVL_INFO, "sending sig_upd msg %p", buf);
+        ushd_dist_proc_sig_send_update(
+            thread, (const dist_fifo_msg_sig_upd *)buf);
+        break;
+
     default:
         ushd_log(LOG_LVL_ERROR, "wrong dist fifo msg type");
         break;

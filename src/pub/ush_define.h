@@ -18,6 +18,7 @@
 
 #define USH_COMM_LSTNR_SEND_PRIO_HAY             (0)
 #define USH_COMM_LSTNR_SEND_PRIO_SIGREG_ACK      (0)
+#define USH_COMM_LSTNR_SEND_PRIO_SIG_UPD         (1)
 
 
 #endif // USH_DEFINE_H

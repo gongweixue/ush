@@ -4,6 +4,8 @@
 #include "ush_sig_id.h"
 #include "ush_string.h"
 
+#include "case_ush_sig_reg.h"
+
 #include "pthread.h"
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
@@ -21,8 +23,7 @@ static ush_ret_t onReg(ush_pipe_t pipe, ush_sig_id_t id, ush_bool_t success) {
     return USH_RET_OK;
 }
 
-static ush_ret_t onRcv(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t data) {
-    (void)pipe;
+static ush_ret_t onRcv(ush_sig_id_t sigid, const ush_pvoid_t data) {
     (void)sigid;
     (void)data;
     pthread_mutex_lock(&mutex);
@@ -33,7 +34,7 @@ static ush_ret_t onRcv(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t da
 
 }
 
-static void test_ush_sig_reg(void) {
+void test_ush_sig_reg(void) {
 
     ush_pipe_t pipe = USH_INVALID_PIPE; // magic num
     ush_ret_t ret = OK;
