@@ -16,8 +16,8 @@
 #define USH_FIFO_DECL_CODE_GEN(NAME)                                            \
 typedef struct NAME##_fifo * NAME##_fifo_t;                                     \
                                                                                 \
-NAME##_fifo_t NAME##_fifo_create(void);                                             \
-                                                                                \
+NAME##_fifo_t NAME##_fifo_create(void);                                         \
+ush_ret_t NAME##_fifo_destroy(NAME##_fifo_t *pFifo);                            \
 ush_ret_t NAME##_fifo_push(NAME##_fifo_t fifo, const void *buf, ush_size_t sz); \
                                                                                 \
 ush_size_t NAME##_fifo_pop(NAME##_fifo_t fifo, void *buf, ush_size_t sz);
@@ -62,7 +62,7 @@ static ush_size_t NAME##_fifo_curr_num(const NAME##_fifo_t fifo);               
                                                                                 \
                                                                                 \
 NAME##_fifo_t                                                                   \
-NAME##_fifo_create(void) {                                                          \
+NAME##_fifo_create(void) {                                                      \
     NAME##_fifo_t fifo = (NAME##_fifo_t)malloc(sizeof(struct NAME##_fifo));     \
                                                                                 \
     if (!fifo) {                                                                \
@@ -101,6 +101,19 @@ RET:                                                                            
     return fifo;                                                                \
 }                                                                               \
                                                                                 \
+ush_ret_t                                                                       \
+NAME##_fifo_destroy(NAME##_fifo_t *pFifo) {                                     \
+    if (pFifo && *pFifo) {                                                      \
+        ushd_log(LOG_LVL_ERROR, "destroy null ptr fifo of %s", #NAME);          \
+        return USH_RET_WRONG_PARAM;                                             \
+    }                                                                           \
+    NAME##_fifo_cs_entry(*pFifo);                                               \
+    pthread_cond_destroy(&((*pFifo)->cond_producer));                           \
+    pthread_cond_destroy(&((*pFifo)->cond_consumer));                           \
+    NAME##_fifo_cs_exit(*pFifo);                                                \
+    pthread_mutex_destroy(&((*pFifo)->mutex));                                  \
+    return USH_RET_OK;                                                          \
+}                                                                               \
                                                                                 \
 ush_ret_t                                                                       \
 NAME##_fifo_push(NAME##_fifo_t fifo, const void *buf, ush_size_t sz) {          \

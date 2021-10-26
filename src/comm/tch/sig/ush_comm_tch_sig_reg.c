@@ -134,3 +134,8 @@ ush_size_t
 ush_comm_tch_sig_reg_sizeof(void) {
     return sizeof(struct comm_tch_sig_reg);
 }
+
+void
+ush_comm_tch_sig_reg_testpoint(const ush_comm_tch_sig_reg_t msg) {
+    (void)msg;
+}

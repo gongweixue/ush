@@ -23,7 +23,7 @@ typedef struct dist_thread {
 static ush_ret_t dist_mq_open(ushd_dist_thread_t    thread,
                               const ush_char_t     *name);
 
-void * ushd_dist_thread_entry(void *arg);
+static void * ushd_dist_thread_entry(void *arg);
 
 ushd_dist_thread_t
 ushd_dist_thread_create(const ush_char_t *name) {
@@ -72,6 +72,28 @@ ushd_dist_thread_start(ushd_dist_thread_t thread) {
     return USH_RET_OK;
 }
 
+ush_ret_t
+ushd_dist_thread_stop_destroy(ushd_dist_thread_t *pThread) {
+    if (!pThread || !(*pThread)) {
+        return USH_RET_OK;
+    }
+
+    if (USH_INVALID_TID != (*pThread)->tid) {
+        pthread_cancel((*pThread)->tid);
+        (*pThread)->tid = USH_INVALID_TID;
+    }
+
+    if (NULL != (*pThread)->fifo) {
+        ushd_dist_fifo_destroy(&((*pThread)->fifo));
+    }
+
+    if (USH_INVALID_MQD_VALUE != (*pThread)->mq) {
+        mq_close((*pThread)->mq);
+        (*pThread)->mq = USH_INVALID_MQD_VALUE;
+    }
+    return USH_RET_OK;
+}
+
 ushd_dist_fifo_t
 ushd_dist_thread_get_fifo(ushd_dist_thread_t thread) {
     ush_assert(thread);
@@ -82,7 +104,8 @@ ushd_dist_thread_get_fifo(ushd_dist_thread_t thread) {
 }
 
 
-void * ushd_dist_thread_entry(void *arg) {
+static void *
+ushd_dist_thread_entry(void *arg) {
     ush_assert(arg);
     ushd_dist_thread_t thread = (ushd_dist_thread_t)arg;
     thread->tid = pthread_self();
@@ -111,7 +134,7 @@ void * ushd_dist_thread_entry(void *arg) {
 static ush_ret_t
 dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
     if (!name || USH_INVALID_MQD_VALUE != thread->mq) {
-        ush_log(LOG_LVL_ERROR, "wrong param");
+        ushd_log(LOG_LVL_ERROR, "wrong param");
         return USH_RET_WRONG_PARAM;
     }
 

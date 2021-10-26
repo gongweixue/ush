@@ -10,6 +10,8 @@ ushd_dist_thread_t ushd_dist_thread_create(const ush_char_t *name);
 
 ush_ret_t          ushd_dist_thread_start(ushd_dist_thread_t thread);
 
+ush_ret_t          ushd_dist_thread_stop_destroy(ushd_dist_thread_t *pThread);
+
 ushd_dist_fifo_t   ushd_dist_thread_get_fifo(ushd_dist_thread_t thread);
 
 ush_ret_t

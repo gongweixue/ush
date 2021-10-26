@@ -16,6 +16,7 @@ typedef struct ushd_conn_record {
     ush_char_t                   name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_cert_t                   cert;
     ushd_dist_thread_t           dist;
+    ushd_realm_thread_t          realm;
 } * ushd_conn_record_t;
 
 // ush_bool_t
@@ -108,8 +109,9 @@ ushd_conn_tbl_init(void) {
 ush_cert_t
 ushd_conn_tbl_add(const ush_char_t         *name,
                   ush_cert_t                cert,
-                  const ushd_dist_thread_t  dist) {
-    ush_assert(name && (USH_INVALID_CERT_VALUE!=cert) && dist);
+                  const ushd_dist_thread_t  dist,
+                  const ushd_realm_thread_t realm) {
+    ush_assert(name && (USH_INVALID_CERT_VALUE!=cert) && dist && realm);
 
     ush_connidx_t idx = USHD_INVALID_CONN_IDX_VALUE;
 
@@ -121,10 +123,11 @@ ushd_conn_tbl_add(const ush_char_t         *name,
         goto BAILED;
     }
 
-    tbl.records[tbl.cursor].valid     = 1;
     strcpy(tbl.records[tbl.cursor].name, name);
     tbl.records[tbl.cursor].cert      = cert;
     tbl.records[tbl.cursor].dist      = dist;
+    tbl.records[tbl.cursor].realm     = realm;
+    tbl.records[tbl.cursor].valid     = 1;
 
     idx = tbl.cursor;
 
@@ -136,13 +139,24 @@ BAILED:
     return idx;
 }
 
-ush_bool_t ush_conn_tbl_connidx_valid(ush_connidx_t idx) {
+ush_ret_t  ushd_conn_tbl_remove(ush_connidx_t idx) {
+    if (!ushd_conn_tbl_check_connidx(idx)) {
+        return 1;
+    }
+
+    conn_tbl_cs_entry();
+    tbl.records[idx].valid = 0;
+    conn_tbl_cs_exit();
+    return 1;
+}
+
+ush_bool_t ushd_conn_tbl_check_connidx(ush_connidx_t idx) {
     return (idx > 0 && idx < USH_CONN_IDX_MAX);
 }
 
 ush_bool_t
-ushd_conn_tbl_get_valid(ush_connidx_t idx) {
-    if (!ush_conn_tbl_connidx_valid(idx)) {
+ushd_conn_tbl_get_valid_flg(ush_connidx_t idx) {
+    if (!ushd_conn_tbl_check_connidx(idx)) {
         return 0;
     }
 
@@ -158,7 +172,7 @@ ushd_conn_tbl_get_cert(ush_s32_t idx) {
 
     conn_tbl_cs_entry();
 
-    if (!ush_conn_tbl_connidx_valid(idx)) {
+    if (!ushd_conn_tbl_check_connidx(idx)) {
         ret = USH_INVALID_CERT_VALUE;
     } else  if (0 == tbl.records[idx].valid) {
         ret = USH_INVALID_CERT_VALUE;
@@ -176,7 +190,7 @@ ushd_conn_tbl_get_dist(ush_connidx_t idx) {
 
     conn_tbl_cs_entry();
 
-    if (!ush_conn_tbl_connidx_valid(idx)) {
+    if (!ushd_conn_tbl_check_connidx(idx)) {
         ushd_log(LOG_LVL_ERROR, "out of bound");
     } else if (0 == tbl.records[idx].valid) {
         ushd_log(LOG_LVL_ERROR, "record not valid");

@@ -2,6 +2,7 @@
 #define USH_COMM_TCH_SIG_REG_H
 
 #include "ush_type_pub.h"
+#include "ush_sig_id.h"
 
 typedef struct comm_tch_sig_reg * ush_comm_tch_sig_reg_t;
 
@@ -38,5 +39,8 @@ ush_comm_tch_sig_reg_sizeof(void);
 
 ush_ret_t
 ush_comm_tch_sig_reg_destroy(ush_comm_tch_sig_reg_t *msg);
+
+void
+ush_comm_tch_sig_reg_testpoint(const ush_comm_tch_sig_reg_t msg);
 
 #endif // USH_COMM_TCH_SIG_REG_H

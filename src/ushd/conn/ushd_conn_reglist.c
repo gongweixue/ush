@@ -54,7 +54,7 @@ ush_ret_t
 ushd_conn_reglist_set_rcv(ush_connidx_t idx,
                           ush_sig_id_t  sigid,
                           ush_pvoid_t   rcv) {
-    if (!ush_conn_tbl_connidx_valid(idx) || !ush_sig_id_valid(sigid)) {
+    if (!ushd_conn_tbl_check_connidx(idx) || !ush_sig_id_valid(sigid)) {
         ushd_log(LOG_LVL_ERROR, "idx or sigid is out of bound");
         return USH_RET_FAILED;
     }
@@ -94,7 +94,7 @@ ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
     ush_sig_val_t           val   = reglist.signals[sigid].value;
     ush_reglist_sig_node_t *nodes = reglist.signals[sigid].nodes;
     for (ush_connidx_t connidx= 0; connidx < USH_CONN_IDX_MAX; ++connidx) {
-        if (!ushd_conn_tbl_get_valid(connidx) || NULL == nodes[connidx].rcv) {
+        if (!ushd_conn_tbl_get_valid_flg(connidx) || NULL == nodes[connidx].rcv) {
             continue;
         }
 

@@ -25,7 +25,7 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
 
     // check idx
     ush_connidx_t idx = ush_comm_tch_sig_reg_get_connidx(msg);
-    if (!ushd_conn_tbl_get_valid(idx)) {
+    if (!ushd_conn_tbl_get_valid_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
@@ -77,7 +77,7 @@ static void notify_handle(ush_connidx_t connidx,
                           ush_sig_id_t  sigid,
                           ush_sig_val_t val,
                           ush_pvoid_t   rcv) {
-    if (!ushd_conn_tbl_get_valid(connidx)) {
+    if (!ushd_conn_tbl_get_valid_flg(connidx)) {
         ushd_log(LOG_LVL_DETAIL, "Invalid idx:%d value of tbl", connidx);
         return;
     }
@@ -105,7 +105,7 @@ static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {
 
     // check idx
     ush_connidx_t idx = ush_comm_tch_sig_set_get_connidx(msg);
-    if (!ushd_conn_tbl_get_valid(idx)) {
+    if (!ushd_conn_tbl_get_valid_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }

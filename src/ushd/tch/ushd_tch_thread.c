@@ -10,7 +10,6 @@
 #include "ushd_tch.h"
 
 typedef struct ushd_tch_thread {
-    ush_bool_t       tidFlg; // tid initial flag
     pthread_t        tid;    // thread id for the listener
     ushd_tch_t       touch;  // mq handle
 } * ushd_tch_thread_t;
@@ -42,7 +41,7 @@ ush_ret_t
 ushd_tch_thread_set_id(pthread_t tid) {
     ushd_tch_thread_t tch_thread = ushd_tch_thread_singleton();
     ushd_log(LOG_LVL_DETAIL, "get thread entity singleton %p", tch_thread);
-    if (!tch_thread || tch_thread->tidFlg) {
+    if (!tch_thread || USH_INVALID_TID != tch_thread->tid) {
         ushd_log(LOG_LVL_FATAL, "can not set tid to NULL or alreay set id");
         return USH_RET_FAILED;
     }
@@ -51,7 +50,6 @@ ushd_tch_thread_set_id(pthread_t tid) {
 
     ushd_log(LOG_LVL_DETAIL, "set tid 0x%08lx and tid flag", tid);
     tch_thread->tid    = tid;
-    tch_thread->tidFlg = 1;
 
     ushd_tch_thread_cs_exit();
 
@@ -135,7 +133,10 @@ tch_thread_create(void) {
     ushd_tch_thread_t newMem =
         (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread));
 
-    if (newMem) {
+    if (!newMem) {
+        ushd_log(LOG_LVL_FATAL, "create ushd_tch_thread failed");
+        return NULL;
+    } else {
         if (USH_RET_OK !=  ushd_tch_create(&(newMem->touch))) {
             ushd_log(LOG_LVL_FATAL, "create ushd_tch failed");
             free(newMem);
@@ -143,7 +144,6 @@ tch_thread_create(void) {
         }
         ushd_log(LOG_LVL_INFO, "ushd_tch created, addr %p", newMem->touch);
 
-        newMem->tidFlg = 0;
         newMem->tid    = USH_INVALID_TID; // maybe a valid value
     }
 

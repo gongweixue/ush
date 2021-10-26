@@ -24,6 +24,7 @@ target_link_libraries(${LIB_USHD_SCHED}
     ush_util
     ushd_conn
     ushd_dist
+    ushd_realm
 )
 
 set_target_properties(${LIB_USHD_SCHED}

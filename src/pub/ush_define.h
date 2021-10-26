@@ -3,7 +3,7 @@
 
 #define USH_INVALID_CERT_VALUE         (-1)
 
-#define USH_INVALID_TID                (0xFFFFFFFF)
+#define USH_INVALID_TID                (0xFFFFFFFFFFFFFFFF) // 64bits addr
 
 #define USH_INVALID_MQD_VALUE          (-1)
 

@@ -1,4 +1,5 @@
 add_subdirectory(conn)
+add_subdirectory(realm)
 add_subdirectory(sched)
 add_subdirectory(tch)
 add_subdirectory(dist)
