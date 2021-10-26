@@ -13,7 +13,7 @@
 
 typedef struct ushd_conn_record {
     ush_bool_t                   valid; // 0 for invalid, 1 for valid
-    ush_char_t                   name[USH_COMM_CONN_NAME_LEN_MAX];
+    ush_char_t                   name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_cert_t                   cert;
     ushd_dist_thread_t           dist;
 } * ushd_conn_record_t;

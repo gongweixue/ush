@@ -11,7 +11,7 @@
 // be carefulto to manipulate the ack, maybe free already.
 typedef struct tch_hello {
     ush_comm_tch_msg_d        desc;
-    ush_char_t                name[USH_COMM_CONN_NAME_LEN_MAX];
+    ush_char_t                name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_pvoid_t              *ackSync;
     ush_cert_t                cert;
 } USH_COMM_MSG_PACKED * ush_comm_tch_hello_t;

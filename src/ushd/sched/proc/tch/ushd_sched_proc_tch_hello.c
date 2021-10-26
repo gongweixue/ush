@@ -1,4 +1,4 @@
-
+#include "string.h"
 #include "ush_string.h"
 
 #include "ush_comm_desc.h"
@@ -18,15 +18,18 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
 
     const ush_comm_tch_hello_t hello = (const ush_comm_tch_hello_t)msg;
 
-    const ush_char_t *name    = ush_comm_tch_hello_name_of(hello);
-    const ush_pvoid_t ackSync = ush_comm_tch_hello_ack_of(hello);
-    ush_cert_t        cert    = ush_comm_tch_hello_cert_of(hello);
+    const ush_char_t *shortname_ts = ush_comm_tch_hello_name_of(hello);
+    const ush_pvoid_t ackSync      = ush_comm_tch_hello_ack_of(hello);
+    ush_cert_t        cert         = ush_comm_tch_hello_cert_of(hello);
 
     // create dist thread
-    ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
-    ush_string_certname(certname, sizeof(certname), name, cert);
+    ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
+    ush_string_gen_lstnr_fullname(fullname,
+                                  sizeof(fullname),
+                                  shortname_ts,
+                                  cert);
 
-    ushd_dist_thread_t dist = ushd_dist_thread_create(certname);
+    ushd_dist_thread_t dist = ushd_dist_thread_create(fullname);
     if (!dist) {
         ushd_log(LOG_LVL_ERROR, "dist thread create failed.");
         return;
@@ -34,7 +37,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     ushd_log(LOG_LVL_INFO, "dist thread created %p.", dist);
 
     // add the info to the conn table
-    ush_connidx_t record_idx = ushd_conn_tbl_add(name, cert, dist);
+    ush_connidx_t record_idx = ushd_conn_tbl_add(shortname_ts, cert, dist);
     if (USHD_INVALID_CONN_IDX_VALUE == record_idx) {
         ushd_log(LOG_LVL_ERROR, "conn can not add to the table");
         return;

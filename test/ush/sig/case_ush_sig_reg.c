@@ -34,7 +34,6 @@ static ush_ret_t onRcv(ush_sig_id_t sigid, const ush_sig_val_t val) {
     pthread_cond_signal(&cond);
     pthread_mutex_unlock(&mutex);
     return USH_RET_OK;
-
 }
 
 void test_ush_sig_reg(void) {

@@ -7,7 +7,7 @@ typedef struct ush_connect * ush_connect_t;
 #include "lstnr/ush_lstnr.h"
 #include "ush_tch.h"
 
-ush_ret_t ush_connect_create(ush_connect_t *pConn, const ush_char_t *name);
+ush_ret_t ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts);
 
 ush_ret_t ush_connect_destroy(ush_connect_t *pConn);
 

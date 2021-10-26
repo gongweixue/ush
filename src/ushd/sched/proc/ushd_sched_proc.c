@@ -21,6 +21,7 @@ void ushd_sched_proc(const ush_pvoid_t ptr) {
         ushd_sched_proc_tch(ptr);
         break;
 
+    case USH_COMM_PORT_REALM:
     case USH_COMM_PORT_LSTNR:
     case USH_COMM_PORT_MAX:
     default:

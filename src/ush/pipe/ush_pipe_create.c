@@ -20,15 +20,15 @@
 
 typedef struct timespec timespec;
 
-static ush_ret_t send_hello_and_wait(const ush_char_t      *pName,
-                                     const timespec        *pDL,
-                                     ush_connect_t          conn);
+static ush_ret_t send_hello_and_wait(const ush_char_t  *shortname_ts,
+                                     const timespec    *pDL,
+                                     ush_connect_t      conn);
 
 static ush_ret_t realize_timeout(timespec *ptr, ush_u16_t timeout);
 
 static ush_ret_t get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack);
 
-static void gen_prefix_name(ush_char_t       *name,
+static void gen_shortname_ts(ush_char_t       *name,
                           ush_size_t        sz,
                           const ush_char_t *shortname);
 
@@ -55,18 +55,17 @@ ush_pipe_create(
 
     *pPipe = USH_INVALID_PIPE; // NULL for error return;
 
-    if (USH_COMM_LSTNR_Q_SHORTNAME_LEN_MAX < strlen(pName)) {
+    // pipe name validation
+    if (USH_COMM_CONN_SHORTNAME_LEN_MAX < strlen(pName)) {
         ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
-                USH_COMM_LSTNR_Q_SHORTNAME_LEN_MAX);
+                USH_COMM_CONN_SHORTNAME_LEN_MAX);
         return USH_RET_NOT_SUPPORT;
     }
 
-    ush_char_t name[USH_COMM_CONN_NAME_LEN_MAX];
-    gen_prefix_name(name, sizeof(name), pName);
-
+    ush_char_t shortname_ts[USH_COMM_CONN_FULL_NAME_LEN_MAX];
+    gen_shortname_ts(shortname_ts, sizeof(shortname_ts), pName);
 
     ush_ret_t ret = USH_RET_OK;
-
 
     // for timeout
     timespec deadline;
@@ -84,13 +83,13 @@ ush_pipe_create(
     ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
 
     ush_connect_t conn = NULL;
-    ret = ush_connect_create(&conn, name);
+    ret = ush_connect_create(&conn, shortname_ts);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect create failed");
         goto RET;
     }
 
-    ret = send_hello_and_wait(name, pDL, conn);
+    ret = send_hello_and_wait(shortname_ts, pDL, conn);
 
     if (USH_RET_OK == ret) {
         *pPipe = (ush_u64_t)conn;
@@ -104,12 +103,12 @@ RET:
 }
 
 static ush_ret_t
-send_hello_and_wait(const ush_char_t *pName,
+send_hello_and_wait(const ush_char_t *shortname_ts,
                     const timespec   *pDL,
                     ush_connect_t     conn) {
-    ush_assert(pName && conn);
+    ush_assert(shortname_ts && conn);
     // param valid
-    if (!pName || !conn) {
+    if (!shortname_ts || !conn) {
         ush_log(LOG_LVL_ERROR, "params NULL");
         return USH_RET_WRONG_PARAM;
     }
@@ -128,7 +127,7 @@ send_hello_and_wait(const ush_char_t *pName,
     ush_log(LOG_LVL_DETAIL, "create hello msg");
     ush_cert_t cert = USH_INVALID_CERT_VALUE;
     ush_connect_get_cert(conn, &cert);
-    ush_comm_tch_hello_create(&hello, pName, ack, cert);
+    ush_comm_tch_hello_create(&hello, shortname_ts, ack, cert);
 
     // send with or without timeout
     ush_tch_t touch = NULL;
@@ -185,28 +184,22 @@ get_info_from_hello_ack_cb(ush_sync_hello_ack_t ack) {
 }
 
 static void
-gen_prefix_name(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
-    if (strlen(USH_COMM_LSTNR_Q_PATH_PREFIX) >= sz) {
+gen_shortname_ts(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
+    if (strlen(shortname) >= sz) {
         ush_log(LOG_LVL_ERROR, "name too long, name gen failed");
         return;
     }
-    // prefix
-    strcpy(name, USH_COMM_LSTNR_Q_PATH_PREFIX);
 
-    if (strlen(name) + strlen(shortname) >= sz) {
-        ush_log(LOG_LVL_INFO, "name too long, but only gen prefix.");
-        return;
-    }
-    // prefix-shortname
-    strcat(name, shortname);
-
-    // prefix-shortname-timestamp
+    // shortname-timestamp
     ush_char_t timestamp[16];
     ush_itoa(timestamp, time(NULL));
-    if (strlen(name) + 1 + strlen(timestamp) >= sz) { // with an extra "-"
+    if (strlen(shortname) + 1 + strlen(timestamp) >= sz) { // with an extra "-"
         ush_log(LOG_LVL_INFO, "name too long, but prefix-shortname gen.");
         return;
     }
+
+    // name = shortname
+    strcpy(name, timestamp);
     strcat(name, "-");
-    strcat(name, timestamp);
+    strcat(name, shortname);
 }

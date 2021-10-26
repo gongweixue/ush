@@ -17,16 +17,14 @@
 typedef struct ush_lstnr {
     mqd_t      mq;
     pthread_t  tid;
-    ush_char_t name[USH_COMM_CONN_NAME_LEN_MAX];
 } * ush_lstnr_t;
 
 static void *    lstnr_thread_entry(void *arg);
 static ush_ret_t ushd_lstnr_receive(mqd_t mq, ush_char_t *dest, size_t sz);
 
 ush_ret_t
-ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *name) {
-    ush_assert(pPtr && name);
-    ush_assert(sizeof(((ush_lstnr_t)NULL)->name) >= (strlen(name) + 1));
+ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
+    ush_assert(pPtr && fullname);
     *pPtr = NULL;
 
     ush_lstnr_t tmp = (ush_lstnr_t)malloc(sizeof(struct ush_lstnr));
@@ -37,31 +35,30 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *name) {
     ush_log(LOG_LVL_DETAIL, "allocate memory for listener %p", tmp);
 
     tmp->tid = USH_INVALID_TID;
-    strcpy(tmp->name, name);
 
     // open the mqueue
     struct mq_attr attr;
     memset(&attr, 0, sizeof(attr));
     attr.mq_maxmsg  = USH_COMM_LSTNR_Q_MSG_MAX_CNT;
     attr.mq_msgsize = USH_COMM_LSTNR_Q_MSG_MAX_LEN;
-    tmp->mq = mq_open(name, O_RDONLY | O_CREAT, S_IRWXU | S_IRWXG, &attr);
+    tmp->mq = mq_open(fullname, O_RDONLY | O_CREAT, S_IRWXU | S_IRWXG, &attr);
     if (USH_INVALID_MQD_VALUE == tmp->mq) {
-        ush_log(LOG_LVL_FATAL, "%s can not open, errno:%d", name, errno);
+        ush_log(LOG_LVL_FATAL, "%s can not open, errno:%d", fullname, errno);
         free(tmp);
         return USH_RET_FAILED;
     }
-    ush_log(LOG_LVL_DETAIL, "the listener queue opened, %p", tmp);
+    ush_log(LOG_LVL_DETAIL, "the lstnr queue opened, %p", tmp);
 
 
     if (0 != pthread_create(&tmp->tid, NULL, lstnr_thread_entry, tmp)) {
-        ush_log(LOG_LVL_FATAL, "listener %s thread start failed", name);
+        ush_log(LOG_LVL_FATAL, "lstnr %s thread start failed", fullname);
         mq_close(tmp->mq);
         free(tmp);
         return USH_RET_FAILED;
     }
 
     if (0 != pthread_detach(tmp->tid)) {
-        ush_log(LOG_LVL_FATAL, "detach listener %s thread failed", name);
+        ush_log(LOG_LVL_FATAL, "detach lstnr %s thread failed", fullname);
         pthread_cancel(tmp->tid);
         mq_close(tmp->mq);
         free(tmp);

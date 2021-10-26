@@ -36,8 +36,8 @@ connect_cs_exit(const ush_connect_t conn) {
 }
 
 ush_ret_t
-ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
-    ush_assert(pConn && name);
+ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts) {
+    ush_assert(pConn && shortname_ts);
 
     *pConn = NULL;
 
@@ -66,11 +66,14 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
         goto BAILED_TCH_DESTROY;
     }
 
-    ush_char_t certname[USH_COMM_CONN_NAME_LEN_MAX];
-    ush_cert_t cert = ush_random_generate_cert(certname);
-    ush_string_certname(certname, sizeof(certname), name, cert);
+    ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
+    ush_cert_t cert = ush_random_generate_cert(fullname);
+    ush_string_gen_lstnr_fullname(fullname,
+                                  sizeof(fullname),
+                                  shortname_ts,
+                                  cert);
 
-    ret = ush_lstnr_open_start(&(newMem->listener), certname);
+    ret = ush_lstnr_open_start(&(newMem->listener), fullname);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "listener start failed");
         goto BAILED_MUTEX;
