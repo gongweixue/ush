@@ -58,7 +58,7 @@ set(CMAKE_C_FLAGS  "-I${PROJECT_SOURCE_DIR}/gen \
 
 add_subdirectory(src)
 
-if (USH_UT)
+# if (USH_UT)
 set(CMAKE_BUILD_TYPE "Debug") # test cases must in debug mode anyway.
 add_subdirectory(test)
-endif()
+# endif()

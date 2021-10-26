@@ -5,6 +5,6 @@
 
 typedef struct ush_realm * ush_realm_t;
 
-ush_ret_t ush_realm_alloc(ush_realm_t *pRealm);
+ush_ret_t ush_realm_alloc(ush_realm_t *pRealm, const ush_char_t *fullname);
 
 #endif // USH_REALM_H

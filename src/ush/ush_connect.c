@@ -10,6 +10,7 @@
 #include "ush_random.h"
 #include "ush_string.h"
 #include "ush_tch.h"
+#include "ush_realm.h"
 
 
 typedef struct ush_connect {
@@ -17,6 +18,7 @@ typedef struct ush_connect {
     ush_connidx_t        connidx;
     ush_tch_t            touch;
     ush_lstnr_t          listener;
+    ush_realm_t          realm;
     pthread_mutex_t      mutex;
 } * ush_connect_t;
 
@@ -79,6 +81,17 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts) {
         goto BAILED_MUTEX;
     }
 
+    // register realm name
+    ush_string_gen_realm_fullname(fullname,
+                                  sizeof(fullname),
+                                  shortname_ts,
+                                  cert);
+    ret = ush_realm_alloc(&(newMem->realm), fullname);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_FATAL, "realm alloc failed");
+        goto BAILED_LSTNR_STOP_CLOSE;
+    }
+
 
 // NORMAL:
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
@@ -87,6 +100,9 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts) {
     *pConn = newMem;
     return USH_RET_OK;
 
+BAILED_LSTNR_STOP_CLOSE:
+    ush_log(LOG_LVL_DETAIL, "destory mutext");
+    ush_lstnr_stop_close(&(newMem->listener));
 
 BAILED_MUTEX:
     ush_log(LOG_LVL_DETAIL, "destory mutext");

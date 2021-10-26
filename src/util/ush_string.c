@@ -28,11 +28,6 @@ void ush_itoa(char *str, long num) {
 #define USH_COMM_LSTNR_Q_PATH_PREFIX "/USH-LSTNR-"
 // [/USH-LSTNR-][shortname][-timestamp-][cert]
 //    11B           20B         11B       10B
-
-#define USH_COMM_REALM_Q_PATH_PERFIX "/USH-REALM-"
-// [/USH-REALM-][shortname][-timestamp-][cert]
-//    11B           20B         11B       10B
-
 void ush_string_gen_lstnr_fullname(char *dst, size_t dstsz,
                                    const char *shortname_ts,
                                    int cert) {
@@ -48,6 +43,29 @@ void ush_string_gen_lstnr_fullname(char *dst, size_t dstsz,
     assert(dstsz > total);
 
     strcpy(dst, USH_COMM_LSTNR_Q_PATH_PREFIX);
+    strcat(dst, shortname_ts);
+    strcat(dst, "-");
+    strcat(dst,certstr);
+}
+
+#define USH_COMM_REALM_Q_PATH_PREFIX "/USH-REALM-"
+// [/USH-REALM-][shortname][-timestamp-][cert]
+//    11B           20B         11B       10B
+void ush_string_gen_realm_fullname(char *dst, size_t dstsz,
+                                   const char *shortname_ts,
+                                   int cert) {
+    assert(dst && shortname_ts);
+
+    char certstr[16];
+    ush_itoa(certstr, cert);
+
+    size_t total = strlen(USH_COMM_REALM_Q_PATH_PREFIX)
+                 + strlen(shortname_ts)
+                 + 1
+                 + strlen(certstr);
+    assert(dstsz > total);
+
+    strcpy(dst, USH_COMM_REALM_Q_PATH_PREFIX);
     strcat(dst, shortname_ts);
     strcat(dst, "-");
     strcat(dst,certstr);

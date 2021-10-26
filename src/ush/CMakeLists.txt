@@ -3,6 +3,7 @@ set(LIB_USH ush)
 set(SRC_USH
     ush_connect.c
     ush_sync.c
+    ush_realm.c
     ush_tch.c
     ush_version.c
     lstnr/ush_lstnr.c

@@ -9,5 +9,8 @@ void ush_itoa(char *str, long num);
 void ush_string_gen_lstnr_fullname(char *dst, size_t dstsz,
                                    const char *shortname_ts,
                                    int cert);
+void ush_string_gen_realm_fullname(char *dst, size_t dstsz,
+                                   const char *shortname_ts,
+                                   int cert);
 
 #endif // USH_STRING_H
