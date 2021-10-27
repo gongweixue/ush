@@ -7,7 +7,7 @@
 
 typedef struct lstnr_hay {
     ush_comm_lstnr_msg_d         desc;
-    ush_sync_hello_ack_t         sync;
+    ush_sync_hello_ack_t        *sync;
     ush_connidx_t                connidx;
     ush_cert_t                   cert;
 } USH_COMM_MSG_PACKED * ush_comm_lstnr_hay_t;
@@ -31,14 +31,14 @@ ush_comm_lstnr_hay_create(ush_pvoid_t   sync,
 
     ret->desc.desc.port = USH_COMM_PORT_LSTNR;
     ret->desc.catalog   = USH_COMM_LSTNR_MSG_CATALOG_HAY;
-    ret->sync           = (ush_sync_hello_ack_t)sync;
+    ret->sync           = (ush_sync_hello_ack_t*)sync;
     ret->connidx        = idx;
     ret->cert           = cert;
 
     return ret;
 }
 
-ush_sync_hello_ack_t
+ush_sync_hello_ack_t *
 ush_comm_lstnr_hay_ack_of(ush_comm_lstnr_hay_t msg) {
     if (!msg) {
         return NULL;

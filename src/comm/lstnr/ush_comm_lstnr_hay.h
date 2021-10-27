@@ -12,7 +12,7 @@ ush_comm_lstnr_hay_create(ush_pvoid_t     sync,
                           ush_connidx_t   idx,
                           ush_cert_t      cert);
 
-ush_sync_hello_ack_t
+ush_sync_hello_ack_t *
 ush_comm_lstnr_hay_ack_of(ush_comm_lstnr_hay_t msg);
 
 ush_connidx_t

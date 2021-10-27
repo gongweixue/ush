@@ -1,5 +1,6 @@
 
 #include "pthread.h"
+#include "string.h"
 #include "stdlib.h"
 
 #include "ush_assert.h"
@@ -9,6 +10,7 @@
 #include "ush_pipe_pub.h"
 #include "ush_random.h"
 #include "ush_string.h"
+#include "ush_sync.h"
 #include "ush_tch.h"
 #include "ush_realm.h"
 
@@ -20,6 +22,7 @@ typedef struct ush_connect {
     ush_lstnr_t          listener;
     ush_realm_t          realm;
     pthread_mutex_t      mutex;
+    ush_char_t           shortname_ts[USH_COMM_CONN_FULL_NAME_LEN_MAX];
 } * ush_connect_t;
 
 
@@ -37,9 +40,31 @@ connect_cs_exit(const ush_connect_t conn) {
     return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
 }
 
+
+static void
+gen_name_ts(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
+    if (strlen(shortname) >= sz) {
+        ush_log(LOG_LVL_ERROR, "name too long, name gen failed");
+        return;
+    }
+
+    // shortname-timestamp
+    ush_char_t timestamp[16];
+    ush_itoa(timestamp, time(NULL));
+    if (strlen(shortname) + 1 + strlen(timestamp) >= sz) { // with an extra "-"
+        ush_log(LOG_LVL_INFO, "name too long, but prefix-shortname gen.");
+        return;
+    }
+
+    // name = shortname
+    strcpy(name, timestamp);
+    strcat(name, "-");
+    strcat(name, shortname);
+}
+
 ush_ret_t
-ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts) {
-    ush_assert(pConn && shortname_ts);
+ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
+    ush_assert(pConn && name);
 
     *pConn = NULL;
 
@@ -68,11 +93,12 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts) {
         goto BAILED_TCH_DESTROY;
     }
 
+    gen_name_ts(newMem->shortname_ts, sizeof(newMem->shortname_ts), name);
     ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
-    ush_cert_t cert = ush_random_generate_cert(fullname);
+    ush_cert_t cert = ush_random_generate_cert(newMem->shortname_ts);
     ush_string_gen_lstnr_fullname(fullname,
                                   sizeof(fullname),
-                                  shortname_ts,
+                                  newMem->shortname_ts,
                                   cert);
 
     ret = ush_lstnr_open_start(&(newMem->listener), fullname);
@@ -84,7 +110,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *shortname_ts) {
     // register realm name
     ush_string_gen_realm_fullname(fullname,
                                   sizeof(fullname),
-                                  shortname_ts,
+                                  newMem->shortname_ts,
                                   cert);
     ret = ush_realm_alloc(&(newMem->realm), fullname);
     if (USH_RET_OK != ret) {
@@ -202,4 +228,84 @@ ush_connect_get_tch(ush_connect_t conn, ush_tch_t *ptr) {
     ush_log(LOG_LVL_DETAIL, "get touch successful, addr %p", *ptr);
 
     return USH_RET_OK;
+}
+
+
+static ush_ret_t
+realize_timeout(struct timespec *ptr, ush_u16_t timeout) {
+    if (!ptr) {
+        ush_log(LOG_LVL_INFO, "timespec os null, just return OK.");
+        return USH_RET_OK;
+    }
+
+    if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
+        ush_log(LOG_LVL_ERROR, "clock_gettime failed");
+        return USH_RET_FAILED;
+    }
+
+    ush_log(LOG_LVL_DETAIL, "update the deadline");
+    ptr->tv_sec += timeout + 1;
+
+    return USH_RET_OK;
+}
+
+ush_ret_t
+ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
+    ush_assert(conn);
+    // param valid
+    if (!conn) {
+        ush_log(LOG_LVL_ERROR, "params NULL");
+        return USH_RET_WRONG_PARAM;
+    }
+
+    // use ack to wait feedback
+    ush_sync_hello_ack_t ack = NULL;
+    ush_log(LOG_LVL_DETAIL, "create hello ack");
+    ush_ret_t ret = ush_sync_hello_ack_create(&ack, conn);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "hello ack create failed");
+        return ret;
+    }
+
+    // prepare hello msg
+    ush_comm_tch_hello_t hello;
+    ush_log(LOG_LVL_DETAIL, "create hello msg");
+    ush_cert_t cert = USH_INVALID_CERT_VALUE;
+    ush_connect_get_cert(conn, &cert);
+    ush_comm_tch_hello_create(&hello, conn->shortname_ts, &ack, cert);
+
+    // for timeout
+    struct timespec deadline;
+    struct timespec *pDL = NULL;
+    if (0 != timeout) {
+        ush_log(LOG_LVL_INFO, "need timeout operation");
+        pDL = &deadline;
+        ret = realize_timeout(pDL, timeout);
+        if(USH_RET_OK != ret) {
+            ush_log(LOG_LVL_ERROR, "realize timeout failed");
+            ush_log(LOG_LVL_INFO, "ptr of deadline rollback to NULL");
+            pDL = NULL; // disable the deadline
+        }
+    }
+    ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
+
+    // send with or without timeout
+    ush_tch_t touch = NULL;
+    ush_connect_get_tch(conn, &touch);
+    ret = ush_tch_send_hello(touch, hello, pDL);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_FATAL, "sending hello failed");
+    } else {
+        ret = ush_sync_hello_ack_wait(ack, pDL);
+        if (USH_RET_OK != ret) {
+            ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
+
+            ush_log(LOG_LVL_DETAIL, "destroy connect %p", conn);
+        }
+    }
+
+    ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
+    ush_comm_tch_hello_destroy(&hello);
+
+    return ret;
 }

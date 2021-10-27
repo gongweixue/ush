@@ -14,8 +14,33 @@ typedef struct ush_hello_ack {
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
     ush_connect_t       conn;
+    ush_bool_t          obsolete;
 } * ush_sync_hello_ack_t;
 
+
+static void
+hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
+    ush_assert(pAck);
+    if (!(*pAck)) {
+        ush_log(LOG_LVL_ERROR, "ush_hello_ack NULL to be destroy");
+        return;
+    }
+
+    if (1 != (*pAck)->obsolete) {
+        ush_log(LOG_LVL_ERROR, "ack can not be destroy before obsolete");
+        return;
+    }
+
+    pthread_mutex_destroy(&(*pAck)->mutex);
+    pthread_condattr_destroy(&(*pAck)->condattr);
+    pthread_cond_destroy(&(*pAck)->cond);
+
+    ush_log(LOG_LVL_DETAIL, "free ack %p", pAck);
+    free(*pAck);
+    *pAck = NULL;
+
+    return;
+}
 
 ush_ret_t
 ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
@@ -53,6 +78,7 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     }
 
     pMem->conn = conn;
+    pMem->obsolete = 0;
 
     *pAck = pMem;
 
@@ -60,10 +86,13 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
 }
 
 ush_ret_t
-ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
-                        const struct timespec       *pDL,
-                        ush_sync_hello_ack_wait_cb_t pCallback) {
+ush_sync_hello_ack_wait(ush_sync_hello_ack_t   ack,
+                        const struct timespec *pDL) {
     ush_assert(ack);
+    if (1 == ack->obsolete) {
+        ush_log(LOG_LVL_FATAL, "can not wait a obosleted ack %p", ack);
+        return USH_RET_WRONG_PARAM;
+    }
 
     pthread_mutex_lock(&ack->mutex);
 
@@ -90,32 +119,30 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t         ack,
         break;
     }
 
-    ush_log(LOG_LVL_DETAIL, "wait return with ret code %d", ret);
+    ack->obsolete = 1;
 
-    // DO anythings you want once the ack arrived..
-    if (USH_RET_OK == ret && pCallback) {
-        ush_log(LOG_LVL_INFO, "ack-callback be called");
-        ret = pCallback(ack);
-    }
+    ush_log(LOG_LVL_DETAIL, "wait return with ret code %d", ret);
 
     pthread_mutex_unlock(&ack->mutex);
     return ret;
 }
 
 ush_ret_t
-ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
-                          ush_connidx_t        idx,
-                          ush_cert_t           cert) {
-    ush_assert(ack);
-    if (!ack) {
-        return USH_RET_OK;
+ush_sync_hello_ack_signal_and_destroy(ush_sync_hello_ack_t *pAck,
+                                      ush_connidx_t         idx,
+                                      ush_cert_t            cert) {
+    ush_assert(pAck && *pAck);
+
+    ush_ret_t ret = USH_RET_OK;
+    if (1 == (*pAck)->obsolete) {
+        ush_log(LOG_LVL_ERROR, "obsolete ack %p reached, destroy it", *pAck);
+        goto ACK_DESTROY;
     }
 
-    pthread_mutex_lock(&ack->mutex);
-    ush_ret_t ret = USH_RET_OK;
+    pthread_mutex_lock(&((*pAck)->mutex));
 
     ush_cert_t local_cert = USH_INVALID_CERT_VALUE;
-    ret = ush_connect_get_cert(ack->conn, &local_cert);
+    ret = ush_connect_get_cert((*pAck)->conn, &local_cert);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect cert get failed");
         goto BAILED;
@@ -127,35 +154,18 @@ ush_sync_hello_ack_signal(ush_sync_hello_ack_t ack,
     }
 
     // set the ident from ushd back to the conn
-    ret = ush_connect_set_connidx(ack->conn, idx);
+    ret = ush_connect_set_connidx((*pAck)->conn, idx);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "connect remote idx can not set");
         goto BAILED;
     }
 
-    pthread_cond_signal(&ack->cond);
+    pthread_cond_signal(&((*pAck)->cond));
 
 BAILED:
-    pthread_mutex_unlock(&ack->mutex);
+    pthread_mutex_unlock(&((*pAck)->mutex));
+
+ACK_DESTROY:
+    hello_ack_destroy(pAck);
     return ret;
-}
-
-ush_ret_t
-ush_sync_hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
-    ush_assert(pAck);
-    if (!(*pAck)) {
-        ush_log(LOG_LVL_INFO, "ush_hello_ack NULL to be destroy");
-        return USH_RET_OK;
-    }
-
-    ush_log(LOG_LVL_DETAIL, "destroy mutex cond and free mem %p", *pAck);
-    pthread_mutex_destroy(&(*pAck)->mutex);
-    pthread_condattr_destroy(&(*pAck)->condattr);
-    pthread_cond_destroy(&(*pAck)->cond);
-
-    ush_log(LOG_LVL_DETAIL, "free ack %p", pAck);
-    free(*pAck);
-    *pAck = NULL;
-
-    return USH_RET_OK;
 }

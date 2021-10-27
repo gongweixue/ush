@@ -63,9 +63,14 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
     }
 
     ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(idx);
-    ushd_dist_fifo_t   fifo = ushd_dist_thread_get_fifo(dist);
+    if (!dist) {
+        ushd_log(LOG_LVL_ERROR, "dist thread of %d is NULL", idx);
+        return;
+    }
+    ushd_dist_fifo_t fifo = ushd_dist_thread_get_fifo(dist);
     if (!fifo) {
-        ushd_log(LOG_LVL_ERROR, "no dist fifo to push");
+        ushd_log(LOG_LVL_ERROR, "no dist fifo of connidx %d to push", idx);
+        return;
     }
     ushd_dist_fifo_push(fifo, (dist_fifo_msg_d*)&ack, sizeof(ack));
 
@@ -89,11 +94,17 @@ static void notify_handle(ush_connidx_t connidx,
     msg.rcv         = rcv;
 
     ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(connidx);
-    ushd_dist_fifo_t   fifo = ushd_dist_thread_get_fifo(dist);
+    if (!dist) {
+        ushd_log(LOG_LVL_ERROR, "dist thread of %d is NULL", connidx);
+        return;
+    }
+    ushd_dist_fifo_t fifo = ushd_dist_thread_get_fifo(dist);
     if (!fifo) {
-        ushd_log(LOG_LVL_ERROR, "no dist fifo to push");
+        ushd_log(LOG_LVL_ERROR, "no dist fifo of connidx %d to push", connidx);
+        return;
     }
     ushd_dist_fifo_push(fifo, (dist_fifo_msg_d*)&msg, sizeof(msg));
+
     return;
 }
 static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {

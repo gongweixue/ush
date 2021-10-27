@@ -45,7 +45,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
                                   cert);
     ushd_realm_thread_t realm = ushd_realm_thread_create(fullname);
     if (!realm) {
-        ushd_log(LOG_LVL_ERROR, "dist thread create failed.");
+        ushd_log(LOG_LVL_ERROR, "%s dist thread create failed.", fullname);
         ushd_dist_thread_stop_destroy(&dist);
         return;
     }
@@ -53,7 +53,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     // add the info to the conn table
     ush_connidx_t connidx = ushd_conn_tbl_add(shortname_ts, cert, dist, realm);
     if (USHD_INVALID_CONN_IDX_VALUE == connidx) {
-        ushd_log(LOG_LVL_ERROR, "conn can not add to the table");
+        ushd_log(LOG_LVL_ERROR, "%s can not add to the table", shortname_ts);
         ushd_dist_thread_stop_destroy(&dist);
         ushd_realm_thread_stop_destroy(&realm);
         return;
@@ -62,7 +62,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
 
     ushd_log(LOG_LVL_INFO, "starting realm thread %p", realm);
     if (USH_RET_OK != ushd_realm_thread_start(realm)) {
-        ushd_log(LOG_LVL_ERROR, "conn can not add to the table");
+        ushd_log(LOG_LVL_ERROR, "%s realm thread can not start", fullname);
         ushd_conn_tbl_remove(connidx);
         ushd_dist_thread_stop_destroy(&dist);
         ushd_realm_thread_stop_destroy(&realm);
@@ -71,6 +71,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
 
     ushd_log(LOG_LVL_INFO, "starting dist thread %p", dist);
     if (USH_RET_OK != ushd_dist_thread_start(dist)) {
+        ushd_log(LOG_LVL_ERROR, "%s dist thread can not start", fullname);
         ushd_conn_tbl_remove(connidx);
         ushd_dist_thread_stop_destroy(&dist);
         ushd_realm_thread_stop_destroy(&realm);
@@ -79,6 +80,9 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
             {USHD_DIST_FIFO_MSG_TYPE_HAY}, ackSync, connidx, cert};
 
         ushd_dist_fifo_t fifo = ushd_dist_thread_get_fifo(dist);
+        if (!fifo) {
+            ushd_log(LOG_LVL_ERROR, "%s dist fifo NULL", fullname);
+        }
 
         ushd_log(LOG_LVL_INFO, "push data to the dist fifo");
         ushd_dist_fifo_push(fifo, (dist_fifo_msg_d*)&hay, sizeof(hay));

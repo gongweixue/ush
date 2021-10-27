@@ -10,26 +10,26 @@ static void test_hello_create(void) {
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
 
-    ret = ush_comm_tch_hello_create(&msg, "testname", ack, 123456);
+    ret = ush_comm_tch_hello_create(&msg, "testname", &ack, 123456);
     ush_assert(OK == ret);
 
-    ret = ush_comm_tch_hello_create(&msg, "testname", ack, 0);
+    ret = ush_comm_tch_hello_create(&msg, "testname", &ack, 0);
     ush_assert(OK == ret);
 
-    ret = ush_comm_tch_hello_create(&msg, "adsd", ack, 0x7FFFFFFF);
+    ret = ush_comm_tch_hello_create(&msg, "adsd", &ack, 0x7FFFFFFF);
     ush_assert(OK == ret);
 
     //exception
-    ret = ush_comm_tch_hello_create(NULL, "abc", ack, 0);
+    ret = ush_comm_tch_hello_create(NULL, "abc", &ack, 0);
     ush_assert(OK != ret);
 
-    ret = ush_comm_tch_hello_create(&msg, "", ack, 0);
+    ret = ush_comm_tch_hello_create(&msg, "", &ack, 0);
     ush_assert(OK != ret);
     ush_assert(NULL == msg);
 
     char name[] = // 64 bytes
         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    ret = ush_comm_tch_hello_create(&msg, name, ack, 123456);
+    ret = ush_comm_tch_hello_create(&msg, name, &ack, 123456);
     ush_assert(OK != ret);
     ush_assert(NULL == msg);
 
@@ -45,7 +45,7 @@ static void test_hello_destroy(void) {
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
 
-    ret = ush_comm_tch_hello_create(&msg, "testname", ack, 123456);
+    ret = ush_comm_tch_hello_create(&msg, "testname", &ack, 123456);
     ush_assert(OK == ret);
 
     ret = ush_comm_tch_hello_destroy(&msg);
@@ -70,7 +70,7 @@ static void test_hello_name_of(void) {
     char name[] = "testname";
     ush_cert_t cert = 123456;
 
-    ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
+    ret = ush_comm_tch_hello_create(&msg, name, &ack, cert);
     ush_assert(OK == ret);
     ush_assert(NULL != msg);
 
@@ -94,12 +94,12 @@ static void test_hello_ack_of(void) {
     char name[] = "testname";
     ush_cert_t cert = 123456;
 
-    ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
+    ret = ush_comm_tch_hello_create(&msg, name, &ack, cert);
     ush_assert(OK == ret);
     ush_assert(NULL != msg);
 
-    ush_pvoid_t *result = ush_comm_tch_hello_ack_of(msg);
-    ush_assert((ush_sync_hello_ack_t)result == ack);
+    ush_sync_hello_ack_t *result = ush_comm_tch_hello_ack_of(msg);
+    ush_assert((ush_sync_hello_ack_t*)result == &ack);
 
     ret = ush_comm_tch_hello_destroy(&msg);
     ush_assert(OK == ret);
@@ -120,12 +120,12 @@ static void test_hello_cert_of(void) {
     { // case 1
         ush_cert_t cert = 123456;
 
-        ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
+        ret = ush_comm_tch_hello_create(&msg, name, &ack, cert);
         ush_assert(OK == ret);
         ush_assert(NULL != msg);
 
-        ush_pvoid_t *result = ush_comm_tch_hello_ack_of(msg);
-        ush_assert((ush_sync_hello_ack_t)result == ack);
+        ush_sync_hello_ack_t *result = ush_comm_tch_hello_ack_of(msg);
+        ush_assert((ush_sync_hello_ack_t*)result == &ack);
 
         ret = ush_comm_tch_hello_destroy(&msg);
         ush_assert(OK == ret);
@@ -135,12 +135,12 @@ static void test_hello_cert_of(void) {
     { // case 2
         ush_cert_t cert = 0;
 
-        ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
+        ret = ush_comm_tch_hello_create(&msg, name, &ack, cert);
         ush_assert(OK == ret);
         ush_assert(NULL != msg);
 
         ush_pvoid_t *result = ush_comm_tch_hello_ack_of(msg);
-        ush_assert((ush_sync_hello_ack_t)result == ack);
+        ush_assert((ush_sync_hello_ack_t*)result == &ack);
 
         ret = ush_comm_tch_hello_destroy(&msg);
         ush_assert(OK == ret);
@@ -150,12 +150,12 @@ static void test_hello_cert_of(void) {
     { // case 3
         ush_cert_t cert = 0x7FFFFFFF;
 
-        ret = ush_comm_tch_hello_create(&msg, name, ack, cert);
+        ret = ush_comm_tch_hello_create(&msg, name, &ack, cert);
         ush_assert(OK == ret);
         ush_assert(NULL != msg);
 
         ush_pvoid_t *result = ush_comm_tch_hello_ack_of(msg);
-        ush_assert((ush_sync_hello_ack_t)result == ack);
+        ush_assert((ush_sync_hello_ack_t*)result == &ack);
 
         ret = ush_comm_tch_hello_destroy(&msg);
         ush_assert(OK == ret);

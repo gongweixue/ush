@@ -64,11 +64,11 @@ static void test_hay_ack_of(void) {
     char buf[1024];
     ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
 
-    msg = ush_comm_lstnr_hay_create(ack, 1, 123456);
+    msg = ush_comm_lstnr_hay_create(&ack, 1, 123456);
     ush_assert(NULL != msg);
 
-    ush_sync_hello_ack_t result = ush_comm_lstnr_hay_ack_of(msg);
-    ush_assert(ack == result);
+    ush_sync_hello_ack_t *result = ush_comm_lstnr_hay_ack_of(msg);
+    ush_assert(&ack == result);
 
     // from NULL
     ush_assert(NULL == ush_comm_lstnr_hay_ack_of(NULL));

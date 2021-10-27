@@ -12,17 +12,17 @@
 typedef struct tch_hello {
     ush_comm_tch_msg_d        desc;
     ush_char_t                name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
-    ush_pvoid_t              *ackSync;
+    ush_pvoid_t               pAck;
     ush_cert_t                cert;
 } USH_COMM_MSG_PACKED * ush_comm_tch_hello_t;
 
 ush_ret_t
 ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
                           const ush_char_t        *name,
-                          ush_sync_hello_ack_t     ack,
+                          ush_sync_hello_ack_t    *pAck,
                           ush_cert_t               cert) {
 
-    if (!pHello || !name || !ack) {
+    if (!pHello || !name || !pAck) {
         if (pHello) {*pHello = NULL;}
         ush_log(LOG_LVL_FATAL, "param NULL");
         return USH_RET_WRONG_PARAM;
@@ -55,7 +55,7 @@ ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
 
     strcpy(tmp->name, name);
 
-    tmp->ackSync = (ush_pvoid_t)ack;
+    tmp->pAck = (ush_pvoid_t)pAck;
     tmp->cert = cert;
 
     *pHello = tmp;
@@ -98,7 +98,7 @@ ush_comm_tch_hello_ack_of(const ush_comm_tch_hello_t msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return NULL;
     }
-    return msg->ackSync;
+    return msg->pAck;
 }
 
 ush_cert_t

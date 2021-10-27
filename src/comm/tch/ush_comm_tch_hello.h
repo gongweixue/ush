@@ -10,7 +10,7 @@ typedef struct tch_hello * ush_comm_tch_hello_t;
 ush_ret_t
 ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
                           const ush_char_t        *name,
-                          ush_sync_hello_ack_t     ack,
+                          ush_sync_hello_ack_t    *pAck,
                           ush_cert_t               cert);
 
 ush_ret_t
