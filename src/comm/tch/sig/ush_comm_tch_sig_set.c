@@ -34,7 +34,7 @@ ush_comm_tch_sig_set_create(ush_comm_tch_sig_set_t *pMsg,
     if (USHD_INVALID_CONN_IDX_VALUE == connidx ||
         USH_CONN_IDX_MAX <= connidx            ||
         USH_INVALID_CERT_VALUE == cert         ||
-        !ush_sig_id_valid(sigid)               ||
+        !ush_sig_id_check(sigid)               ||
         USH_INVALID_PIPE == pipe) {
         ush_log(LOG_LVL_ERROR, "wrong parameters");
         *pMsg = NULL;

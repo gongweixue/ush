@@ -32,7 +32,7 @@ typedef enum {
 #endif
 
 // sig-id validation
-static inline ush_bool_t ush_sig_id_valid(ush_sig_id_t id) {
+static inline ush_bool_t ush_sig_id_check(ush_sig_id_t id) {
     return (id > USH_SIG_ID_INVALID && id < USH_SIG_ID_MAX);
 }
 

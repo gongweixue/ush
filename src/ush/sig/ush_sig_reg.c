@@ -34,7 +34,7 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
         return USH_RET_FAILED;
     }
 
-    if (!ush_sig_id_valid(pconf->sigid)) {
+    if (!ush_sig_id_check(pconf->sigid)) {
         ush_log(LOG_LVL_ERROR, "wrong sigid id");
         return USH_RET_WRONG_PARAM;
     }

@@ -21,9 +21,9 @@ ush_cert_t ushd_conn_tbl_add(const ush_char_t           *name,
 
 ush_ret_t  ushd_conn_tbl_remove(ush_connidx_t idx);
 
-ush_bool_t ushd_conn_tbl_check_connidx(ush_connidx_t idx);
+ush_bool_t ushd_conn_tbl_connidx_check(ush_connidx_t idx);
 
-ush_bool_t ushd_conn_tbl_get_valid_flg(ush_connidx_t idx);
+ush_bool_t ushd_conn_tbl_get_active_flg(ush_connidx_t idx);
 
 ush_cert_t ushd_conn_tbl_get_cert(ush_connidx_t idx);
 

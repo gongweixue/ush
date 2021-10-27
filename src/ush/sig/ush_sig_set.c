@@ -41,7 +41,7 @@ static ush_sig_set_func_t set_functions[] = {
 
 ush_ret_t
 ush_sig_set(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval) {
-    if (USH_INVALID_PIPE == pipe || !ush_sig_id_valid(sigid) || !pval) {
+    if (USH_INVALID_PIPE == pipe || !ush_sig_id_check(sigid) || !pval) {
         ush_log(LOG_LVL_ERROR, "parameters not correct!");
         return USH_RET_WRONG_PARAM;
     }
