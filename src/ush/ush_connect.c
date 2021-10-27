@@ -153,10 +153,10 @@ ush_connect_destroy(ush_connect_t *pConn) {
     }
 
     connect_cs_entry(*pConn);
-    ush_lstnr_stop_close(&((*pConn)->listener));
 
-    ush_log(LOG_LVL_DETAIL, "destory touch/listener/mutext");
     ush_tch_destroy_with_closing(&((*pConn)->touch));
+    ush_realm_destroy_with_closing(&((*pConn)->realm));
+    ush_lstnr_stop_close(&((*pConn)->listener));
 
     connect_cs_exit(*pConn);
     pthread_mutex_destroy(&((*pConn)->mutex));
@@ -258,21 +258,26 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
         return USH_RET_WRONG_PARAM;
     }
 
-    // use ack to wait feedback
-    ush_sync_hello_ack_t ack = NULL;
-    ush_log(LOG_LVL_DETAIL, "create hello ack");
-    ush_ret_t ret = ush_sync_hello_ack_create(&ack, conn);
-    if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "hello ack create failed");
-        return ret;
-    }
+    ush_sync_hello_ack_t ack = NULL; // pass addr of ack to hello msg
+    ush_ret_t            ret = USH_RET_OK;
 
     // prepare hello msg
     ush_comm_tch_hello_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
-    ush_cert_t cert = USH_INVALID_CERT_VALUE;
-    ush_connect_get_cert(conn, &cert);
-    ush_comm_tch_hello_create(&hello, conn->shortname_ts, &ack, cert);
+    ush_cert_t cert = conn->cert;
+    ret = ush_comm_tch_hello_create(&hello, conn->shortname_ts, &ack, cert);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "hello create failed"); //
+        return ret;
+    }
+
+    // use ack to wait feedback
+    ush_log(LOG_LVL_DETAIL, "create hello ack");
+    ret = ush_sync_hello_ack_create(&ack, conn);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "hello ack create failed");
+        goto BAILED;;
+    }
 
     // for timeout
     struct timespec deadline;
@@ -290,20 +295,25 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
     ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
 
     // send with or without timeout
-    ush_tch_t touch = NULL;
-    ush_connect_get_tch(conn, &touch);
-    ret = ush_tch_send_hello(touch, hello, pDL);
+    ret = ush_tch_send_hello(conn->touch, hello, pDL);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "sending hello failed");
-    } else {
-        ret = ush_sync_hello_ack_wait(ack, pDL);
-        if (USH_RET_OK != ret) {
-            ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
-
-            ush_log(LOG_LVL_DETAIL, "destroy connect %p", conn);
-        }
+        goto BAILED;
     }
 
+    ret = ush_sync_hello_ack_wait(ack, pDL);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
+        goto BAILED;
+    }
+
+    ret = ush_realm_open(conn->realm);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_FATAL, "open realm failed");
+        goto BAILED;
+    }
+
+BAILED:
     ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
     ush_comm_tch_hello_destroy(&hello);
 

@@ -70,7 +70,7 @@ ush_tch_send_hello(const ush_tch_t                touch,
     return ret;
 }
 
-ush_ret_t
+static ush_ret_t
 ush_tch_close(ush_tch_t touch) {
     ush_assert(touch);
     if (USH_INVALID_MQD_VALUE == touch->mq) {
@@ -101,7 +101,7 @@ ush_tch_open(ush_tch_t touch) {
     for (int counter = 0; counter < USH_TCH_OPEN_RETRY_CNT; ++counter) {
         touch->mq = mq_open(USH_COMM_TCH_Q_PATH, O_WRONLY);
         if (USH_INVALID_MQD_VALUE != touch->mq) { // done
-            ush_log(LOG_LVL_INFO, "listener open done.");
+            ush_log(LOG_LVL_INFO, "touch open done.");
             return USH_RET_OK;
         } else { // failed
             if (ENOENT == errno) { // file has not been create

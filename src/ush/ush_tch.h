@@ -21,8 +21,6 @@ ush_ret_t ush_tch_alloc(ush_tch_t *pTouch);
 
 ush_ret_t ush_tch_open(ush_tch_t touch);
 
-ush_ret_t ush_tch_close(ush_tch_t touch);
-
 ush_ret_t ush_tch_destroy_with_closing(ush_tch_t *pTouch);
 
 
