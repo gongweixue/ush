@@ -3,9 +3,13 @@
 #include "pthread.h"
 #include "stdlib.h"
 #include "string.h"
+
 #include "ush_assert.h"
-#include "ush_comm_def.h"
 #include "ush_log.h"
+
+#include "ush_comm_def.h"
+#include "realm/sig/ush_comm_realm_sigreg.h"
+
 #include "ushd_realm_thread.h"
 
 typedef struct ushd_realm_thread {
@@ -96,10 +100,6 @@ realm_mq_open(ushd_realm_thread_t thread, const ush_char_t *name) {
     return USH_RET_OK;
 }
 
-
-
-#include "tch/sig/ush_comm_tch_sig_reg.h"
-
 static void *
 realm_thread_entry(void *arg) {
     ush_assert(arg);
@@ -132,7 +132,7 @@ realm_thread_entry(void *arg) {
             continue; // skip to next loop.
         }
 
-        ush_comm_tch_sig_reg_testpoint((ush_comm_tch_sig_reg_t)buf);
+        ush_comm_realm_sigreg_testpoint((ush_comm_realm_sigreg_t)buf);
     };
 
 TERMINATE:

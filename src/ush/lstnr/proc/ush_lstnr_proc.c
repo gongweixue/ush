@@ -25,7 +25,6 @@ ush_lstnr_proc(ush_comm_lstnr_msg_d *msgd) {
         ush_lstnr_proc_sig_upd((ush_comm_lstnr_sig_upd_t)msgd);
         break;
 
-    case USH_COMM_LSTNR_MSG_CATALOG_MAX:
     default:
         ush_log(LOG_LVL_ERROR, "wrong listener msg catalog");
         break;

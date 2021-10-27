@@ -4,12 +4,13 @@
 #include "ush_sig_pub.h"
 
 #include "ush_comm_desc.h"
-#include "tch/ush_comm_tch.h"
-#include "tch/sig/ush_comm_tch_sig.h"
-#include "tch/sig/ush_comm_tch_sig_reg.h"
+#include "realm/ush_comm_realm.h"
+#include "realm/sig/ush_comm_realm_sig.h"
+#include "realm/sig/ush_comm_realm_sigreg.h"
+#include "realm/sig/ush_comm_realm_sigset.h"
 
 ush_ret_t
-ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
+ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf) {
     if (0 == pipe || NULL == pconf) {
         ush_log(LOG_LVL_ERROR, "passing 0 as the param");
         return USH_RET_WRONG_PARAM;
@@ -28,38 +29,27 @@ ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf) {
         return USH_RET_WRONG_SEQ;
     }
 
-    ush_tch_t touch = NULL;
-    if (USH_RET_OK != ush_connect_get_tch(conn, &touch)) {
-        ush_log(LOG_LVL_ERROR, "conn's touch getting failed");
-        return USH_RET_FAILED;
-    }
-
     if (!ush_sig_id_check(pconf->sigid)) {
         ush_log(LOG_LVL_ERROR, "wrong sigid id");
         return USH_RET_WRONG_PARAM;
     }
 
-    ush_comm_tch_sig_reg_t msg = NULL;
-    ush_ret_t ret = ush_comm_tch_sig_reg_create(&msg,
-                                                idx,
-                                                cert,
-                                                pconf->sigid,
-                                                pconf->done,
-                                                pconf->rcv,
-                                                pipe);
+    ush_comm_realm_sigreg_t msg = NULL;
+    ush_ret_t ret = ush_comm_realm_sigreg_create(&msg, idx, cert,
+                                                 pconf->sigid,
+                                                 pconf->done,
+                                                 pconf->rcv,
+                                                 pipe);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sigid reg msg create failed");
         return ret;
     }
 
-    ret = ush_tch_send(touch, (const ush_char_t*)msg,
-                       ush_comm_tch_sig_reg_sizeof(),
-                       USH_COMM_TCH_SEND_PRIO_SIG_REG);
-
+    ret = ush_connect_send(conn, (const ush_comm_d *)msg);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sent sigid reg msg failed");
     }
-    ush_comm_tch_sig_reg_destroy(&msg); // destroy in any case
+    ush_comm_realm_sigreg_destroy(&msg); // destroy in any case
 
     return ret;
 }

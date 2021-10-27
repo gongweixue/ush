@@ -13,8 +13,9 @@
 #define USH_CONN_IDX_MAX               (128)
 
 #define USH_COMM_TCH_SEND_PRIO_HELLO             (0)
-#define USH_COMM_TCH_SEND_PRIO_SIG_SET           (1)
-#define USH_COMM_TCH_SEND_PRIO_SIG_REG           (2)
+
+#define USH_COMM_REALM_SEND_PRIO_SIGSET           (0)
+#define USH_COMM_REALM_SEND_PRIO_SIGREG           (1)
 
 #define USH_COMM_LSTNR_SEND_PRIO_HAY             (0)
 #define USH_COMM_LSTNR_SEND_PRIO_SIGREG_ACK      (0)

@@ -3,8 +3,8 @@ set(EXE_NAME test-ush-sig)
 
 set(SRC_LIST
     test-ush-sig.c
-    case_ush_sig_reg.c
-    case_ush_sig_set.c
+    case_ush_sigreg.c
+    case_ush_sigset.c
 )
 
 include_directories(

@@ -11,8 +11,15 @@
 #include "ush_random.h"
 #include "ush_string.h"
 #include "ush_sync.h"
+
+#include "lstnr/ush_lstnr.h"
 #include "ush_tch.h"
+
 #include "ush_realm.h"
+#include "realm/ush_comm_realm.h"
+#include "realm/sig/ush_comm_realm_sig.h"
+#include "realm/sig/ush_comm_realm_sigreg.h"
+#include "realm/sig/ush_comm_realm_sigset.h"
 
 
 typedef struct ush_connect {
@@ -214,22 +221,6 @@ ush_connect_get_connidx(const ush_connect_t conn, ush_connidx_t *ptr) {
     return USH_RET_OK;
 }
 
-ush_ret_t
-ush_connect_get_tch(ush_connect_t conn, ush_tch_t *ptr) {
-    if (!conn || !ptr) {
-        ush_log(LOG_LVL_FATAL, "connect or touch ptr NULL");
-        return USH_RET_WRONG_PARAM;
-    }
-
-    connect_cs_entry(conn);
-    *ptr = conn->touch;
-    connect_cs_exit(conn);
-
-    ush_log(LOG_LVL_DETAIL, "get touch successful, addr %p", *ptr);
-
-    return USH_RET_OK;
-}
-
 
 static ush_ret_t
 realize_timeout(struct timespec *ptr, ush_u16_t timeout) {
@@ -264,7 +255,12 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
     // prepare hello msg
     ush_comm_tch_hello_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
+
+
+    connect_cs_entry(conn);
     ush_cert_t cert = conn->cert;
+    connect_cs_exit(conn);
+
     ret = ush_comm_tch_hello_create(&hello, conn->shortname_ts, &ack, cert);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "hello create failed"); //
@@ -316,6 +312,39 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
 BAILED:
     ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
     ush_comm_tch_hello_destroy(&hello);
+
+    return ret;
+}
+
+ush_ret_t
+ush_connect_send(ush_connect_t conn, const ush_comm_d *msg) {
+    (void)msg;
+    ush_ret_t ret = USH_RET_FAILED;
+    if (USH_COMM_PORT_REALM == msg->port) {
+        const ush_comm_realm_msg_d *realm_d = (const ush_comm_realm_msg_d*)msg;
+        if (USH_COMM_REALM_MSG_CATALOG_SIG == realm_d->catalog) {
+            size_t sz = 0;
+            ush_u32_t prio = 255;
+            switch (((const ush_comm_realm_sig_d*)msg)->intent) {
+            case USH_COMM_REALM_SIG_INTENT_REG:
+                sz = ush_comm_realm_sigreg_sizeof();
+                prio = USH_COMM_REALM_SEND_PRIO_SIGREG;
+                break;
+
+            case USH_COMM_REALM_SIG_INTENT_SET:
+                sz = ush_comm_realm_sigset_sizeof();
+                prio = USH_COMM_REALM_SEND_PRIO_SIGSET;
+                break;
+
+            default:
+                ushd_log(LOG_LVL_ERROR, "wrong realm sig msg type");
+                break;
+            }
+            connect_cs_entry(conn);
+            ret = ush_tch_send(conn->touch, (const ush_char_t *)msg, sz, prio);
+            connect_cs_exit(conn);
+        }
+    }
 
     return ret;
 }

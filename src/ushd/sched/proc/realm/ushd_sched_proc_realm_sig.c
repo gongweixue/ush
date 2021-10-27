@@ -7,16 +7,17 @@
 #include "conn/ushd_conn_reglist.h"
 
 #include "ush_comm_desc.h"
-#include "tch/ush_comm_tch.h"
-#include "tch/sig/ush_comm_tch_sig.h"
-#include "tch/sig/ush_comm_tch_sig_reg.h"
-#include "tch/sig/ush_comm_tch_sig_set.h"
+#include "realm/ush_comm_realm.h"
+#include "realm/sig/ush_comm_realm_sig.h"
+#include "realm/sig/ush_comm_realm_sigreg.h"
+#include "realm/sig/ush_comm_realm_sigset.h"
 
 #include "dist/ushd_dist_fifo.h"
 #include "dist/ushd_dist_fifo_msg.h"
-#include "ushd_sched_proc_tch_sig.h"
 
-static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
+#include "ushd_sched_proc_realm_sig.h"
+
+static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     ush_assert(msg);
     if (!msg) {
         ushd_log(LOG_LVL_ERROR, "NULL reg msg");
@@ -24,14 +25,14 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
     }
 
     // check idx
-    ush_connidx_t idx = ush_comm_tch_sig_reg_get_connidx(msg);
+    ush_connidx_t idx = ush_comm_realm_sigreg_get_connidx(msg);
     if (!ushd_conn_tbl_get_active_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
 
     // check cert
-    const ush_cert_t cert = ush_comm_tch_sig_reg_get_cert(msg);
+    const ush_cert_t cert = ush_comm_realm_sigreg_get_cert(msg);
     const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
     if (ref != cert) {
         ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
@@ -39,22 +40,22 @@ static void ushd_sched_proc_tch_sig_reg(const ush_comm_tch_sig_reg_t msg) {
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_tch_sig_reg_get_sigid(msg);
+    ush_sig_id_t sigid = ush_comm_realm_sigreg_get_sigid(msg);
     if (!ush_sig_id_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
     }
 
     // ack for
-    dist_fifo_msg_sig_reg_ack ack;
-    ack.desc.type = USHD_DIST_FIFO_MSG_TYPE_SIG_REG_ACK;
+    dist_fifo_msg_sigreg_ack ack;
+    ack.desc.type = USHD_DIST_FIFO_MSG_TYPE_SIGREG_ACK;
     ack.success   = 0;
     ack.sigid     = sigid;
-    ack.pipe      = ush_comm_tch_sig_reg_get_pipe(msg);
-    ack.done      = ush_comm_tch_sig_reg_get_cb_done(msg);
+    ack.pipe      = ush_comm_realm_sigreg_get_pipe(msg);
+    ack.done      = ush_comm_realm_sigreg_get_cb_done(msg);
 
     // add cb func to the sigid domain of conn in the idx.
-    ush_pvoid_t rcv  = ush_comm_tch_sig_reg_get_cb_rcv(msg);
+    ush_pvoid_t rcv  = ush_comm_realm_sigreg_get_cb_rcv(msg);
     if (USH_RET_OK != ushd_conn_reglist_set_rcv(idx, sigid, rcv)) {
         ack.success = 0;
         ushd_log(LOG_LVL_ERROR, "callback register failed");
@@ -107,7 +108,7 @@ static void notify_handle(ush_connidx_t connidx,
 
     return;
 }
-static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {
+static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
     ush_assert(msg);
     if (!msg) {
         ushd_log(LOG_LVL_ERROR, "NULL sig-set msg");
@@ -115,14 +116,14 @@ static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {
     }
 
     // check idx
-    ush_connidx_t idx = ush_comm_tch_sig_set_get_connidx(msg);
+    ush_connidx_t idx = ush_comm_realm_sigset_get_connidx(msg);
     if (!ushd_conn_tbl_get_active_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
 
     // check cert
-    const ush_cert_t cert = ush_comm_tch_sig_set_get_cert(msg);
+    const ush_cert_t cert = ush_comm_realm_sigset_get_cert(msg);
     const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
     if (ref != cert) {
         ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
@@ -130,14 +131,14 @@ static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_tch_sig_set_get_sigid(msg);
+    ush_sig_id_t sigid = ush_comm_realm_sigset_get_sigid(msg);
     if (!ush_sig_id_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
     }
 
     // update the sig value in reglist
-    ush_sig_val_t val = ush_comm_tch_sig_set_get_val(msg);
+    ush_sig_val_t val = ush_comm_realm_sigset_get_val(msg);
     if (USH_RET_OK != ushd_conn_reglist_set_val(sigid, val)) {
         ushd_log(LOG_LVL_ERROR, "signal %d value setting failed", sigid);
         return;
@@ -151,25 +152,24 @@ static void ushd_sched_proc_tch_sig_set(const ush_comm_tch_sig_set_t msg) {
     return;
 }
 
-void ushd_sched_proc_tch_sig(const ush_pvoid_t msg) {
+void ushd_sched_proc_realm_sig(const ush_pvoid_t msg) {
     ush_assert(msg);
     if (!msg) {
         ushd_log(LOG_LVL_ERROR, "msg is NULL!!!");
         return;
     }
 
-    const ush_comm_tch_sig_d *pDesc = (const ush_comm_tch_sig_d *)msg;
+    const ush_comm_realm_sig_d *pDesc = (const ush_comm_realm_sig_d *)msg;
 
     switch (pDesc->intent) {
-    case USH_COMM_TCH_SIG_INTENT_REG:
-        ushd_sched_proc_tch_sig_reg((const ush_comm_tch_sig_reg_t)msg);
+    case USH_COMM_REALM_SIG_INTENT_REG:
+        ushd_sched_proc_realm_sigreg((const ush_comm_realm_sigreg_t)msg);
         break;
 
-    case USH_COMM_TCH_SIG_INTENT_SET:
-        ushd_sched_proc_tch_sig_set((const ush_comm_tch_sig_set_t)msg);
+    case USH_COMM_REALM_SIG_INTENT_SET:
+        ushd_sched_proc_realm_sigset((const ush_comm_realm_sigset_t)msg);
         break;
 
-    case USH_COMM_TCH_SIG_INTENT_MAX:
     default:
         ushd_log(LOG_LVL_FATAL, "wrong intent #%d", pDesc->intent);
         break;

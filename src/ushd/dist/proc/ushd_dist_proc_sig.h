@@ -7,7 +7,7 @@
 
 ush_ret_t
 ushd_dist_proc_sig_send_reg_ack(ushd_dist_thread_t thread,
-                                const dist_fifo_msg_sig_reg_ack *msg);
+                                const dist_fifo_msg_sigreg_ack *msg);
 
 ush_ret_t
 ushd_dist_proc_sig_send_update(ushd_dist_thread_t thread,

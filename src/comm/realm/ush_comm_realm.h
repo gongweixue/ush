@@ -7,8 +7,7 @@
 #include "ush_comm_desc.h"
 
 typedef enum USH_COMM_REALM_MSG_CATALOG {
-    USH_COMM_TCH_MSG_CATALOG_SIG,
-    USH_COMM_TCH_MSG_CATALOG_MAX
+    USH_COMM_REALM_MSG_CATALOG_SIG
 } USH_COMM_REALM_MSG_CATALOG;
 
 typedef struct comm_realm_msg_desc {

@@ -21,10 +21,10 @@ ushd_dist_proc(ushd_dist_thread_t thread, ush_char_t *buf) {
         ushd_dist_proc_hay_send(thread, (const dist_fifo_msg_hay *)buf);
         break;
 
-    case USHD_DIST_FIFO_MSG_TYPE_SIG_REG_ACK:
+    case USHD_DIST_FIFO_MSG_TYPE_SIGREG_ACK:
         ushd_log(LOG_LVL_INFO, "sending sig-reg-msg %p", buf);
         ushd_dist_proc_sig_send_reg_ack(
-            thread, (const dist_fifo_msg_sig_reg_ack *)buf);
+            thread, (const dist_fifo_msg_sigreg_ack *)buf);
         break;
 
     case USHD_DIST_FIFO_MSG_TYPE_SIG_UPD:

@@ -2,8 +2,7 @@
 #define USH_CONNECT_H
 
 #include "ush_type_pub.h"
-#include "lstnr/ush_lstnr.h"
-#include "ush_tch.h"
+#include "ush_comm_desc.h"
 
 typedef struct ush_connect * ush_connect_t;
 
@@ -17,10 +16,8 @@ ush_ret_t ush_connect_set_connidx(ush_connect_t conn, ush_connidx_t idx);
 
 ush_ret_t ush_connect_get_connidx(const ush_connect_t conn, ush_connidx_t *ptr);
 
-ush_ret_t ush_connect_get_tch(ush_connect_t conn, ush_tch_t *ptr);
-
-ush_ret_t ush_connect_get_lstnr(ush_connect_t conn, ush_lstnr_t *ptr);
-
 ush_ret_t ush_connect_link(ush_connect_t conn, ush_u16_t timeout);
+
+ush_ret_t ush_connect_send(ush_connect_t conn, const ush_comm_d *msg);
 
 #endif // USH_CONNECT_H

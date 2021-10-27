@@ -8,6 +8,7 @@
 
 #include "ushd_sched_proc.h"
 #include "tch/ushd_sched_proc_tch.h"
+#include "realm/ushd_sched_proc_realm.h"
 
 void ushd_sched_proc(const ush_pvoid_t ptr) {
     ush_assert(ptr);
@@ -22,8 +23,10 @@ void ushd_sched_proc(const ush_pvoid_t ptr) {
         break;
 
     case USH_COMM_PORT_REALM:
+        ushd_sched_proc_realm(ptr);
+        break;
+
     case USH_COMM_PORT_LSTNR:
-    case USH_COMM_PORT_MAX:
     default:
         ushd_log(LOG_LVL_ERROR, "wrong ush_comm_port");
         break;

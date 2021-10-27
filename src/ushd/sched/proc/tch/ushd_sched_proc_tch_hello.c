@@ -6,7 +6,6 @@
 
 #include "conn/ushd_conn_tbl.h"
 #include "dist/ushd_dist_thread.h"
-#include "realm/ushd_realm_thread.h"
 
 #include "ushd_sched_proc_tch_hello.h"
 

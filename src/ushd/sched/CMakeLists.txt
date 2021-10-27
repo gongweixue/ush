@@ -6,7 +6,8 @@ set(SRC_USHD_SCHED
     proc/ushd_sched_proc.c
     proc/tch/ushd_sched_proc_tch.c
     proc/tch/ushd_sched_proc_tch_hello.c
-    proc/tch/ushd_sched_proc_tch_sig.c
+    proc/realm/ushd_sched_proc_realm.c
+    proc/realm/ushd_sched_proc_realm_sig.c
 )
 
 include_directories(

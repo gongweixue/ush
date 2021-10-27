@@ -10,11 +10,11 @@
 extern "C" {
 #endif
 
-typedef struct ush_sig_reg_conf_t {
+typedef struct ush_sigreg_conf_t {
     ush_sig_id_t     sigid;
     ush_sig_cb_reg_t done;
     ush_sig_cb_rcv_t rcv;
-} ush_sig_reg_conf_t;
+} ush_sigreg_conf_t;
 
 
 /*
@@ -26,7 +26,7 @@ typedef struct ush_sig_reg_conf_t {
  *     but the return dose not mean the msg value has been set on the ushd.
  *     Pass NULL to reset the callbacks.
  */
-ush_ret_t ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf);
+ush_ret_t ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf);
 
 /*
  * Update a signal value to signal bus
@@ -37,7 +37,7 @@ ush_ret_t ush_sig_reg(ush_pipe_t pipe, const ush_sig_reg_conf_t *pconf);
  *     but the return dose not mean the msg value has been set on the ushd.
  *     Client who listening this sigid will be triggered by the callback.
  */
-ush_ret_t ush_sig_set(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval);
+ush_ret_t ush_sigset(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval);
 
 
 // implement with burst reg mode
