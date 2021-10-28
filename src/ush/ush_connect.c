@@ -297,7 +297,7 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
         goto BAILED;
     }
 
-    ret = ush_sync_hello_ack_wait(ack, pDL);
+    ret = ush_sync_hello_ack_wait_and_destroy(&ack, pDL);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
         goto BAILED;

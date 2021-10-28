@@ -86,23 +86,23 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
 }
 
 ush_ret_t
-ush_sync_hello_ack_wait(ush_sync_hello_ack_t   ack,
-                        const struct timespec *pDL) {
-    ush_assert(ack);
-    if (1 == ack->obsolete) {
-        ush_log(LOG_LVL_FATAL, "can not wait a obosleted ack %p", ack);
+ush_sync_hello_ack_wait_and_destroy(ush_sync_hello_ack_t  *pAck,
+                                    const struct timespec *pDL) {
+    ush_assert(pAck && *pAck);
+    if (1 == (*pAck)->obsolete) {
+        ush_log(LOG_LVL_FATAL, "can not wait a obosleted ack %p", *pAck);
         return USH_RET_WRONG_PARAM;
     }
 
-    pthread_mutex_lock(&ack->mutex);
+    pthread_mutex_lock(&((*pAck)->mutex));
 
     int ret = USH_RET_OK;
-    ush_log(LOG_LVL_DETAIL, "waiting the cond's signal, ack addr %p", ack);
+    ush_log(LOG_LVL_DETAIL, "waiting the cond's signal, ack addr %p", (*pAck));
     int wait = 0;
     if (pDL) {
-        wait = pthread_cond_timedwait(&ack->cond, &ack->mutex, pDL);
+        wait = pthread_cond_timedwait(&((*pAck)->cond), &((*pAck)->mutex), pDL);
     } else {
-        wait = pthread_cond_wait(&ack->cond, &ack->mutex);
+        wait = pthread_cond_wait(&((*pAck)->cond), &((*pAck)->mutex));
     }
     switch (wait) {
     case 0:
@@ -119,27 +119,31 @@ ush_sync_hello_ack_wait(ush_sync_hello_ack_t   ack,
         break;
     }
 
-    ack->obsolete = 1;
+    (*pAck)->obsolete = 1;
 
     ush_log(LOG_LVL_DETAIL, "wait return with ret code %d", ret);
 
-    pthread_mutex_unlock(&ack->mutex);
+    pthread_mutex_unlock(&((*pAck)->mutex));
+
+    hello_ack_destroy(pAck);
     return ret;
 }
 
 ush_ret_t
-ush_sync_hello_ack_signal_and_destroy(ush_sync_hello_ack_t *pAck,
-                                      ush_connidx_t         idx,
-                                      ush_cert_t            cert) {
+ush_sync_hello_ack_signal(ush_sync_hello_ack_t *pAck,
+                          ush_connidx_t         idx,
+                          ush_cert_t            cert) {
     ush_assert(pAck && *pAck);
 
     ush_ret_t ret = USH_RET_OK;
-    if (1 == (*pAck)->obsolete) {
-        ush_log(LOG_LVL_ERROR, "obsolete ack %p reached, destroy it", *pAck);
-        goto ACK_DESTROY;
-    }
+
 
     pthread_mutex_lock(&((*pAck)->mutex));
+
+    if (1 == (*pAck)->obsolete) {
+        ush_log(LOG_LVL_ERROR, "obsolete ack %p reached, destroy it", *pAck);
+        goto BAILED;
+    }
 
     ush_cert_t local_cert = USH_INVALID_CERT_VALUE;
     ret = ush_connect_get_cert((*pAck)->conn, &local_cert);
@@ -164,8 +168,5 @@ ush_sync_hello_ack_signal_and_destroy(ush_sync_hello_ack_t *pAck,
 
 BAILED:
     pthread_mutex_unlock(&((*pAck)->mutex));
-
-ACK_DESTROY:
-    hello_ack_destroy(pAck);
     return ret;
 }

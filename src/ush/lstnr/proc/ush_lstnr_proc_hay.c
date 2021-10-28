@@ -12,6 +12,6 @@ ush_lstnr_proc_hay(const ush_comm_lstnr_hay_t msg) {
 
         if (pAck && *pAck) {
             ush_log(LOG_LVL_INFO, "signal the ack for hello");
-            ush_sync_hello_ack_signal_and_destroy(pAck, idx, cert);
+            ush_sync_hello_ack_signal(pAck, idx, cert);
         }
 }
