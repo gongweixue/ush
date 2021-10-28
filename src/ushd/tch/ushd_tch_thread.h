@@ -8,10 +8,6 @@
 typedef struct ushd_tch_thread * ushd_tch_thread_t;
 
 
-ushd_tch_thread_t ushd_tch_thread_singleton(void);
-
-ush_ret_t ushd_tch_thread_set_id(pthread_t tid);
-
 ush_ret_t ushd_tch_thread_start(void);
 
 #endif //USHD_TOCH_THREAD_H

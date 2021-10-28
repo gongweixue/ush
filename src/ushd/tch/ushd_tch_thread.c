@@ -15,71 +15,48 @@ typedef struct ushd_tch_thread {
 } * ushd_tch_thread_t;
 
 
-static ushd_tch_thread_t s_tch_thread = NULL;
+static ushd_tch_thread_t thread = NULL;
 
+static ushd_tch_thread_t
+tch_thread_create(void) {
+    ushd_tch_thread_t newMem =
+        (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread));
 
-static ush_ret_t ushd_tch_thread_cs_entry(void);
-static ush_ret_t ushd_tch_thread_cs_exit(void);
-
-static ushd_tch_thread_t tch_thread_create(void);
-
-ushd_tch_thread_t
-ushd_tch_thread_singleton(void) {
-    if (!s_tch_thread) { // null test without lock
-        ushd_tch_thread_cs_entry();
-        // ushd_tch_thread_t tmp;
-        if (!s_tch_thread) {
-            ushd_log(LOG_LVL_INFO, "touch thread create first time");
-            s_tch_thread = tch_thread_create();
+    if (!newMem) {
+        ushd_log(LOG_LVL_FATAL, "create ushd_tch_thread failed");
+        return NULL;
+    } else {
+        if (USH_RET_OK !=  ushd_tch_create(&(newMem->touch))) {
+            ushd_log(LOG_LVL_FATAL, "create ushd_tch failed");
+            free(newMem);
+            return NULL;
         }
-        ushd_tch_thread_cs_exit();
-    }
-    return s_tch_thread;
-}
+        ushd_log(LOG_LVL_INFO, "ushd_tch created, addr %p", newMem->touch);
 
-ush_ret_t
-ushd_tch_thread_set_id(pthread_t tid) {
-    ushd_tch_thread_t tch_thread = ushd_tch_thread_singleton();
-    ushd_log(LOG_LVL_DETAIL, "get thread entity singleton %p", tch_thread);
-    if (!tch_thread || USH_INVALID_TID != tch_thread->tid) {
-        ushd_log(LOG_LVL_FATAL, "can not set tid to NULL or alreay set id");
-        return USH_RET_FAILED;
+        newMem->tid    = USH_INVALID_TID; // maybe a valid value
     }
 
-    ushd_tch_thread_cs_entry();
-
-    ushd_log(LOG_LVL_DETAIL, "set tid 0x%08lx and tid flag", tid);
-    tch_thread->tid    = tid;
-
-    ushd_tch_thread_cs_exit();
-
-    return USH_RET_OK;
+    ushd_log(LOG_LVL_DETAIL, "tch_thread singleton init, %p", newMem);
+    return newMem;
 }
-
 
 static void *
 ushd_tch_thread_entry(void *arg) {
     (void)arg;
     ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
-    ushd_tch_thread_t tch_thread = ushd_tch_thread_singleton();
-    if (!tch_thread) {
+    thread = tch_thread_create();
+    if (!thread) {
         ushd_log(LOG_LVL_FATAL, "singleton touch thread NULL");
         pthread_exit(NULL);
         goto TERMINATE;
     }
 
-    if (USH_RET_OK != ushd_tch_thread_set_id(pthread_self())) {
-        ushd_log(LOG_LVL_FATAL, "touch thread set id failed");
-        goto TERMINATE;
-    }
-    ushd_log(LOG_LVL_DETAIL, "set touch thread tid, 0x%08lx", pthread_self());
+    thread->tid = pthread_self();
 
-    ushd_tch_thread_cs_entry();
-    if (USH_RET_OK != ushd_tch_open(tch_thread->touch)) {
+    if (USH_RET_OK != ushd_tch_open(thread->touch)) {
         goto TERMINATE;
     }
-    ushd_tch_thread_cs_exit();
-    ushd_log(LOG_LVL_DETAIL, "touch been opened %p", tch_thread->touch);
+    ushd_log(LOG_LVL_DETAIL, "touch been opened %p", thread->touch);
 
     while (1) {
         ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
@@ -88,7 +65,7 @@ ushd_tch_thread_entry(void *arg) {
 
         ushd_log(LOG_LVL_INFO, "receive from touch...");
         ush_ret_t res = USH_RET_OK;
-        res = ushd_tch_receive(tch_thread->touch, buf, sizeof(buf));
+        res = ushd_tch_receive(thread->touch, buf, sizeof(buf));
         if (USH_RET_OK != res) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
             continue;
@@ -126,42 +103,4 @@ ushd_tch_thread_start(void) {
     }
 
     return USH_RET_OK;
-}
-
-ushd_tch_thread_t
-tch_thread_create(void) {
-    ushd_tch_thread_t newMem =
-        (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread));
-
-    if (!newMem) {
-        ushd_log(LOG_LVL_FATAL, "create ushd_tch_thread failed");
-        return NULL;
-    } else {
-        if (USH_RET_OK !=  ushd_tch_create(&(newMem->touch))) {
-            ushd_log(LOG_LVL_FATAL, "create ushd_tch failed");
-            free(newMem);
-            return NULL;
-        }
-        ushd_log(LOG_LVL_INFO, "ushd_tch created, addr %p", newMem->touch);
-
-        newMem->tid    = USH_INVALID_TID; // maybe a valid value
-    }
-
-    ushd_log(LOG_LVL_DETAIL, "tch_thread singleton init, %p", newMem);
-    return newMem;
-}
-
-
-
-/////////////////////// critical section, just for touch thread singleton
-pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
-ush_ret_t
-ushd_tch_thread_cs_entry(void) {
-    ushd_log(LOG_LVL_DETAIL, "entry cs of touch thread entity");
-    return !pthread_mutex_lock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
-}
-ush_ret_t
-ushd_tch_thread_cs_exit(void) {
-    ushd_log(LOG_LVL_DETAIL, "exit cs of touch thread entity");
-    return !pthread_mutex_unlock(&cs_mutex) ? USH_RET_OK : USH_RET_FAILED;
 }
