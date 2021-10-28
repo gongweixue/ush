@@ -19,55 +19,15 @@ typedef struct ushd_conn_item {
     ushd_realm_thread_t          realm;
 } * ushd_conn_item_t;
 
-// ush_bool_t
-// ushd_conn_record_is_valid(const ushd_conn_item_t record) {
-//     if (!record) {
-//         return 0;
-//     }
-//     return ushd_conn_tbl_is_record_valid(record->idx);
-// }
-
-// ush_ret_t
-// ushd_conn_record_attr_set(ushd_conn_item_t         record,
-//                           USHD_CONN_RECORD_ATTR_TYPE ty,
-//                           const ush_pvoid_t           ptr,
-//                           ush_size_t                 sz) {
-//     ush_assert(record && ptr);
-
-//     return ushd_conn_tbl_set_record_attr(record->idx, ty, ptr, sz);
-// }
-
-// ush_s32_t
-// ushd_conn_record_attr_get(const ushd_conn_item_t   record,
-//                           USHD_CONN_RECORD_ATTR_TYPE ty,
-//                           ush_pvoid_t                 ptr,
-//                           ush_size_t                 sz) {
-//     ush_assert(record && ptr);
-
-//     return ushd_conn_tbl_get_record_attr(record->idx, ty, ptr, sz);
-// }
-
-
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
-typedef pthread_mutex_t conn_tbl_cs_guard_t;
 
 typedef struct {
     struct ushd_conn_item      items[USH_CONN_IDX_MAX];
     ush_s32_t                  cursor;
-    conn_tbl_cs_guard_t        cs;
 } conn_tbl;
 
 static conn_tbl tbl; // all 0 when init
-
-static void conn_tbl_cs_entry(void) {
-    pthread_mutex_lock(&tbl.cs);
-}
-
-static void conn_tbl_cs_exit(void) {
-    pthread_mutex_unlock(&tbl.cs);
-}
 
 static void move_cursor_to_next_empty_record(void) {
     int pos = tbl.cursor;
@@ -100,8 +60,6 @@ ushd_conn_tbl_init(void) {
 
     tbl.cursor = USHD_INVALID_CONN_IDX_VALUE;
 
-    pthread_mutex_init(&tbl.cs, NULL);
-
     ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 
     return USH_RET_OK;
@@ -115,8 +73,6 @@ ushd_conn_tbl_add(const ush_char_t         *name,
     ush_assert(name && (USH_INVALID_CERT_VALUE!=cert) && dist && realm);
 
     ush_connidx_t idx = USHD_INVALID_CONN_IDX_VALUE;
-
-    conn_tbl_cs_entry();
 
     move_cursor_to_next_empty_record();
     if (USHD_INVALID_CONN_IDX_VALUE == tbl.cursor) {
@@ -133,25 +89,20 @@ ushd_conn_tbl_add(const ush_char_t         *name,
     idx = tbl.cursor;
 
 BAILED:
-    conn_tbl_cs_exit();
-
-    ushd_log(LOG_LVL_INFO, "a new conn record into the table");
-
     return idx;
 }
 
-ush_ret_t  ushd_conn_tbl_remove(ush_connidx_t idx) {
+ush_ret_t
+ushd_conn_tbl_remove(ush_connidx_t idx) {
     if (!ushd_conn_tbl_connidx_check(idx)) {
         return 1;
     }
-
-    conn_tbl_cs_entry();
     tbl.items[idx].active = 0;
-    conn_tbl_cs_exit();
     return 1;
 }
 
-ush_bool_t ushd_conn_tbl_connidx_check(ush_connidx_t idx) {
+ush_bool_t
+ushd_conn_tbl_connidx_check(ush_connidx_t idx) {
     return (idx > 0 && idx < USH_CONN_IDX_MAX);
 }
 
@@ -161,17 +112,14 @@ ushd_conn_tbl_get_active_flg(ush_connidx_t idx) {
         return 0;
     }
 
-    conn_tbl_cs_entry();
     ush_bool_t ret = tbl.items[idx].active;
-    conn_tbl_cs_exit();
+
     return ret;
 }
 
 ush_cert_t
 ushd_conn_tbl_get_cert(ush_s32_t idx) {
     ush_cert_t ret = USH_INVALID_CERT_VALUE;
-
-    conn_tbl_cs_entry();
 
     if (!ushd_conn_tbl_connidx_check(idx)) {
         ret = USH_INVALID_CERT_VALUE;
@@ -181,15 +129,12 @@ ushd_conn_tbl_get_cert(ush_s32_t idx) {
         ret = tbl.items[idx].cert;
     }
 
-    conn_tbl_cs_exit();
     return ret;
 }
 
 ushd_dist_thread_t
 ushd_conn_tbl_get_dist(ush_connidx_t idx) {
     ushd_dist_thread_t ret = NULL;
-
-    conn_tbl_cs_entry();
 
     if (!ushd_conn_tbl_connidx_check(idx)) {
         ushd_log(LOG_LVL_ERROR, "out of bound");
@@ -198,8 +143,6 @@ ushd_conn_tbl_get_dist(ush_connidx_t idx) {
     } else {
         ret = tbl.items[idx].dist;
     }
-
-    conn_tbl_cs_exit();
 
     return ret;
 }

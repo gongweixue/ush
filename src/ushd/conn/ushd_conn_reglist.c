@@ -24,7 +24,6 @@ typedef struct ush_reglist_sig_ty {
 } ush_reglist_sig_ty;
 
 typedef struct ush_reglist_t {
-    pthread_mutex_t         creticalsection;
     ush_reglist_sig_ty      signals[USH_SIG_ID_MAX];
 } ush_reglist_t;
 
@@ -37,17 +36,8 @@ ush_ret_t ushd_conn_reglist_init(void) {
         return USH_RET_OK;
     }
 
-    pthread_mutex_init(&reglist.creticalsection, NULL);
-
     flag = 1;
     return USH_RET_OK;
-}
-
-static inline void reglist_cs_entry(void) {
-    pthread_mutex_lock(&(reglist.creticalsection));
-}
-static inline void reglist_cs_exit(void) {
-    pthread_mutex_unlock(&(reglist.creticalsection));
 }
 
 ush_ret_t
@@ -59,9 +49,7 @@ ushd_conn_reglist_set_rcv(ush_connidx_t idx,
         return USH_RET_FAILED;
     }
 
-    reglist_cs_entry();
     reglist.signals[sigid].nodes[idx].rcv = rcv;
-    reglist_cs_exit();
 
     return USH_RET_OK;
 }
@@ -75,16 +63,12 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
 
     ush_ret_t ret = USH_RET_FAILED;
     if (1 != reglist.signals[sigid].valid) { // first time to assigned
-        reglist_cs_entry();
         reglist.signals[sigid].value.dataMAX = val.dataMAX;
         reglist.signals[sigid].valid = 1;
-        reglist_cs_exit();
         ret = USH_RET_OK;
     } else {
         if (val.dataMAX != reglist.signals[sigid].value.dataMAX) { // new value
-            reglist_cs_entry();
             reglist.signals[sigid].value.dataMAX = val.dataMAX;
-            reglist_cs_exit();
             ret = USH_RET_OK;
         } else { // same value, no need to update, return failed.
             ret = USH_RET_FAILED;
@@ -93,7 +77,8 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
     return ret;
 }
 
-ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
+ush_ret_t
+ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
     if (!func || !ush_sig_id_check(sigid)) {
         return USH_RET_WRONG_PARAM;
     }
