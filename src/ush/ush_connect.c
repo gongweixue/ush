@@ -28,24 +28,8 @@ typedef struct ush_connect {
     ush_tch_t            touch;
     ush_lstnr_t          listener;
     ush_realm_t          realm;
-    pthread_mutex_t      mutex;
     ush_char_t           shortname_ts[USH_COMM_CONN_FULL_NAME_LEN_MAX];
 } * ush_connect_t;
-
-
-static ush_ret_t
-connect_cs_entry(const ush_connect_t conn) {
-    ush_assert(conn);
-    ush_log(LOG_LVL_DETAIL, "entry cs of %p conn", conn);
-    // 0 for locked, others for not
-    return !pthread_mutex_lock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
-}
-static ush_ret_t
-connect_cs_exit(const ush_connect_t conn) {
-    ush_assert(conn);
-    ush_log(LOG_LVL_DETAIL, "exit cs of %p conn", conn);
-    return !pthread_mutex_unlock(&(conn->mutex)) ? USH_RET_OK : USH_RET_FAILED;
-}
 
 
 static void
@@ -94,12 +78,6 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
         goto BAILED_TCH_DESTROY;
     }
 
-    if (0 != pthread_mutex_init(&(newMem->mutex), NULL)) { // init failed
-        ush_log(LOG_LVL_FATAL, "mutex init of connect failed");
-        ret = USH_RET_FAILED;
-        goto BAILED_TCH_DESTROY;
-    }
-
     gen_name_ts(newMem->shortname_ts, sizeof(newMem->shortname_ts), name);
     ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_cert_t cert = ush_random_generate_cert(newMem->shortname_ts);
@@ -107,11 +85,10 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
                                   sizeof(fullname),
                                   newMem->shortname_ts,
                                   cert);
-
     ret = ush_lstnr_open_start(&(newMem->listener), fullname);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "listener start failed");
-        goto BAILED_MUTEX;
+        goto BAILED_TCH_DESTROY;
     }
 
     // register realm name
@@ -134,12 +111,8 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
     return USH_RET_OK;
 
 BAILED_LSTNR_STOP_CLOSE:
-    ush_log(LOG_LVL_DETAIL, "destory mutext");
+    ush_log(LOG_LVL_DETAIL, "stop and close LSTNR thread");
     ush_lstnr_stop_close(&(newMem->listener));
-
-BAILED_MUTEX:
-    ush_log(LOG_LVL_DETAIL, "destory mutext");
-    pthread_mutex_destroy(&(newMem->mutex));
 
 BAILED_TCH_DESTROY:
     ush_log(LOG_LVL_DETAIL, "close & destory touch");
@@ -159,14 +132,9 @@ ush_connect_destroy(ush_connect_t *pConn) {
         return USH_RET_OK;
     }
 
-    connect_cs_entry(*pConn);
-
     ush_tch_destroy_with_closing(&((*pConn)->touch));
     ush_realm_destroy_with_closing(&((*pConn)->realm));
     ush_lstnr_stop_close(&((*pConn)->listener));
-
-    connect_cs_exit(*pConn);
-    pthread_mutex_destroy(&((*pConn)->mutex));
 
     ush_log(LOG_LVL_DETAIL, "and free conn mem %p", *pConn);
     free(*pConn);
@@ -183,10 +151,7 @@ ush_connect_get_cert(ush_connect_t conn, ush_cert_t *ptr) {
         *ptr = USH_INVALID_CERT_VALUE;
         return USH_RET_FAILED;
     }
-
-    connect_cs_entry(conn);
     *ptr = conn->cert;
-    connect_cs_exit(conn);
 
     return USH_RET_OK;
 }
@@ -197,10 +162,7 @@ ush_connect_set_connidx(ush_connect_t conn, ush_connidx_t idx) {
     if (!conn) {
         return USH_RET_WRONG_PARAM;
     }
-
-    connect_cs_entry(conn);
     conn->connidx = idx;
-    connect_cs_exit(conn);
 
     return USH_RET_OK;
 }
@@ -213,10 +175,7 @@ ush_connect_get_connidx(const ush_connect_t conn, ush_connidx_t *ptr) {
 
         return USH_RET_WRONG_PARAM;
     }
-
-    connect_cs_entry(conn);
     *ptr = conn->connidx;
-    connect_cs_exit(conn);
 
     return USH_RET_OK;
 }
@@ -256,10 +215,7 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
     ush_comm_tch_hello_t hello;
     ush_log(LOG_LVL_DETAIL, "create hello msg");
 
-
-    connect_cs_entry(conn);
     ush_cert_t cert = conn->cert;
-    connect_cs_exit(conn);
 
     ret = ush_comm_tch_hello_create(&hello, conn->shortname_ts, &ack, cert);
     if (USH_RET_OK != ret) {
@@ -340,9 +296,7 @@ ush_connect_send(ush_connect_t conn, const ush_comm_d *msg) {
                 ushd_log(LOG_LVL_ERROR, "wrong realm sig msg type");
                 break;
             }
-            connect_cs_entry(conn);
             ret = ush_tch_send(conn->touch, (const ush_char_t *)msg, sz, prio);
-            connect_cs_exit(conn);
         }
     }
 
