@@ -67,18 +67,30 @@ ushd_conn_reglist_set_rcv(ush_connidx_t idx,
 }
 
 ush_ret_t
-ushd_conn_reglist_set_val(ush_sig_id_t sigid, ush_sig_val_t val) {
+ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
     if (!ush_sig_id_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "idx or sigid is out of bound");
         return USH_RET_FAILED;
     }
 
-    reglist_cs_entry();
-    reglist.signals[sigid].value.dataMAX = val.dataMAX;
-    reglist.signals[sigid].valid = 1;
-    reglist_cs_exit();
-
-    return USH_RET_OK;
+    ush_ret_t ret = USH_RET_FAILED;
+    if (1 != reglist.signals[sigid].valid) { // first time to assigned
+        reglist_cs_entry();
+        reglist.signals[sigid].value.dataMAX = val.dataMAX;
+        reglist.signals[sigid].valid = 1;
+        reglist_cs_exit();
+        ret = USH_RET_OK;
+    } else {
+        if (val.dataMAX != reglist.signals[sigid].value.dataMAX) { // new value
+            reglist_cs_entry();
+            reglist.signals[sigid].value.dataMAX = val.dataMAX;
+            reglist_cs_exit();
+            ret = USH_RET_OK;
+        } else { // same value, no need to update, return failed.
+            ret = USH_RET_FAILED;
+        }
+    }
+    return ret;
 }
 
 ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
@@ -90,6 +102,7 @@ ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
         return USH_RET_FAILED;
     }
 
+    ushd_log(LOG_LVL_DETAIL, "begin sending notify to listeners");
     // cb to notify all observers.
     ush_sig_val_t           val   = reglist.signals[sigid].value;
     ush_reglist_sig_node_t *nodes = reglist.signals[sigid].nodes;

@@ -10,7 +10,8 @@ ush_ret_t ushd_conn_reglist_set_rcv(ush_connidx_t     idx,
                                     ush_sig_id_t      sigid,
                                     ush_pvoid_t       rcv);
 
-ush_ret_t ushd_conn_reglist_set_val(ush_sig_id_t sigid, ush_sig_val_t val);
+// compare and set if different, return USH_RET_OK if set success
+ush_ret_t ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val);
 
 typedef void (*notify_func_t)(
     ush_connidx_t,

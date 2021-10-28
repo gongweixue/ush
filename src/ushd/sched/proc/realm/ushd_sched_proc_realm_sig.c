@@ -139,11 +139,10 @@ static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
 
     // update the sig value in reglist
     ush_sig_val_t val = ush_comm_realm_sigset_get_val(msg);
-    if (USH_RET_OK != ushd_conn_reglist_set_val(sigid, val)) {
-        ushd_log(LOG_LVL_ERROR, "signal %d value setting failed", sigid);
+    if (USH_RET_OK != ushd_conn_reglist_cas(sigid, val)) {
+        ushd_log(LOG_LVL_INFO, "signal %d value update failed", sigid);
         return;
     }
-
     if (USH_RET_OK != ushd_conn_reglist_notify(sigid, notify_handle)) {
         ushd_log(LOG_LVL_ERROR, "notify sigid %d update failed", sigid);
         return;
