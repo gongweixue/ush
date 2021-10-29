@@ -49,7 +49,7 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     // ack for
     dist_fifo_msg_sigreg_ack ack;
     ack.desc.type = USHD_DIST_FIFO_MSG_TYPE_SIGREG_ACK;
-    ack.success   = 0;
+    ack.success   = USH_FALSE;
     ack.sigid     = sigid;
     ack.pipe      = ush_comm_realm_sigreg_get_pipe(msg);
     ack.done      = ush_comm_realm_sigreg_get_cb_done(msg);
@@ -57,7 +57,7 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     // add cb func to the sigid domain of conn in the idx.
     ush_pvoid_t rcv  = ush_comm_realm_sigreg_get_cb_rcv(msg);
     if (USH_RET_OK != ushd_conn_reglist_set_rcv(idx, sigid, rcv)) {
-        ack.success = 0;
+        ack.success = USH_FALSE;
         ushd_log(LOG_LVL_ERROR, "callback register failed");
     } else {
         ack.success = 1;

@@ -12,7 +12,7 @@
 
 
 typedef struct ushd_conn_item_s {
-    ush_bool_t                   active; // 0 for inactive, 1 for active
+    ush_bool_t                   active; // USH_FALSE for inactive
     ush_char_t                   name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_cert_t                   cert;
     ushd_dist_thread_t           dist;
@@ -52,7 +52,7 @@ BAILED:
 ush_ret_t
 ushd_conn_tbl_init(void) {
     //make idx 0 inactive
-    tbl.items[USHD_INVALID_CONN_IDX_VALUE].active  = 0;   // 0 means empty slot
+    tbl.items[USHD_INVALID_CONN_IDX_VALUE].active  = USH_FALSE; // empty slot
     tbl.items[USHD_INVALID_CONN_IDX_VALUE].name[0] = '\0'; // name empty
     tbl.items[USHD_INVALID_CONN_IDX_VALUE].cert    = USH_INVALID_CERT_VALUE;
     tbl.items[USHD_INVALID_CONN_IDX_VALUE].dist    = NULL;
@@ -84,7 +84,7 @@ ushd_conn_tbl_add(const ush_char_t         *name,
     tbl.items[tbl.cursor].cert      = cert;
     tbl.items[tbl.cursor].dist      = dist;
     tbl.items[tbl.cursor].realm     = realm;
-    tbl.items[tbl.cursor].active    = 1;
+    tbl.items[tbl.cursor].active    = USH_TRUE;
 
     idx = tbl.cursor;
 
@@ -97,7 +97,7 @@ ushd_conn_tbl_remove(ush_connidx_t idx) {
     if (!ushd_conn_tbl_connidx_check(idx)) {
         return 1;
     }
-    tbl.items[idx].active = 0;
+    tbl.items[idx].active = USH_FALSE;
     return 1;
 }
 
@@ -123,7 +123,7 @@ ushd_conn_tbl_get_cert(ush_s32_t idx) {
 
     if (!ushd_conn_tbl_connidx_check(idx)) {
         ret = USH_INVALID_CERT_VALUE;
-    } else  if (0 == tbl.items[idx].active) {
+    } else  if (USH_FALSE == tbl.items[idx].active) {
         ret = USH_INVALID_CERT_VALUE;
     } else {
         ret = tbl.items[idx].cert;
@@ -138,7 +138,7 @@ ushd_conn_tbl_get_dist(ush_connidx_t idx) {
 
     if (!ushd_conn_tbl_connidx_check(idx)) {
         ushd_log(LOG_LVL_ERROR, "out of bound");
-    } else if (0 == tbl.items[idx].active) {
+    } else if (USH_FALSE == tbl.items[idx].active) {
         ushd_log(LOG_LVL_ERROR, "record not active");
     } else {
         ret = tbl.items[idx].dist;

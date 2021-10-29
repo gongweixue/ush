@@ -251,18 +251,20 @@ static ush_bool_t                                                               
 NAME##_fifo_is_empty(const NAME##_fifo_t fifo) {                                \
     ush_assert(fifo);                                                           \
     if (!fifo) {                                                                \
-        return USH_RET_WRONG_PARAM;                                             \
+        return USH_FALSE;                                                       \
     }                                                                           \
-    return (fifo->head == fifo->tail);                                          \
+    ush_bool_t ret = (fifo->head == fifo->tail) ? USH_TRUE : USH_FALSE;         \
+    return ret;                                                                 \
 }                                                                               \
                                                                                 \
 static ush_bool_t                                                               \
 NAME##_fifo_is_full(const NAME##_fifo_t fifo) {                                 \
     ush_assert(fifo);                                                           \
     if (!fifo) {                                                                \
-        return USH_RET_WRONG_PARAM;                                             \
+        return USH_FALSE;                                                       \
     }                                                                           \
-    return ((fifo->tail + 1) % fifo_len) == (fifo->head);                       \
+    ush_bool_t ret = ((fifo->tail + 1) % fifo_len) == (fifo->head);             \
+    return ret;                                                                 \
 }                                                                               \
                                                                                 \
 static ush_size_t                                                               \
@@ -271,7 +273,7 @@ NAME##_fifo_curr_num(const NAME##_fifo_t fifo) {                                
     if (!fifo) {                                                                \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \
-    return (ush_size_t)((fifo->tail + fifo_len - fifo->head) % fifo_len);                     \
+    return (ush_size_t)((fifo->tail + fifo_len - fifo->head) % fifo_len);       \
 }                                                                               \
 
 

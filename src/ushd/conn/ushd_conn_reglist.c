@@ -30,13 +30,13 @@ typedef struct ush_reglist_s {
 static ush_reglist_t reglist; // static var, all 0 while loading.
 
 ush_ret_t ushd_conn_reglist_init(void) {
-    static ush_bool_t flag = 0;
-    if (1 == flag) {
+    static ush_bool_t flag = USH_FALSE;
+    if (USH_TRUE == flag) {
         ushd_log(LOG_LVL_INFO, "reglist has been alreay init.");
         return USH_RET_OK;
     }
 
-    flag = 1;
+    flag = USH_TRUE;
     return USH_RET_OK;
 }
 
@@ -64,7 +64,7 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
     ush_ret_t ret = USH_RET_FAILED;
     if (1 != reglist.signals[sigid].valid) { // first time to assigned
         reglist.signals[sigid].value.dataMAX = val.dataMAX;
-        reglist.signals[sigid].valid = 1;
+        reglist.signals[sigid].valid = USH_TRUE;
         ret = USH_RET_OK;
     } else {
         if (val.dataMAX != reglist.signals[sigid].value.dataMAX) { // new value

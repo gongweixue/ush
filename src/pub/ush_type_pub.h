@@ -12,7 +12,7 @@ extern "C" {
 
 typedef enum {
     USH_FALSE = 0,
-    USH_TRUE  = 1
+    USH_TRUE = !USH_FALSE
 } ush_bool_t;
 
 typedef char               ush_char_t;
