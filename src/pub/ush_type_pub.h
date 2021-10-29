@@ -10,7 +10,11 @@ extern "C" {
 
 #include "ush_define.h"
 
-typedef unsigned char      ush_bool_t;
+typedef enum {
+    USH_FALSE = 0,
+    USH_TRUE  = 1
+} ush_bool_t;
+
 typedef char               ush_char_t;
 typedef unsigned char      ush_u8_t;
 typedef signed char        ush_s8_t;

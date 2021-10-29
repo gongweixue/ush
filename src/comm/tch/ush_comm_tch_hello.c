@@ -5,24 +5,26 @@
 #include "ush_comm_tch.h"
 #include "ush_comm_tch_hello.h"
 #include "ush_log.h"
+#include "ush_time.h"
 
-
-// ack contains the pointers should not be free at destroy function
-// be carefulto to manipulate the ack, maybe free already.
+// sync contains the pointers should not be free at destroy function
+// be carefulto to manipulate the sync, maybe free already.
 typedef struct tch_hello_s {
     ush_comm_tch_msg_d        desc;
     ush_char_t                name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
-    ush_pvoid_t               pAck;
+    ush_pvoid_t               sync;
     ush_cert_t                cert;
+    ush_s64_t                 deadline;
 } USH_COMM_MSG_PACKED * ush_comm_tch_hello_t;
 
 ush_ret_t
 ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
                           const ush_char_t        *name,
-                          ush_sync_hello_ack_t    *pAck,
-                          ush_cert_t               cert) {
+                          ush_connect_sync_t       sync,
+                          ush_cert_t               cert,
+                          struct timespec         *pDL) {
 
-    if (!pHello || !name || !pAck) {
+    if (!pHello || !name || !sync) {
         if (pHello) {*pHello = NULL;}
         ush_log(LOG_LVL_FATAL, "param NULL");
         return USH_RET_WRONG_PARAM;
@@ -55,8 +57,15 @@ ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
 
     strcpy(tmp->name, name);
 
-    tmp->pAck = (ush_pvoid_t)pAck;
-    tmp->cert = cert;
+    tmp->sync          = (ush_pvoid_t)sync;
+    tmp->cert          = cert;
+
+    // calculate the deadline by nano-second
+    if (NULL == pDL) {
+        tmp->deadline = 0;
+    } else {
+        tmp->deadline = pDL->tv_sec * USH_TIME_NSEC_PER_SEC + pDL->tv_nsec;
+    }
 
     *pHello = tmp;
 
@@ -71,7 +80,7 @@ ush_comm_tch_hello_destroy(ush_comm_tch_hello_t *pHello) {
     }
 
     ush_log(LOG_LVL_DETAIL, "free memory for msg %p", *pHello);
-    // just free it self, do not destroy ack
+    // just free it self, do not destroy sync
     free(*pHello);
     *pHello = NULL;
 
@@ -93,18 +102,24 @@ ush_comm_tch_hello_name_of(const ush_comm_tch_hello_t msg) {
 }
 
 ush_pvoid_t
-ush_comm_tch_hello_ack_of(const ush_comm_tch_hello_t msg) {
+ush_comm_tch_hello_sync_of(const ush_comm_tch_hello_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return NULL;
     }
-    return msg->pAck;
+    return msg->sync;
 }
 
 ush_cert_t
 ush_comm_tch_hello_cert_of(const ush_comm_tch_hello_t msg) {
     ush_assert(msg);
     return msg->cert;
+}
+
+ush_s64_t
+ush_comm_tch_hello_deadline_of(const ush_comm_tch_hello_t msg) {
+    ush_assert(msg);
+    return msg->deadline;
 }
 
 void

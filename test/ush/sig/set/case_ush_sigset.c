@@ -33,9 +33,7 @@ static void case_normal(void) {
     ret = ush_sigreg(pipe, &conf);
     ush_assert(OK == ret);
 
-    for (int i = 0; i < 100; ++i) {
-        ush_time_delay_ms(20); // wait to avoid the cond lost from callback.
-
+    for (int i = 0; i < 5; ++i) {
         // gen a random num for reference val, ensure the callback be invoked.
         struct timespec ts;
         clock_gettime(CLOCK_MONOTONIC, &ts);

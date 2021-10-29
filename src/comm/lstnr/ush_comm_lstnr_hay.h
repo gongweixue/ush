@@ -3,23 +3,27 @@
 
 #include "ush_type_pub.h"
 
-typedef struct ush_hello_ack_s * ush_sync_hello_ack_t;
+typedef struct ush_connect_sync_s * ush_connect_sync_t;
 
 typedef struct lstnr_hay_s * ush_comm_lstnr_hay_t;
 
 ush_comm_lstnr_hay_t
 ush_comm_lstnr_hay_create(ush_pvoid_t     sync,
                           ush_connidx_t   idx,
-                          ush_cert_t      cert);
+                          ush_cert_t      cert,
+                          ush_s64_t       deadline);
 
-ush_sync_hello_ack_t *
-ush_comm_lstnr_hay_ack_of(ush_comm_lstnr_hay_t msg);
+ush_pvoid_t
+ush_comm_lstnr_hay_sync_of(ush_comm_lstnr_hay_t msg);
 
 ush_connidx_t
 ush_comm_lstnr_hay_connidx_of(ush_comm_lstnr_hay_t msg);
 
 ush_cert_t
 ush_comm_lstnr_hay_cert_of(ush_comm_lstnr_hay_t msg);
+
+ush_bool_t
+ush_comm_lstnr_hay_outofdate(ush_comm_lstnr_hay_t msg);
 
 ush_size_t
 ush_comm_lstnr_hay_sizeof(void);

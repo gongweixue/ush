@@ -56,13 +56,7 @@ ush_pipe_create(
 
     ret = ush_connect_link(conn, timeout);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "hello and hay failed");
-        ush_connect_destroy(&conn);
-        goto RET;
-    }
-
-    if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "connection postprocess failed");
+        ush_log(LOG_LVL_FATAL, "connect_link failed");
         ush_connect_destroy(&conn);
         goto RET;
     }

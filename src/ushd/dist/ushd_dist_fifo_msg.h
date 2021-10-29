@@ -21,9 +21,10 @@ typedef struct dist_fifo_msg_desc_s {
 
 typedef struct dist_fifo_msg_hay_s {
     dist_fifo_msg_d            desc;
-    ush_pvoid_t                ack_sync;
+    ush_pvoid_t                sync;
     ush_connidx_t              idx;
     ush_cert_t                 cert;
+    ush_s64_t                  deadline;
 } dist_fifo_msg_hay;
 
 typedef struct dist_fifo_msg_sigreg_ack_s {

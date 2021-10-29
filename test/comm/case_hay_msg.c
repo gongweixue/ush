@@ -10,24 +10,24 @@ static void test_hay_create(void) {
     ush_comm_lstnr_hay_t msg = NULL;
 
     char buf[1024];
-    ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
+    ush_connect_sync_t sync = (ush_connect_sync_t)buf;
 
-    msg = ush_comm_lstnr_hay_create(ack, 1, 123456);
+    msg = ush_comm_lstnr_hay_create(sync, 1, 123456, 666);
     ush_assert(NULL != msg);
 
-    msg = ush_comm_lstnr_hay_create(NULL, 1, 123456);
+    msg = ush_comm_lstnr_hay_create(NULL, 1, 123456, 666);
     ush_assert(NULL == msg);
 
-    msg = ush_comm_lstnr_hay_create(ack, 0, 123456);
+    msg = ush_comm_lstnr_hay_create(sync, 0, 123456, 666);
     ush_assert(NULL == msg);
 
-    msg = ush_comm_lstnr_hay_create(ack, -1, 123456);
+    msg = ush_comm_lstnr_hay_create(sync, -1, 123456, 666);
     ush_assert(NULL == msg);
 
-    msg = ush_comm_lstnr_hay_create(ack, 1, 0);
+    msg = ush_comm_lstnr_hay_create(sync, 1, 0, 666);
     ush_assert(NULL != msg);
 
-    msg = ush_comm_lstnr_hay_create(ack, 1, 0x7FFFFFFF);
+    msg = ush_comm_lstnr_hay_create(sync, 1, 0x7FFFFFFF, 666);
     ush_assert(NULL != msg);
 }
 
@@ -46,9 +46,9 @@ static void test_hay_destroy(void) {
 
 
     char buf[1024];
-    ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
+    ush_connect_sync_t sync = (ush_connect_sync_t)buf;
 
-    msg = ush_comm_lstnr_hay_create(ack, 1, 123456);
+    msg = ush_comm_lstnr_hay_create(sync, 1, 123456, 666);
     ush_assert(NULL != msg);
 
     ret = ush_comm_lstnr_hay_destroy(&msg);
@@ -56,22 +56,23 @@ static void test_hay_destroy(void) {
     ush_assert(NULL == msg);
 }
 
-static void test_hay_ack_of(void) {
+static void test_hay_sync_of(void) {
     ush_ret_t ret = USH_RET_OK;
     (void)ret;
     ush_comm_lstnr_hay_t msg = NULL;
 
     char buf[1024];
-    ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
+    ush_connect_sync_t sync = (ush_connect_sync_t)buf;
 
-    msg = ush_comm_lstnr_hay_create(&ack, 1, 123456);
+    msg = ush_comm_lstnr_hay_create(sync, 1, 123456, 666);
     ush_assert(NULL != msg);
 
-    ush_sync_hello_ack_t *result = ush_comm_lstnr_hay_ack_of(msg);
-    ush_assert(&ack == result);
+    ush_connect_sync_t result =
+        (ush_connect_sync_t)ush_comm_lstnr_hay_sync_of(msg);
+    ush_assert(sync == result);
 
     // from NULL
-    ush_assert(NULL == ush_comm_lstnr_hay_ack_of(NULL));
+    ush_assert(NULL == ush_comm_lstnr_hay_sync_of(NULL));
 }
 
 static void test_hay_idx_of(void) {
@@ -80,11 +81,11 @@ static void test_hay_idx_of(void) {
     ush_comm_lstnr_hay_t msg = NULL;
 
     char buf[1024];
-    ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
+    ush_connect_sync_t sync = (ush_connect_sync_t)buf;
     ush_connidx_t idx = 1;
     ush_cert_t cert = 123456;
 
-    msg = ush_comm_lstnr_hay_create(ack, idx, cert);
+    msg = ush_comm_lstnr_hay_create(sync, idx, cert, 666);
     ush_assert(NULL != msg);
 
     ush_connidx_t result = ush_comm_lstnr_hay_connidx_of(msg);
@@ -100,11 +101,11 @@ static void test_hay_cert_of(void) {
     ush_comm_lstnr_hay_t msg = NULL;
 
     char buf[1024];
-    ush_sync_hello_ack_t ack = (ush_sync_hello_ack_t)buf;
+    ush_connect_sync_t sync = (ush_connect_sync_t)buf;
     ush_connidx_t idx = 1;
     ush_cert_t cert = 123456;
 
-    msg = ush_comm_lstnr_hay_create(ack, idx, cert);
+    msg = ush_comm_lstnr_hay_create(sync, idx, cert, 666);
     ush_assert(NULL != msg);
 
     ush_cert_t result = ush_comm_lstnr_hay_cert_of(msg);
@@ -117,7 +118,7 @@ static void test_hay_cert_of(void) {
 static void test_hay(void) {
     test_hay_create();
     test_hay_destroy();
-    test_hay_ack_of();
+    test_hay_sync_of();
     test_hay_idx_of();
     test_hay_cert_of();
 }

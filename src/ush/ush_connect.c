@@ -14,6 +14,7 @@
 
 #include "lstnr/ush_lstnr.h"
 #include "ush_tch.h"
+#include "ush_time.h"
 
 #include "ush_realm.h"
 #include "realm/ush_comm_realm.h"
@@ -181,11 +182,15 @@ ush_connect_get_connidx(const ush_connect_t conn, ush_connidx_t *ptr) {
 }
 
 
-static ush_ret_t
-realize_timeout(struct timespec *ptr, ush_u16_t timeout) {
+static ush_ret_t // delay extra 500ms to avoid the NULL prt crush from sync
+realize_timespec(struct timespec *ptr, ush_u16_t timeout) {
     if (!ptr) {
         ush_log(LOG_LVL_INFO, "timespec os null, just return OK.");
         return USH_RET_OK;
+    }
+    if (0 == timeout) {
+        ush_log(LOG_LVL_ERROR, "timeout value invalid.");
+        return USH_RET_WRONG_PARAM;
     }
 
     if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
@@ -193,8 +198,7 @@ realize_timeout(struct timespec *ptr, ush_u16_t timeout) {
         return USH_RET_FAILED;
     }
 
-    ush_log(LOG_LVL_DETAIL, "update the deadline");
-    ptr->tv_sec += timeout + 1;
+    ptr->tv_sec += timeout;
 
     return USH_RET_OK;
 }
@@ -208,67 +212,77 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
         return USH_RET_WRONG_PARAM;
     }
 
-    ush_sync_hello_ack_t ack = NULL; // pass addr of ack to hello msg
-    ush_ret_t            ret = USH_RET_OK;
+    ush_ret_t ret = USH_RET_OK;
 
-    // prepare hello msg
-    ush_comm_tch_hello_t hello;
-    ush_log(LOG_LVL_DETAIL, "create hello msg");
-
-    ush_cert_t cert = conn->cert;
-
-    ret = ush_comm_tch_hello_create(&hello, conn->shortname_ts, &ack, cert);
+    // use sync to wait feedback
+    ush_connect_sync_t sync = NULL;
+    ush_log(LOG_LVL_DETAIL, "create hello sync");
+    ret = ush_connect_sync_create(&sync, conn);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "hello create failed"); //
-        return ret;
-    }
-
-    // use ack to wait feedback
-    ush_log(LOG_LVL_DETAIL, "create hello ack");
-    ret = ush_sync_hello_ack_create(&ack, conn);
-    if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "hello ack create failed");
-        goto BAILED;;
+        ush_log(LOG_LVL_ERROR, "hello sync create failed");
+        goto BAILED;
     }
 
     // for timeout
     struct timespec deadline;
     struct timespec *pDL = NULL;
-    if (0 != timeout) {
-        ush_log(LOG_LVL_INFO, "need timeout operation");
-        pDL = &deadline;
-        ret = realize_timeout(pDL, timeout);
-        if(USH_RET_OK != ret) {
-            ush_log(LOG_LVL_ERROR, "realize timeout failed");
-            ush_log(LOG_LVL_INFO, "ptr of deadline rollback to NULL");
-            pDL = NULL; // disable the deadline
+    {
+        if (0 != timeout) {
+            ush_log(LOG_LVL_INFO, "need timeout operation");
+            pDL = &deadline;
+            ret = realize_timespec(pDL, timeout);
+            if(USH_RET_OK != ret) {
+                ush_log(LOG_LVL_ERROR, "realize timeout failed");
+                ush_log(LOG_LVL_INFO, "ptr of deadline rollback to NULL");
+                pDL = NULL; // disable the deadline
+            }
         }
     }
-    ush_log(LOG_LVL_DETAIL, "timespec is %p", pDL);
 
-    // send with or without timeout
-    ret = ush_tch_send_hello(conn->touch, hello, pDL);
+    // prepare hello msg
+    ush_comm_tch_hello_t msg = NULL;
+    ush_cert_t cert = conn->cert;
+    ret = ush_comm_tch_hello_create(&msg, conn->shortname_ts, sync, cert, pDL);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_FATAL, "sending hello failed");
-        goto BAILED;
+        ush_log(LOG_LVL_ERROR, "hello create failed");
+        goto DESTROY_SYNC;
     }
 
-    ret = ush_sync_hello_ack_wait_and_destroy(&ack, pDL);
+    ret = ush_connect_sync_lock(sync);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "wait hello-ack failed, and return anyway");
-        goto BAILED;
+        ush_log(LOG_LVL_FATAL, "sync locks failed");
+        goto DESTROY_MSG;
+    }
+
+    // send with or without timeout
+    ret = ush_tch_send_hello(conn->touch, msg, pDL);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_FATAL, "sending hello failed");
+        goto UNLOCK_SYNC;
+    }
+
+    ret = ush_connect_sync_wait(sync, pDL);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "wait hello-sync failed, and return anyway");
+        goto UNLOCK_SYNC;
     }
 
     ret = ush_realm_open(conn->realm);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_FATAL, "open realm failed");
-        goto BAILED;
+        goto UNLOCK_SYNC;
     }
 
-BAILED:
-    ush_log(LOG_LVL_DETAIL, "destroy hello ack and hello msg");
-    ush_comm_tch_hello_destroy(&hello);
+UNLOCK_SYNC:
+    ush_connect_sync_unlock(sync);
 
+DESTROY_MSG:
+    ush_comm_tch_hello_destroy(&msg);
+
+DESTROY_SYNC:
+    ush_connect_sync_destroy(&sync);
+
+BAILED:
     return ret;
 }
 

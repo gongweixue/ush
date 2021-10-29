@@ -9,8 +9,10 @@ void ushd_dist_proc_hay_send(ushd_dist_thread_t       thread,
     ush_assert(thread && msg);
 
     // construct msg
-    ush_comm_lstnr_hay_t hay =
-        ush_comm_lstnr_hay_create(msg->ack_sync, msg->idx, msg->cert);
+    ush_comm_lstnr_hay_t hay = ush_comm_lstnr_hay_create(msg->sync,
+                                                         msg->idx,
+                                                         msg->cert,
+                                                         msg->deadline);
     if (!hay) {
         ushd_log(LOG_LVL_ERROR, "lstnr_hay msg mem alloc failed.");
         return;

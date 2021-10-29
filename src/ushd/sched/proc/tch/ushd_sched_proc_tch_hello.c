@@ -19,8 +19,9 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     const ush_comm_tch_hello_t hello = (const ush_comm_tch_hello_t)msg;
 
     const ush_char_t *shortname_ts = ush_comm_tch_hello_name_of(hello);
-    const ush_pvoid_t ackSync      = ush_comm_tch_hello_ack_of(hello);
+    const ush_pvoid_t sync         = ush_comm_tch_hello_sync_of(hello);
     ush_cert_t        cert         = ush_comm_tch_hello_cert_of(hello);
+    ush_s64_t         deadline     = ush_comm_tch_hello_deadline_of(hello);
 
     // create dist thread
     ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
@@ -76,7 +77,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
         ushd_realm_thread_stop_destroy(&realm);
     } else {
         dist_fifo_msg_hay hay = {
-            {USHD_DIST_FIFO_MSG_TYPE_HAY}, ackSync, connidx, cert};
+            {USHD_DIST_FIFO_MSG_TYPE_HAY}, sync, connidx, cert, deadline};
 
         ushd_dist_fifo_t fifo = ushd_dist_thread_get_fifo(dist);
         if (!fifo) {
