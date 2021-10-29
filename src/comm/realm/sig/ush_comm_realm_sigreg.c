@@ -7,7 +7,7 @@
 #include "realm/sig/ush_comm_realm_sigreg.h"
 
 
-typedef struct comm_realm_sigreg {
+typedef struct comm_realm_sigreg_s {
     ush_comm_realm_sig_d         desc;
     ush_connidx_t                connidx;
     ush_cert_t                   cert;
@@ -33,7 +33,7 @@ ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
     }
 
     ush_comm_realm_sigreg_t tmp =
-        (ush_comm_realm_sigreg_t)malloc(sizeof(struct comm_realm_sigreg));
+        (ush_comm_realm_sigreg_t)malloc(sizeof(struct comm_realm_sigreg_s));
     if (!tmp) {
         ush_log(LOG_LVL_ERROR, "out of mem");
         return USH_RET_OUT_OF_MEM;
@@ -132,7 +132,7 @@ ush_comm_realm_sigreg_destroy(ush_comm_realm_sigreg_t *pMsg) {
 
 ush_size_t
 ush_comm_realm_sigreg_sizeof(void) {
-    return sizeof(struct comm_realm_sigreg);
+    return sizeof(struct comm_realm_sigreg_s);
 }
 
 void

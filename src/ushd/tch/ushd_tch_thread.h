@@ -5,7 +5,7 @@
 
 #include "ush_type_pub.h"
 
-typedef struct ushd_tch_thread * ushd_tch_thread_t;
+typedef struct ushd_tch_thread_s * ushd_tch_thread_t;
 
 
 ush_ret_t ushd_tch_thread_start(void);

@@ -3,7 +3,7 @@
 
 #include "ush_type_pub.h"
 
-typedef struct ushd_tch  * ushd_tch_t;
+typedef struct ushd_tch_s  * ushd_tch_t;
 
 ush_ret_t ushd_tch_create(ushd_tch_t *pTouch);
 

@@ -1,7 +1,7 @@
 #ifndef USH_TCH_H
 #define USH_TCH_H
 
-typedef struct ush_tch *  ush_tch_t;
+typedef struct ush_tch_s *  ush_tch_t;
 
 #include "time.h"
 

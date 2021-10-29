@@ -12,18 +12,18 @@
 // CAUTION: all member of reglist are static, and be initialized by 0.
 //////////////////////////////////////////////////////////////////////
 
-typedef struct ush_reglist_sig_node_t {
+typedef struct ush_reglist_sig_node_s {
     ush_pvoid_t    rcv;
 } ush_reglist_sig_node_t;
 
 
-typedef struct ush_reglist_sig_ty {
+typedef struct ush_reglist_sig_s {
     ush_reglist_sig_node_t  nodes[USH_CONN_IDX_MAX];
     ush_sig_val_t           value; // current value of the signal
     ush_bool_t              valid; // is current value valid to use
 } ush_reglist_sig_ty;
 
-typedef struct ush_reglist_t {
+typedef struct ush_reglist_s {
     ush_reglist_sig_ty      signals[USH_SIG_ID_MAX];
 } ush_reglist_t;
 

@@ -7,7 +7,7 @@
 #include "ush_connect.h"
 
 
-typedef struct ush_hello_ack * ush_sync_hello_ack_t;
+typedef struct ush_hello_ack_s * ush_sync_hello_ack_t;
 
 ush_ret_t ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck,
                                     ush_connect_t         conn);

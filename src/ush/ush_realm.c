@@ -9,7 +9,7 @@
 
 #include "ush_realm.h"
 
-typedef struct ush_realm {
+typedef struct ush_realm_s {
     mqd_t      mq;
     ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
 } * ush_realm_t;
@@ -19,7 +19,7 @@ ush_realm_alloc(ush_realm_t *pRealm, const ush_char_t *fullname) {
     ush_assert(pRealm);
     *pRealm = NULL;
 
-    ush_realm_t tmp = (ush_realm_t)malloc(sizeof(struct ush_realm));
+    ush_realm_t tmp = (ush_realm_t)malloc(sizeof(struct ush_realm_s));
     if (!tmp) {
         ush_log(LOG_LVL_FATAL, "realm alloc failed");
         return USH_RET_OUT_OF_MEM;

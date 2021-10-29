@@ -13,7 +13,7 @@ typedef enum USH_COMM_LSTNR_MSG_CATALOG {
     USH_COMM_LSTNR_MSG_CATALOG_SIG_UPD
 } USH_COMM_LSTNR_MSG_CATALOG;
 
-typedef struct lstnr_msg_desc {
+typedef struct lstnr_msg_desc_s {
     ush_comm_d                  desc;
     USH_COMM_LSTNR_MSG_CATALOG  catalog;
 } USH_COMM_MSG_PACKED ush_comm_lstnr_msg_d;

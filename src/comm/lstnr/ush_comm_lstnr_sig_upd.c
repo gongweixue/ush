@@ -5,7 +5,7 @@
 #include "ush_comm_lstnr_sig_upd.h"
 
 
-typedef struct lstnr_sig_upd {
+typedef struct lstnr_sig_upd_s {
     ush_comm_lstnr_msg_d         desc;
     ush_sig_id_t                 sigid;
     ush_sig_val_t                val;
@@ -17,7 +17,7 @@ ush_comm_lstnr_sig_upd_create(ush_sig_id_t  sigid,
                               ush_sig_val_t val,
                               ush_pvoid_t   rcv) {
     ush_comm_lstnr_sig_upd_t ret =
-        (ush_comm_lstnr_sig_upd_t)malloc(sizeof(struct lstnr_sig_upd));
+        (ush_comm_lstnr_sig_upd_t)malloc(sizeof(struct lstnr_sig_upd_s));
 
     if (!ret) {
         ush_log(LOG_LVL_ERROR, "sig_upd msg mem alloc failed.");
@@ -35,7 +35,7 @@ ush_comm_lstnr_sig_upd_create(ush_sig_id_t  sigid,
 
 ush_size_t
 ush_comm_lstnr_sig_upd_sizeof(void) {
-    return sizeof(struct lstnr_sig_upd);
+    return sizeof(struct lstnr_sig_upd_s);
 }
 
 ush_sig_cb_rcv_t

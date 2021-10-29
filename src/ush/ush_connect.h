@@ -4,7 +4,7 @@
 #include "ush_type_pub.h"
 #include "ush_comm_desc.h"
 
-typedef struct ush_connect * ush_connect_t;
+typedef struct ush_connect_s * ush_connect_t;
 
 ush_ret_t ush_connect_create(ush_connect_t *pConn, const ush_char_t *name);
 

@@ -13,20 +13,20 @@ typedef enum DIST_FIFO_MSG_TYPE {
 } DIST_FIFO_MSG_TYPE;
 
 // base
-typedef struct dist_fifo_msg_desc {
+typedef struct dist_fifo_msg_desc_s {
     DIST_FIFO_MSG_TYPE type;
 } dist_fifo_msg_d;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct dist_fifo_msg_hay {
+typedef struct dist_fifo_msg_hay_s {
     dist_fifo_msg_d            desc;
     ush_pvoid_t                ack_sync;
     ush_connidx_t              idx;
     ush_cert_t                 cert;
 } dist_fifo_msg_hay;
 
-typedef struct dist_fifo_msg_sigreg_ack {
+typedef struct dist_fifo_msg_sigreg_ack_s {
     dist_fifo_msg_d            desc;
     ush_bool_t                 success;
     ush_sig_id_t               sigid;
@@ -34,7 +34,7 @@ typedef struct dist_fifo_msg_sigreg_ack {
     ush_pvoid_t                done;
 } dist_fifo_msg_sigreg_ack;
 
-typedef struct dist_fifo_msg_sig_upd {
+typedef struct dist_fifo_msg_sig_upd_s {
     dist_fifo_msg_d            desc;
     ush_sig_id_t               sigid;
     ush_sig_val_t              val;

@@ -12,7 +12,7 @@ typedef enum USH_COMM_REALM_SIG_INTENT {
 } USH_COMM_REALM_SIG_INTENT;
 
 
-typedef struct ush_comm_realm_sig_d {
+typedef struct ush_comm_realm_sig_desc_s {
     ush_comm_realm_msg_d        desc;
     USH_COMM_REALM_SIG_INTENT   intent;
 } USH_COMM_MSG_PACKED ush_comm_realm_sig_d;

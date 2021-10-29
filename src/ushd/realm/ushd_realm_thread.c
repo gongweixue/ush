@@ -12,7 +12,7 @@
 
 #include "ushd_realm_thread.h"
 
-typedef struct ushd_realm_thread {
+typedef struct ushd_realm_thread_s {
     pthread_t        tid;    // thread id for the ushd realm thread
     mqd_t            mq;     // mq handle
 } * ushd_realm_thread_t;
@@ -24,7 +24,7 @@ static void *realm_thread_entry(void *arg);
 ushd_realm_thread_t
 ushd_realm_thread_create(const ush_char_t *name) {
     ushd_realm_thread_t thread =
-        (ushd_realm_thread_t)malloc(sizeof(struct ushd_realm_thread));
+        (ushd_realm_thread_t)malloc(sizeof(struct ushd_realm_thread_s));
 
     if (!thread) {
         ushd_log(LOG_LVL_FATAL, "create ushd_realm_thread_t failed");

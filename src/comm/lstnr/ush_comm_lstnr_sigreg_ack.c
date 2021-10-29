@@ -5,7 +5,7 @@
 #include "ush_comm_lstnr_sigreg_ack.h"
 
 
-typedef struct lstnr_sigreg_ack {
+typedef struct lstnr_sigreg_ack_s {
     ush_comm_lstnr_msg_d         desc;
     ush_bool_t                   success;
     ush_sig_id_t                 sigid;
@@ -19,7 +19,7 @@ ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
                                  ush_pipe_t   pipe,
                                  ush_pvoid_t  done) {
     ush_comm_lstnr_sigreg_ack_t ret =
-        (ush_comm_lstnr_sigreg_ack_t)malloc(sizeof(struct lstnr_sigreg_ack));
+        (ush_comm_lstnr_sigreg_ack_t)malloc(sizeof(struct lstnr_sigreg_ack_s));
 
     if (!ret) {
         ush_log(LOG_LVL_ERROR, "hay msg mem alloc failed.");
@@ -38,7 +38,7 @@ ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
 
 ush_size_t
 ush_comm_lstnr_sigreg_ack_sizeof(void) {
-    return sizeof(struct lstnr_sigreg_ack);
+    return sizeof(struct lstnr_sigreg_ack_s);
 }
 
 

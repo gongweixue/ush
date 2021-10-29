@@ -14,7 +14,7 @@
 #include "proc/ushd_dist_proc.h"
 
 
-typedef struct dist_thread {
+typedef struct dist_thread_s {
     pthread_t           tid;
     ushd_dist_fifo_t    fifo;
     mqd_t               mq;
@@ -29,7 +29,7 @@ ushd_dist_thread_t
 ushd_dist_thread_create(const ush_char_t *name) {
     ush_assert(name);
     ushd_dist_thread_t thread =
-        (ushd_dist_thread_t)malloc(sizeof(struct dist_thread));
+        (ushd_dist_thread_t)malloc(sizeof(struct dist_thread_s));
     if (!thread) {
         ushd_log(LOG_LVL_ERROR, "dist thread create failed");
         return NULL;

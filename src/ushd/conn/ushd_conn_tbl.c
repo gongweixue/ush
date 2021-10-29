@@ -11,7 +11,7 @@
 #include "ushd_conn_tbl.h"
 
 
-typedef struct ushd_conn_item {
+typedef struct ushd_conn_item_s {
     ush_bool_t                   active; // 0 for inactive, 1 for active
     ush_char_t                   name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_cert_t                   cert;
@@ -23,7 +23,7 @@ typedef struct ushd_conn_item {
 ////////////////////////////////////////////////////////////////////////////////
 
 typedef struct {
-    struct ushd_conn_item      items[USH_CONN_IDX_MAX];
+    struct ushd_conn_item_s    items[USH_CONN_IDX_MAX];
     ush_s32_t                  cursor;
 } conn_tbl;
 

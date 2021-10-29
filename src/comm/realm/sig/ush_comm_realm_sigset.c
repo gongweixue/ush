@@ -8,7 +8,7 @@
 #include "realm/sig/ush_comm_realm_sigset.h"
 
 
-typedef struct comm_realm_sigset {
+typedef struct comm_realm_sigset_s {
     ush_comm_realm_sig_d         desc;
     ush_connidx_t                connidx;
     ush_cert_t                   cert;
@@ -42,7 +42,7 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
     }
 
     ush_comm_realm_sigset_t tmp =
-        (ush_comm_realm_sigset_t)malloc(sizeof(struct comm_realm_sigset));
+        (ush_comm_realm_sigset_t)malloc(sizeof(struct comm_realm_sigset_s));
     if (!tmp) {
         ush_log(LOG_LVL_ERROR, "out of mem");
         *pMsg = NULL;
@@ -128,5 +128,5 @@ ush_comm_realm_sigset_destroy(ush_comm_realm_sigset_t *pMsg) {
 
 ush_size_t
 ush_comm_realm_sigset_sizeof(void) {
-    return sizeof(struct comm_realm_sigset);
+    return sizeof(struct comm_realm_sigset_s);
 }

@@ -14,7 +14,7 @@
 
 // for the fifo header file
 #define USH_FIFO_DECL_CODE_GEN(NAME)                                            \
-typedef struct NAME##_fifo * NAME##_fifo_t;                                     \
+typedef struct NAME##_fifo_s * NAME##_fifo_t;                                   \
                                                                                 \
 NAME##_fifo_t NAME##_fifo_create(void);                                         \
 ush_ret_t NAME##_fifo_destroy(NAME##_fifo_t *pFifo);                            \
@@ -39,7 +39,7 @@ ush_size_t NAME##_fifo_pop(NAME##_fifo_t fifo, void *buf, ush_size_t sz);
                                READ_ELEM,                                       \
                                MSG_MAX_LEN)                                     \
                                                                                 \
-typedef struct NAME##_fifo {                                                    \
+typedef struct NAME##_fifo_s {                                                  \
     pthread_mutex_t mutex;                                                      \
     pthread_cond_t  cond_consumer;                                              \
     pthread_cond_t  cond_producer;                                              \
@@ -63,7 +63,7 @@ static ush_size_t NAME##_fifo_curr_num(const NAME##_fifo_t fifo);               
                                                                                 \
 NAME##_fifo_t                                                                   \
 NAME##_fifo_create(void) {                                                      \
-    NAME##_fifo_t fifo = (NAME##_fifo_t)malloc(sizeof(struct NAME##_fifo));     \
+    NAME##_fifo_t fifo = (NAME##_fifo_t)malloc(sizeof(struct NAME##_fifo_s));   \
                                                                                 \
     if (!fifo) {                                                                \
         ushd_log(LOG_LVL_ERROR, "fifo of "#NAME" creation failed");             \

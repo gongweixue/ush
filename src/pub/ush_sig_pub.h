@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-typedef struct ush_sigreg_conf_t {
+typedef struct ush_sigreg_conf_s {
     ush_sig_id_t     sigid;
     ush_sig_cb_reg_t done;
     ush_sig_cb_rcv_t rcv;

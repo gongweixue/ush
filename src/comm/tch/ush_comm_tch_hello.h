@@ -3,9 +3,9 @@
 
 #include "ush_type_pub.h"
 
-typedef struct ush_hello_ack * ush_sync_hello_ack_t;
+typedef struct ush_hello_ack_s * ush_sync_hello_ack_t;
 
-typedef struct tch_hello * ush_comm_tch_hello_t;
+typedef struct tch_hello_s * ush_comm_tch_hello_t;
 
 ush_ret_t
 ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,

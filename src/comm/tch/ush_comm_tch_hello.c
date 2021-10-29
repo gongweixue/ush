@@ -9,7 +9,7 @@
 
 // ack contains the pointers should not be free at destroy function
 // be carefulto to manipulate the ack, maybe free already.
-typedef struct tch_hello {
+typedef struct tch_hello_s {
     ush_comm_tch_msg_d        desc;
     ush_char_t                name[USH_COMM_CONN_FULL_NAME_LEN_MAX];
     ush_pvoid_t               pAck;
@@ -42,7 +42,7 @@ ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
 
 
     ush_comm_tch_hello_t tmp =
-        (ush_comm_tch_hello_t)malloc(sizeof(struct tch_hello));
+        (ush_comm_tch_hello_t)malloc(sizeof(struct tch_hello_s));
     if (!tmp) {
         *pHello = NULL;
         ush_log(LOG_LVL_FATAL, "no mem for hello");
@@ -80,7 +80,7 @@ ush_comm_tch_hello_destroy(ush_comm_tch_hello_t *pHello) {
 
 size_t
 ush_comm_tch_hello_sizeof(void) {
-    return sizeof(struct tch_hello);
+    return sizeof(struct tch_hello_s);
 }
 
 const ush_char_t *

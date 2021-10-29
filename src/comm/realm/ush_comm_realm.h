@@ -10,7 +10,7 @@ typedef enum USH_COMM_REALM_MSG_CATALOG {
     USH_COMM_REALM_MSG_CATALOG_SIG
 } USH_COMM_REALM_MSG_CATALOG;
 
-typedef struct comm_realm_msg_desc {
+typedef struct comm_realm_msg_desc_s {
     ush_comm_d                    desc;
     USH_COMM_REALM_MSG_CATALOG    catalog;
 } USH_COMM_MSG_PACKED ush_comm_realm_msg_d;

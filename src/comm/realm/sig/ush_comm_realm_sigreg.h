@@ -4,7 +4,7 @@
 #include "ush_type_pub.h"
 #include "ush_sig_id.h"
 
-typedef struct comm_realm_sigreg * ush_comm_realm_sigreg_t;
+typedef struct comm_realm_sigreg_s * ush_comm_realm_sigreg_t;
 
 
 ush_ret_t

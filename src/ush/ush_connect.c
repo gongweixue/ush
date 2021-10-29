@@ -22,7 +22,7 @@
 #include "realm/sig/ush_comm_realm_sigset.h"
 
 
-typedef struct ush_connect {
+typedef struct ush_connect_s {
     ush_cert_t           cert;
     ush_connidx_t        connidx;
     ush_tch_t            touch;
@@ -59,7 +59,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
 
     *pConn = NULL;
 
-    ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct ush_connect));
+    ush_connect_t newMem = (ush_connect_t)malloc(sizeof(struct ush_connect_s));
 
     if (!newMem) {
         ush_log(LOG_LVL_FATAL, "connect memory allocation failed");

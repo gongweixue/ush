@@ -5,7 +5,7 @@
 #include "ush_comm_lstnr_hay.h"
 #include "ush_log.h"
 
-typedef struct lstnr_hay {
+typedef struct lstnr_hay_s {
     ush_comm_lstnr_msg_d         desc;
     ush_sync_hello_ack_t        *sync;
     ush_connidx_t                connidx;
@@ -22,7 +22,7 @@ ush_comm_lstnr_hay_create(ush_pvoid_t   sync,
         return NULL;
     }
     ush_comm_lstnr_hay_t ret =
-        (ush_comm_lstnr_hay_t)malloc(sizeof(struct lstnr_hay));
+        (ush_comm_lstnr_hay_t)malloc(sizeof(struct lstnr_hay_s));
 
     if (!ret) {
         ush_log(LOG_LVL_ERROR, "hay msg mem alloc failed.");
@@ -69,7 +69,7 @@ ush_comm_lstnr_hay_cert_of(ush_comm_lstnr_hay_t msg) {
 
 ush_size_t
 ush_comm_lstnr_hay_sizeof(void) {
-    return sizeof(struct lstnr_hay);
+    return sizeof(struct lstnr_hay_s);
 }
 
 ush_ret_t

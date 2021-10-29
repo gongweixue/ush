@@ -9,7 +9,7 @@
 #include "ush_pipe_pub.h"
 #include "ush_sync.h"
 
-typedef struct ush_hello_ack {
+typedef struct ush_hello_ack_s {
     pthread_cond_t      cond;
     pthread_condattr_t  condattr;
     pthread_mutex_t     mutex;
@@ -22,7 +22,7 @@ static void
 hello_ack_destroy(ush_sync_hello_ack_t *pAck) {
     ush_assert(pAck);
     if (!(*pAck)) {
-        ush_log(LOG_LVL_ERROR, "ush_hello_ack NULL to be destroy");
+        ush_log(LOG_LVL_ERROR, "ush_hello_ack_s NULL to be destroy");
         return;
     }
 
@@ -48,7 +48,7 @@ ush_sync_hello_ack_create(ush_sync_hello_ack_t *pAck, ush_connect_t conn) {
     *pAck = NULL;
 
     ush_sync_hello_ack_t pMem =
-        (ush_sync_hello_ack_t)malloc(sizeof(struct ush_hello_ack));
+        (ush_sync_hello_ack_t)malloc(sizeof(struct ush_hello_ack_s));
     if (!pMem) {
         ush_log(LOG_LVL_FATAL, "hello ack init:out of mem failed");
         return USH_RET_OUT_OF_MEM;

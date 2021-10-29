@@ -4,7 +4,7 @@
 #include "ush_type_pub.h"
 #include "ushd_dist_fifo.h"
 
-typedef struct dist_thread * ushd_dist_thread_t;
+typedef struct dist_thread_s * ushd_dist_thread_t;
 
 ushd_dist_thread_t ushd_dist_thread_create(const ush_char_t *name);
 

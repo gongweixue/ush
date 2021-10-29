@@ -3,9 +3,9 @@
 
 #include "ush_type_pub.h"
 
-typedef struct ush_hello_ack * ush_sync_hello_ack_t;
+typedef struct ush_hello_ack_s * ush_sync_hello_ack_t;
 
-typedef struct lstnr_hay * ush_comm_lstnr_hay_t;
+typedef struct lstnr_hay_s * ush_comm_lstnr_hay_t;
 
 ush_comm_lstnr_hay_t
 ush_comm_lstnr_hay_create(ush_pvoid_t     sync,

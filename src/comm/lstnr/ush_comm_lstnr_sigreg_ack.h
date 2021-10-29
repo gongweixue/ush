@@ -3,7 +3,7 @@
 
 #include "ush_cb_pub.h"
 
-typedef struct lstnr_sigreg_ack * ush_comm_lstnr_sigreg_ack_t;
+typedef struct lstnr_sigreg_ack_s * ush_comm_lstnr_sigreg_ack_t;
 
 ush_comm_lstnr_sigreg_ack_t
 ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,

@@ -3,7 +3,7 @@
 
 #include "ush_type_pub.h"
 
-typedef struct comm_realm_sigset * ush_comm_realm_sigset_t;
+typedef struct comm_realm_sigset_s * ush_comm_realm_sigset_t;
 
 ush_ret_t
 ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,

@@ -9,7 +9,7 @@
 #include "ushd_tch_thread.h"
 #include "ushd_tch.h"
 
-typedef struct ushd_tch_thread {
+typedef struct ushd_tch_thread_s {
     pthread_t        tid;    // thread id for the listener
     ushd_tch_t       touch;  // mq handle
 } * ushd_tch_thread_t;
@@ -20,18 +20,18 @@ static ushd_tch_thread_t thread = NULL;
 static ushd_tch_thread_t
 tch_thread_create(void) {
     ushd_tch_thread_t newMem =
-        (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread));
+        (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread_s));
 
     if (!newMem) {
-        ushd_log(LOG_LVL_FATAL, "create ushd_tch_thread failed");
+        ushd_log(LOG_LVL_FATAL, "create ushd_tch_thread_s failed");
         return NULL;
     } else {
         if (USH_RET_OK !=  ushd_tch_create(&(newMem->touch))) {
-            ushd_log(LOG_LVL_FATAL, "create ushd_tch failed");
+            ushd_log(LOG_LVL_FATAL, "create ushd_tch_s failed");
             free(newMem);
             return NULL;
         }
-        ushd_log(LOG_LVL_INFO, "ushd_tch created, addr %p", newMem->touch);
+        ushd_log(LOG_LVL_INFO, "ushd_tch_s created, addr %p", newMem->touch);
 
         newMem->tid    = USH_INVALID_TID; // maybe a valid value
     }
@@ -95,7 +95,7 @@ ushd_tch_thread_start(void) {
         return USH_RET_FAILED;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "ushd_tch_thread start with tid %lu", tid);
+    ushd_log(LOG_LVL_DETAIL, "ushd_tch_thread_s start with tid %lu", tid);
 
     if (0 != pthread_detach(tid)) {
         ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.");

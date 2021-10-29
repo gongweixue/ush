@@ -14,7 +14,7 @@
 #include "ush_lstnr.h"
 #include "ush_sync.h"
 
-typedef struct ush_lstnr {
+typedef struct ush_lstnr_s {
     mqd_t      mq;
     pthread_t  tid;
 } * ush_lstnr_t;
@@ -27,7 +27,7 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
     ush_assert(pPtr && fullname);
     *pPtr = NULL;
 
-    ush_lstnr_t tmp = (ush_lstnr_t)malloc(sizeof(struct ush_lstnr));
+    ush_lstnr_t tmp = (ush_lstnr_t)malloc(sizeof(struct ush_lstnr_s));
     if (!tmp) {
         ush_log(LOG_LVL_FATAL, "listener alloc failed");
         return USH_RET_OUT_OF_MEM;

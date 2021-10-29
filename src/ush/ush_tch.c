@@ -12,7 +12,7 @@
 #define USH_TCH_OPEN_RETRY_CNT    (3)
 #define USH_TCH_OPEN_INTERVAL_MS  (10)
 
-typedef struct ush_tch {
+typedef struct ush_tch_s {
     mqd_t mq;
 } * ush_tch_t;
 
@@ -123,7 +123,7 @@ ush_tch_alloc(ush_tch_t *pTouch) {
     ush_assert(pTouch);
     *pTouch = NULL;
 
-    ush_tch_t tmp = (ush_tch_t)malloc(sizeof(struct ush_tch));
+    ush_tch_t tmp = (ush_tch_t)malloc(sizeof(struct ush_tch_s));
     if (!tmp) {
         ush_log(LOG_LVL_FATAL, "touch alloc failed");
         return USH_RET_OUT_OF_MEM;

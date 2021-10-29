@@ -3,7 +3,7 @@
 
 #include "ush_type_pub.h"
 
-typedef struct ushd_realm_thread * ushd_realm_thread_t;
+typedef struct ushd_realm_thread_s * ushd_realm_thread_t;
 
 ushd_realm_thread_t
 ushd_realm_thread_create(const ush_char_t *name);

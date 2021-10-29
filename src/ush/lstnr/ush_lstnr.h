@@ -2,7 +2,7 @@
 #define USH_LSTNR_H
 
 
-typedef struct ush_lstnr * ush_lstnr_t;
+typedef struct ush_lstnr_s * ush_lstnr_t;
 
 
 #include "ush_type_pub.h"

@@ -3,7 +3,7 @@
 
 #include "ush_cb_pub.h"
 
-typedef struct lstnr_sig_upd * ush_comm_lstnr_sig_upd_t;
+typedef struct lstnr_sig_upd_s * ush_comm_lstnr_sig_upd_t;
 
 ush_comm_lstnr_sig_upd_t
 ush_comm_lstnr_sig_upd_create(ush_sig_id_t  sigid,

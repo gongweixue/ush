@@ -10,7 +10,7 @@
 
 #include "ushd_tch.h"
 
-typedef struct ushd_tch {
+typedef struct ushd_tch_s {
     mqd_t mq;
 } * ushd_tch_t;
 
@@ -20,7 +20,7 @@ ushd_tch_create(ushd_tch_t *pTouch) {
     ush_assert(pTouch);
     *pTouch = NULL;
 
-    ushd_tch_t tmp = (ushd_tch_t)malloc(sizeof(struct ushd_tch));
+    ushd_tch_t tmp = (ushd_tch_t)malloc(sizeof(struct ushd_tch_s));
     if (!tmp) {
         ushd_log(LOG_LVL_FATAL, "ushd touch alloc failed");
         return USH_RET_OUT_OF_MEM;
