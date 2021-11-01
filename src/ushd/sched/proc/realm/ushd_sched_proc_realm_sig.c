@@ -84,7 +84,7 @@ static void notify_handle(ush_connidx_t connidx,
                           ush_sig_val_t val,
                           ush_pvoid_t   rcv) {
     if (!ushd_conn_tbl_get_active_flg(connidx)) {
-        ushd_log(LOG_LVL_INFO, "Invalid idx:%d value of tbl", connidx);
+        ushd_log(LOG_LVL_INFO, "inactive idx:%d value of tbl", connidx);
         return;
     }
 

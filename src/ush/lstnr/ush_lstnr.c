@@ -17,6 +17,7 @@
 typedef struct ush_lstnr_s {
     mqd_t      mq;
     pthread_t  tid;
+    ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
 } * ush_lstnr_t;
 
 static void *    lstnr_thread_entry(void *arg);
@@ -48,6 +49,8 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
         return USH_RET_FAILED;
     }
     ush_log(LOG_LVL_INFO, "the lstnr queue opened, %p", tmp);
+
+    strcpy(tmp->fullname, fullname);
 
 
     if (0 != pthread_create(&tmp->tid, NULL, lstnr_thread_entry, tmp)) {
@@ -113,6 +116,7 @@ lstnr_thread_entry(void *arg) {
         ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
 
         if (USH_COMM_PORT_LSTNR != ((ush_comm_d*)buf)->port) {
+            ush_log(LOG_LVL_ERROR, "wrong port");
             continue;
         }
 

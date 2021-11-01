@@ -10,7 +10,7 @@ void ush_lstnr_proc_sigreg_ack(const ush_comm_lstnr_sigreg_ack_t msg) {
             return; // nothing to do
     }
 
-    ush_pipe_t pipe = ush_comm_lstnr_sigreg_ack_get_pipe(msg);
+    ush_pipe_t    pipe = ush_comm_lstnr_sigreg_ack_get_pipe(msg);
     ush_sig_id_t sigid = ush_comm_lstnr_sigreg_ack_get_sigid(msg);
     ush_bool_t success = ush_comm_lstnr_sigreg_ack_get_success(msg);
 

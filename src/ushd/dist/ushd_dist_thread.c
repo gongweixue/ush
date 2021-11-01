@@ -2,6 +2,7 @@
 #include "mqueue.h"
 #include "pthread.h"
 #include "stdlib.h"
+#include "string.h"
 
 #include "ush_assert.h"
 #include "ush_log.h"
@@ -18,6 +19,7 @@ typedef struct dist_thread_s {
     pthread_t           tid;
     ushd_dist_fifo_t    fifo;
     mqd_t               mq;
+    ush_char_t          fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
 } *ushd_dist_thread_t;
 
 static ush_ret_t dist_mq_open(ushd_dist_thread_t    thread,
@@ -44,6 +46,7 @@ ushd_dist_thread_create(const ush_char_t *name) {
         free(thread);
         return NULL;
     }
+    strcpy(thread->fullname, name);
 
     thread->fifo = ushd_dist_fifo_create();
     if (!thread->fifo) {
