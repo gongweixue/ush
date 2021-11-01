@@ -10,15 +10,15 @@ static void test_ush_pipe_create(void) {
 
     ret = ush_pipe_create(NULL, 0, 0, &pipe);
     ush_assert(OK != ret);
-    ush_assert(0 == pipe);
+    ush_assert(USH_INVALID_PIPE == pipe);
 
     ret = ush_pipe_create(name, 0, 0, &pipe);
     ush_assert(OK == ret);
-    ush_assert(0 != pipe);
+    ush_assert(USH_INVALID_PIPE != pipe);
 
     ret = ush_pipe_create(name, 0, 3, &pipe);
     ush_assert(OK == ret);
-    ush_assert(0 != pipe);
+    ush_assert(USH_INVALID_PIPE != pipe);
 
     ret = ush_pipe_create(name, 0, 0, NULL);
     ush_assert(OK != ret);
@@ -27,5 +27,5 @@ static void test_ush_pipe_create(void) {
     ush_char_t longname[] = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     ret = ush_pipe_create(longname, 0, 0, &pipe);
     ush_assert(OK != ret);
-    ush_assert(0 == pipe);
+    ush_assert(USH_INVALID_PIPE == pipe);
 }

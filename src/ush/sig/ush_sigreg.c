@@ -11,12 +11,18 @@
 
 ush_ret_t
 ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf) {
-    if (0 == pipe || NULL == pconf) {
+    if (USH_INVALID_PIPE == pipe || NULL == pconf) {
         ush_log(LOG_LVL_ERROR, "passing 0 as the param");
         return USH_RET_WRONG_PARAM;
     }
 
     ush_connect_t conn = (ush_connect_t)pipe;
+
+    if (!ush_connect_valid(conn)) {
+        ush_log(LOG_LVL_ERROR, "invalid pipe");
+        return USH_RET_WRONG_PARAM;
+    }
+
     ush_cert_t cert = USH_INVALID_CERT_VALUE;
     if (USH_RET_OK != ush_connect_get_cert(conn, &cert)) {
         ush_log(LOG_LVL_ERROR, "invalid cert");

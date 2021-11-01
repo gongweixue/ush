@@ -37,7 +37,9 @@ ush_ret_t ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf);
  *     but the return dose not mean the msg value has been set on the ushd.
  *     Client who listening this sigid will be triggered by the callback.
  */
-ush_ret_t ush_sigset(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_pvoid_t pval);
+ush_ret_t ush_sigset(ush_pipe_t    pipe,
+                     ush_sig_id_t  sigid,
+                     ush_sig_val_t value);
 
 
 // implement with burst reg mode

@@ -83,7 +83,7 @@ ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
         return USH_RET_WRONG_PARAM;
     }
 
-    if (0 == reglist.signals[sigid].valid) { // signal is meaningful
+    if (USH_FALSE == reglist.signals[sigid].valid) { // sig must be meaningful
         return USH_RET_FAILED;
     }
 

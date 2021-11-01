@@ -151,7 +151,7 @@ NAME##_fifo_pop(NAME##_fifo_t fifo, void *buf, ush_size_t sz) {                 
     }                                                                           \
                                                                                 \
     ush_size_t ret = READ_ELEM(buf, fifo->buffer + fifo->head, sz);             \
-    if (0 == ret) {                                                             \
+    if (USH_FALSE == ret) {                                                     \
         ushd_log(LOG_LVL_ERROR, "pop elem to %p failed.", buf);                 \
         goto BAILED;                                                            \
     }                                                                           \

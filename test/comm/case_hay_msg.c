@@ -92,7 +92,7 @@ static void test_hay_idx_of(void) {
     ush_assert(idx == result);
 
     // from NULL
-    ush_assert(0 == ush_comm_lstnr_hay_connidx_of(NULL));
+    ush_assert(USHD_INVALID_CONN_IDX_VALUE == ush_comm_lstnr_hay_connidx_of(NULL));
 }
 
 static void test_hay_cert_of(void) {

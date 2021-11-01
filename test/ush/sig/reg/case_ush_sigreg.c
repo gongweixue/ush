@@ -13,7 +13,7 @@ static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
 static ush_ret_t onReg_normal(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t succ) {
     ush_assert(pp == pp);
     ush_assert(USH_SIG_ID_ABC_abc_FP32 == id);
-    ush_assert(1 == succ);
+    ush_assert(USH_TRUE == succ);
 
     pthread_mutex_lock(&mutex);
 

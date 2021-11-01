@@ -43,7 +43,7 @@ static void case_normal(void) {
         // in case that the callback execute too early
         pthread_mutex_lock(&mutex);
 
-        ret = ush_sigset(pipe, USH_SIG_ID_XYZ_xyz_U64, &ref);
+        ret = ush_sigset(pipe, USH_SIG_ID_XYZ_xyz_U64, ref);
         ush_assert(OK == ret);
 
         pthread_cond_wait(&cond, &mutex); // wait the cb 'rcv' signal
@@ -51,9 +51,26 @@ static void case_normal(void) {
     }
 }
 
+static void case_wrong(void) {
+    ush_ret_t  ret    = OK;
+    ush_char_t name[] = "TEST_SIGSET_PARAM";
+
+    ush_pipe_t pipe   = USH_INVALID_PIPE;
+
+    ret = ush_pipe_create(name, 0, 0, &pipe);
+    ush_assert(OK == ret);
+
+    ret = ush_sigset(pipe, USH_SIG_ID_INVALID, ref);
+    ush_assert(OK != ret);
+
+    ret = ush_sigset(pipe, USH_SIG_ID_MAX, ref);
+    ush_assert(OK != ret);
+
+}
 
 int main(void) {
     case_normal();
+    case_wrong();
 
     return 0;
 }
