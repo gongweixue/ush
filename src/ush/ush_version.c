@@ -11,6 +11,6 @@ ush_version_get(ush_u32_t *pVerInfo, ush_u16_t msTimeout) {
         return USH_RET_WRONG_PARAM;
     }
     (void)msTimeout;
-    *pVerInfo = 0x00010000; // v0.1
+    *pVerInfo = 0x00040000; // v0.4
     return USH_RET_OK;
 }
