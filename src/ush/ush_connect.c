@@ -30,8 +30,17 @@ typedef struct ush_connect_s {
     ush_lstnr_t          listener;
     ush_realm_t          realm;
     ush_char_t           shortname_ts[USH_COMM_CONN_FULL_NAME_LEN_MAX];
+    ush_u64_t            fingerprint;
 } * ush_connect_t;
 
+static ush_u64_t cal_fingerprint(const ush_connect_t conn) {
+    ush_u64_t ret = 0;
+    ret ^= conn->cert;
+    ret ^= conn->touch;
+    ret ^= conn->listener;
+    ret ^= conn->realm;
+    return ret;
+}
 
 static void
 gen_name_ts(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
@@ -108,6 +117,7 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
     ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
     newMem->cert = cert;
     newMem->connidx = USHD_INVALID_CONN_IDX_VALUE;
+    newMem->fingerprint = cal_fingerprint(newMem);
     *pConn = newMem;
     return USH_RET_OK;
 
@@ -313,6 +323,19 @@ ush_connect_send(ush_connect_t conn, const ush_comm_d *msg) {
             ret = ush_tch_send(conn->touch, (const ush_char_t *)msg, sz, prio);
         }
     }
+
+    return ret;
+}
+
+
+ush_bool_t
+ush_connect_valid(const ush_connect_t conn) {
+    if (!conn) {
+        return USH_FALSE;
+    }
+
+    ush_bool_t ret =
+        (conn->fingerprint == cal_fingerprint(conn)) ? USH_TRUE : USH_FALSE;
 
     return ret;
 }

@@ -27,34 +27,14 @@ typedef enum USH_PIPE_ATTR {
 #define USH_PP_ATTR_FLG_SHFT_WDG  (0)
 
 
-/* state of the pipe */
-typedef enum USH_PIPE_STATE {
-    USH_PP_STATE_NEW       = 0,
-    USH_PP_STATE_OPENED    = 1,
-    USH_PP_STATE_JAM       = 2,
-    USH_PP_STATE_CLOSED    = 3,
-    USH_PP_STATE_NOT_EXIST = 4,
-} USH_PIPE_STATE;
-
-
 typedef enum USH_PIPE_MODE {
     USH_PP_MODE_STD   = 0,
     USH_PP_MODE_BUNCH = 1, // **DO NOT** USE CURRENTLY!!!
     USH_PP_MODE_MAX_GUARD,
 } USH_PIPE_MODE;
 
-////////////////////////////////////////////////////////////////////////////////
-// Life-time of the pipe:
-// NEW -(start)->OPENED -(query/update)->JAM --(stop)->CLOSED ------
-//  ^               ^                                   |          |
-//  |(@create)      |_________________(start again)_____|          |
-//  |                                                              |
-// NOT_EXIST <------------------(delete)---------------------------|
-////////////////////////////////////////////////////////////////////////////////
-
 /*
  * Create a pipe with hub service
- * sync call: y
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ NO_DATA TIMEOUT
  * restriction: pName/pHdl should not NULL nor too long (less than 20 is fair)
  * detail:
@@ -74,68 +54,13 @@ ush_ret_t ush_pipe_create(
     ush_pipe_t       *pPipe);
 
 /*
- * Destory a pipe connection with the hub
- * sync call: n
+ * Destory a pipe connecting with the hub
+ * sync call: Y
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ
  * restriction: handle should be not NULL
- * detail: handle be delete with the indicated time by ms.
- *         Return immediately after the request sending out of the client,
- *         **And all the data will be not perform after the return.
- *         You should use 'query' operation to realize the final result,
- *         e.g. USH_PP_STATE_NOT_EXIST/USH_PP_STATE_CLOSED.
- *         The pipe will also be closed even you don't 'CLOSE' it explicite.
- *         It would be closed by the hub implicite
- *         The flush will be performed when the value is not 0.
+ * detail: handle be delete, invalid pipe leads UB
 */
-ush_ret_t ush_pipe_delete(ush_pipe_t   pipe,
-                          ush_bool_t   flush,
-                          ush_u16_t    msDelay);
-
-
-/*
- * Flush the data already in the pipe before you deleted/stopped the pipe.
- * sync call: n
- * ret: OK FAILED WRONG_PARAM WRONG_SEQ
- * detail: flush all the data(triger the events) in the indicated pipe.
- * this call may trigger the event 'sigid receive'
-*/
-ush_ret_t ush_pipe_flush(ush_pipe_t pipe);
-
-
-/*
- * Make the pipe work or not.
- * sync call: y
- * ret: OK FAILED WRONG_PARAM WRONG_SEQ
- * restriction: not ensure start in the different threads,
- *     in other words, you should always start/stop the same pipe in the same thread.
- *     Data will be not perform after stopping the pipe,
- *     **Use "flush" to clean the data in the pipe manully if you need it.
- *     The flush will be performed when the value is not 0.
-*/
-ush_ret_t ush_pipe_start(ush_pipe_t pipe);
-
-ush_ret_t ush_pipe_stop(ush_pipe_t pipe, ush_u8_t flush, ush_u16_t msTimeout);
-
-
-/*
- * Checkout the attr value of a pipe.
- * sync call: y
- * ret: OK FAILED WRONG_PARAM NOT_SUPPORT NO_DATA
-*/
-ush_ret_t ush_pipe_query(ush_pipe_t pipe,
-                         USH_PIPE_ATTR attr,
-                         ush_pvoid_t ptr);
-
-/*
- * Update the attr value of a pipe.
- * sync call: y
- * ret: OK FAILED WRONG_PARAM NOT_SUPPORT WRONG_SEQ
- * restriction: wrong seq once the pipe starts,
- *     need to stop the pipe to update the attr of a pipe
-*/
-ush_ret_t ush_pipe_update(ush_pipe_t pipe,
-                          USH_PIPE_ATTR attr,
-                          const ush_pvoid_t ptr);
+ush_ret_t ush_pipe_delete(ush_pipe_t pipe);
 
 
 #ifdef __cplusplus

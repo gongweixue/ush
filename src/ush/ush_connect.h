@@ -20,4 +20,6 @@ ush_ret_t ush_connect_link(ush_connect_t conn, ush_u16_t timeout);
 
 ush_ret_t ush_connect_send(ush_connect_t conn, const ush_comm_d *msg);
 
+ush_bool_t ush_connect_valid(const ush_connect_t conn);
+
 #endif // USH_CONNECT_H
