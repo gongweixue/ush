@@ -26,7 +26,7 @@ static void case_normal(void) {
     ush_ret_t  ret    = OK;
     ush_char_t name[] = "TEST_SIGSET_NORMAL";
 
-    ret = ush_pipe_create(name, USH_PP_MODE_STD, 0, 0, NULL, 0, &pipe);
+    ret = ush_pipe_create(name, 0, 0, &pipe);
     ush_assert(OK == ret);
 
     ush_sigreg_conf_t conf ={USH_SIG_ID_XYZ_xyz_U64, NULL, onRcv_XYZ};
@@ -50,22 +50,6 @@ static void case_normal(void) {
         pthread_mutex_unlock(&mutex);
     }
 }
-
-
-    // {
-    //     ush_sigreg_conf_t conf1 ={USH_SIG_ID_XYZ_xyz_U64, NULL, NULL};
-    //     ret = ush_sigreg(pipe, &conf1);
-    //     ush_assert(OK == ret);
-
-    //     f = 6.6f;
-    //     ret = ush_sigset(pipe, USH_SIG_ID_XYZ_xyz_U64, &f); // same value
-    //     ush_assert(OK == ret);
-
-    //     pthread_mutex_lock(&mutex);
-    //     pthread_cond_timedwait(&cond, &mutex, &ts);
-    //     ush_assert(0 == flag);
-    //     pthread_mutex_unlock(&mutex);
-    // }
 
 
 int main(void) {

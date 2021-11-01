@@ -11,7 +11,6 @@ set(SRC_USH
     lstnr/proc/ush_lstnr_proc_hay.c
     lstnr/proc/ush_lstnr_proc_sig.c
     pipe/ush_pipe_create.c
-    pipe/ush_pipe_attr.c
     sig/ush_sigreg.c
     sig/ush_sigset.c
 )

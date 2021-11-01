@@ -30,7 +30,7 @@ static void case_normal(void) {
     ush_pipe_t pp = USH_INVALID_PIPE; // magic num
     ush_char_t name[] = "TEST_SIGREG_normal";
 
-    ret = ush_pipe_create(name, USH_PP_MODE_STD, 0, 0, NULL, 0, &pp);
+    ret = ush_pipe_create(name, 0, 0, &pp);
     ush_assert(OK == ret);
 
     pthread_mutex_lock(&mutex);
@@ -52,7 +52,7 @@ static void case_wrong_param(void) {
     ush_ret_t ret = OK;
     ush_pipe_t pp = USH_INVALID_PIPE;
     ush_char_t name[] = "TEST_sigreg_param";
-    ret = ush_pipe_create(name, USH_PP_MODE_STD, 0, 0, NULL, 0, &pp);
+    ret = ush_pipe_create(name, 0, 0, &pp);
     ush_assert(OK == ret);
 
     ush_sigreg_conf_t conf ={USH_SIG_ID_ABC_abc_FP32, onReg_normal, NULL};
@@ -81,7 +81,7 @@ static void case_no_cb(void) {
     ush_ret_t ret = OK;
     ush_pipe_t pp = USH_INVALID_PIPE;
     ush_char_t name[] = "TEST_SIGREG_NO_CB";
-    ret = ush_pipe_create(name, USH_PP_MODE_STD, 0, 0, NULL, 0, &pp);
+    ret = ush_pipe_create(name, 0, 0, &pp);
     ush_assert(OK == ret);
 
     ush_sigreg_conf_t conf ={USH_SIG_ID_ABC_abc_FP32, NULL, NULL};

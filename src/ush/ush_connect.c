@@ -35,10 +35,10 @@ typedef struct ush_connect_s {
 
 static ush_u64_t cal_fingerprint(const ush_connect_t conn) {
     ush_u64_t ret = 0;
-    ret ^= conn->cert;
-    ret ^= conn->touch;
-    ret ^= conn->listener;
-    ret ^= conn->realm;
+    ret ^= (ush_u64_t)conn->cert;
+    ret ^= (ush_u64_t)conn->touch;
+    ret ^= (ush_u64_t)conn->listener;
+    ret ^= (ush_u64_t)conn->realm;
     return ret;
 }
 
