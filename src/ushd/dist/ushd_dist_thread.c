@@ -138,7 +138,7 @@ dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
         return USH_RET_WRONG_PARAM;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "open dist %p mq %s", thread, name);
+    ushd_log(LOG_LVL_INFO, "open dist %p mq %s", thread, name);
     for (int counter = 0; counter < MQ_OPEN_RETRY_CNT; ++counter) {
         thread->mq = mq_open(name, O_WRONLY);
         if (USH_INVALID_MQD_VALUE != thread->mq) { // done

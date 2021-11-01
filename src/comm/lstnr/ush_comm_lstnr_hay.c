@@ -46,6 +46,7 @@ ush_comm_lstnr_hay_create(ush_pvoid_t   sync,
 ush_pvoid_t
 ush_comm_lstnr_hay_sync_of(ush_comm_lstnr_hay_t msg) {
     if (!msg) {
+        ush_log(LOG_LVL_ERROR, "msg ptr null");
         return NULL;
     }
 
@@ -75,10 +76,12 @@ ush_comm_lstnr_hay_cert_of(ush_comm_lstnr_hay_t msg) {
 ush_bool_t // return true if error of late than then critical deadline
 ush_comm_lstnr_hay_outofdate(ush_comm_lstnr_hay_t msg) {
     if (!msg) {
+        ush_log(LOG_LVL_ERROR, "msg ptr null");
         return USH_TRUE;
     }
 
     if (0 == msg->deadline) {
+        ush_log(LOG_LVL_INFO, "outofdate is 0");
         return USH_FALSE;
     }
 
@@ -109,11 +112,13 @@ ush_comm_lstnr_hay_sizeof(void) {
 ush_ret_t
 ush_comm_lstnr_hay_destroy(ush_comm_lstnr_hay_t *pMsg) {
     if (!pMsg) {
+        ush_log(LOG_LVL_INFO, "ptr null");
         return USH_RET_OK;
     }
 
     ush_comm_lstnr_hay_t msg = *pMsg;
     if (!msg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 

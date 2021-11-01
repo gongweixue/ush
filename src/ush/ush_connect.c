@@ -114,7 +114,6 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
 
 
 // NORMAL:
-    ush_log(LOG_LVL_DETAIL, "connect create normal return, addr %p", *pConn);
     newMem->cert = cert;
     newMem->connidx = USHD_INVALID_CONN_IDX_VALUE;
     newMem->fingerprint = cal_fingerprint(newMem);
@@ -122,11 +121,9 @@ ush_connect_create(ush_connect_t *pConn, const ush_char_t *name) {
     return USH_RET_OK;
 
 BAILED_LSTNR_STOP_CLOSE:
-    ush_log(LOG_LVL_DETAIL, "stop and close LSTNR thread");
     ush_lstnr_stop_close(&(newMem->listener));
 
 BAILED_TCH_DESTROY:
-    ush_log(LOG_LVL_DETAIL, "close & destory touch");
     ush_tch_destroy_with_closing(&(newMem->touch));
 
 BAILED_CONN:
@@ -147,7 +144,6 @@ ush_connect_destroy(ush_connect_t *pConn) {
     ush_realm_destroy_with_closing(&((*pConn)->realm));
     ush_lstnr_stop_close(&((*pConn)->listener));
 
-    ush_log(LOG_LVL_DETAIL, "and free conn mem %p", *pConn);
     free(*pConn);
 
     *pConn = NULL;
@@ -226,7 +222,6 @@ ush_connect_link(ush_connect_t conn, ush_u16_t timeout) {
 
     // use sync to wait feedback
     ush_connect_sync_t sync = NULL;
-    ush_log(LOG_LVL_DETAIL, "create hello sync");
     ret = ush_connect_sync_create(&sync, conn);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "hello sync create failed");

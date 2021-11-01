@@ -15,29 +15,29 @@
 static void *
 ushd_sched_thread_entry(void *arg) {
     (void)arg;
-    ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
+    ushd_log(LOG_LVL_INFO, "starting the touch thread entry");
 
-    ushd_log(LOG_LVL_DETAIL, "sched fifo creating...");
+    ushd_log(LOG_LVL_INFO, "sched fifo creating...");
     ushd_sched_fifo_t sched_fifo = ushd_sched_fifo_singleton();
     if (!sched_fifo) {
         ushd_log(LOG_LVL_FATAL, "sched fifo init failed.");
         goto TERMINATE;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "conn table init");
+    ushd_log(LOG_LVL_INFO, "conn table init");
     if (USH_RET_OK != ushd_conn_tbl_init()) {
         ushd_log(LOG_LVL_FATAL, "conn-table init failed.");
         goto TERMINATE;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "reg-list init");
+    ushd_log(LOG_LVL_INFO, "reg-list init");
     if (USH_RET_OK != ushd_conn_reglist_init()) {
         ushd_log(LOG_LVL_FATAL, "reglist init failed.");
         goto TERMINATE;
     }
 
     while(1) {
-        ushd_log(LOG_LVL_DETAIL, "retain a full buffer");
+        ushd_log(LOG_LVL_INFO, "retain a full buffer");
         ush_char_t buf[USHD_SCHED_FIFO_ELEM_DATA_LEN];
         size_t cnt = ushd_sched_fifo_pop(sched_fifo, buf, sizeof(buf));
         if (0 == cnt) {
@@ -63,7 +63,7 @@ ushd_sched_thread_start(void) {
         return USH_RET_FAILED;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "ushd_sched_thread start with tid %lu", tid);
+    ushd_log(LOG_LVL_INFO, "ushd_sched_thread start with tid %lu", tid);
 
     ushd_log(LOG_LVL_INFO, "detaching sched daemon thread...");
     if (0 != pthread_detach(tid)) {

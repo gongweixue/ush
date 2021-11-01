@@ -32,7 +32,7 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
         ush_log(LOG_LVL_FATAL, "listener alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
-    ush_log(LOG_LVL_DETAIL, "allocate memory for listener %p", tmp);
+    ush_log(LOG_LVL_INFO, "allocate memory for listener %p", tmp);
 
     tmp->tid = USH_INVALID_TID;
 
@@ -47,7 +47,7 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
         free(tmp);
         return USH_RET_FAILED;
     }
-    ush_log(LOG_LVL_DETAIL, "the lstnr queue opened, %p", tmp);
+    ush_log(LOG_LVL_INFO, "the lstnr queue opened, %p", tmp);
 
 
     if (0 != pthread_create(&tmp->tid, NULL, lstnr_thread_entry, tmp)) {
@@ -92,7 +92,7 @@ ush_lstnr_stop_close(ush_lstnr_t *pPtr) {
 
     free(*pPtr);
     *pPtr = NULL;
-    ush_log(LOG_LVL_DETAIL, "listener %p destoried", *pPtr);
+    ush_log(LOG_LVL_INFO, "listener %p destoried", *pPtr);
 
     return USH_RET_OK;
 }
@@ -154,7 +154,7 @@ ushd_lstnr_receive(mqd_t mq, ush_char_t *dest, size_t sz) {
         ush_log(LOG_LVL_ERROR, "received ret value is -1");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_DETAIL, "ushd listener got the data");
+    ushd_log(LOG_LVL_INFO, "ushd listener got the data");
 
     return USH_RET_OK;
 }

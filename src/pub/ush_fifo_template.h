@@ -94,7 +94,7 @@ BAILED_COND_CONSUMER:                                                           
 BAILED_MUTEX:                                                                   \
     pthread_mutex_destroy(&fifo->mutex);                                        \
 BAILED_FIFO:                                                                    \
-    ushd_log(LOG_LVL_DETAIL, "free fifo %p", fifo);                             \
+    ushd_log(LOG_LVL_INFO, "free fifo %p", fifo);                               \
     free(fifo);                                                                 \
     fifo = NULL;                                                                \
 RET:                                                                            \
@@ -177,7 +177,7 @@ NAME##_fifo_cs_entry(NAME##_fifo_t fifo) {                                      
         ushd_log(LOG_LVL_ERROR, "entry "#NAME" fifo %p failed", fifo);          \
         return USH_RET_FAILED;                                                  \
     }                                                                           \
-    ushd_log(LOG_LVL_DETAIL, "entry "#NAME" fifo %p", fifo);                    \
+    ushd_log(LOG_LVL_INFO, "entry "#NAME" fifo %p", fifo);                      \
     return USH_RET_OK;                                                          \
 }                                                                               \
                                                                                 \
@@ -191,7 +191,7 @@ NAME##_fifo_cs_exit(NAME##_fifo_t fifo) {                                       
         ushd_log(LOG_LVL_ERROR, "exit "#NAME" fifo %p failed", fifo);           \
         return USH_RET_FAILED;                                                  \
     }                                                                           \
-    ushd_log(LOG_LVL_DETAIL, "exit "#NAME" fifo %p", fifo);                     \
+    ushd_log(LOG_LVL_INFO, "exit "#NAME" fifo %p", fifo);                       \
     return USH_RET_OK;                                                          \
 }                                                                               \
                                                                                 \
@@ -201,7 +201,7 @@ NAME##_fifo_producers_wait(NAME##_fifo_t fifo) {                                
     if (!fifo) {                                                                \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \
-    ushd_log(LOG_LVL_DETAIL, "producer waiting...");                            \
+    ushd_log(LOG_LVL_INFO, "producer waiting...");                              \
     if (0 != pthread_cond_wait(&fifo->cond_producer, &fifo->mutex)) {           \
         return USH_RET_FAILED;                                                  \
     }                                                                           \
@@ -214,7 +214,7 @@ NAME##_fifo_consumers_wait(NAME##_fifo_t fifo) {                                
     if (!fifo) {                                                                \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \
-    ushd_log(LOG_LVL_DETAIL, "consumer waiting...");                            \
+    ushd_log(LOG_LVL_INFO, "consumer waiting...");                              \
     if (0 != pthread_cond_wait(&fifo->cond_consumer, &fifo->mutex)) {           \
         return USH_RET_FAILED;                                                  \
     }                                                                           \
@@ -227,7 +227,7 @@ NAME##_fifo_notify_producers(NAME##_fifo_t fifo) {                              
     if (!fifo) {                                                                \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \
-    ushd_log(LOG_LVL_DETAIL, "producer trigger...");                            \
+    ushd_log(LOG_LVL_INFO, "producer trigger...");                              \
     if (0 != pthread_cond_signal(&fifo->cond_producer)) {                       \
         return USH_RET_FAILED;                                                  \
     }                                                                           \
@@ -240,7 +240,7 @@ NAME##_fifo_notify_consumers(NAME##_fifo_t fifo) {                              
     if (!fifo) {                                                                \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \
-    ushd_log(LOG_LVL_DETAIL, "comsumer trigger...");                            \
+    ushd_log(LOG_LVL_INFO, "comsumer trigger...");                              \
     if (0 != pthread_cond_signal(&fifo->cond_consumer)) {                       \
         return USH_RET_FAILED;                                                  \
     }                                                                           \

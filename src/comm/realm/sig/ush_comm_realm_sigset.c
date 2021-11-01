@@ -112,11 +112,13 @@ ush_comm_realm_sigset_get_pipe(const ush_comm_realm_sigset_t msg) {
 ush_ret_t
 ush_comm_realm_sigset_destroy(ush_comm_realm_sigset_t *pMsg) {
     if (!pMsg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 
     ush_comm_realm_sigset_t msg = *pMsg;
     if (!msg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 

@@ -87,7 +87,7 @@ ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
         return USH_RET_FAILED;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "begin sending notify to listeners");
+    ushd_log(LOG_LVL_INFO, "begin sending notify to listeners");
     // cb to notify all observers.
     ush_sig_val_t           val   = reglist.signals[sigid].value;
     ush_reglist_sig_node_t *nodes = reglist.signals[sigid].nodes;

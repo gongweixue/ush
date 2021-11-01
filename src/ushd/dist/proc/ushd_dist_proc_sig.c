@@ -23,7 +23,7 @@ ushd_dist_proc_sig_send_reg_ack(ushd_dist_thread_t thread,
         return USH_RET_OUT_OF_MEM;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "sending ack msg %p ......", ack);
+    ushd_log(LOG_LVL_INFO, "sending ack msg %p ......", ack);
 
     ush_ret_t ret = ushd_dist_thread_send_msg(
         thread, ack,
@@ -53,7 +53,7 @@ ushd_dist_proc_sig_send_update(ushd_dist_thread_t thread,
         return USH_RET_OUT_OF_MEM;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "sending msg %p in thread %p......", upd, thread);
+    ushd_log(LOG_LVL_INFO, "sending msg %p in thread %p......", upd, thread);
 
     ush_ret_t ret = ushd_dist_thread_send_msg(
         thread, upd,

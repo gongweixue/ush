@@ -25,7 +25,7 @@ ushd_tch_create(ushd_tch_t *pTouch) {
         ushd_log(LOG_LVL_FATAL, "ushd touch alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
-    ush_log(LOG_LVL_DETAIL, "alloc mem for touch, addr %p", tmp);
+    ush_log(LOG_LVL_INFO, "alloc mem for touch, addr %p", tmp);
 
     tmp->mq = USH_INVALID_MQD_VALUE;
     *pTouch = tmp;
@@ -55,7 +55,7 @@ ushd_tch_open(ushd_tch_t touch) {
         return USH_RET_FAILED;
     }
 
-    ush_log(LOG_LVL_DETAIL, "the touch queue opened, %p", touch);
+    ush_log(LOG_LVL_INFO, "the touch queue opened, %p", touch);
 
     return USH_RET_OK;
 }
@@ -68,7 +68,7 @@ ushd_tch_close(ushd_tch_t touch) {
         return USH_RET_OK;
     }
 
-    ush_log(LOG_LVL_DETAIL, "closing the touch queue %p", touch);
+    ush_log(LOG_LVL_INFO, "closing the touch queue %p", touch);
 
     if (0 != mq_close(touch->mq)) {
         ushd_log(LOG_LVL_ERROR, "ushd touch closed failed");
@@ -112,7 +112,7 @@ ushd_tch_receive(ushd_tch_t touch, ush_char_t *dest, ush_size_t sz) {
         ush_log(LOG_LVL_ERROR, "received ret value is -1");
         return USH_RET_FAILED;
     }
-    ushd_log(LOG_LVL_DETAIL, "ushd touch got the data");
+    ushd_log(LOG_LVL_INFO, "ushd touch got the data");
 
     return USH_RET_OK;
 }
@@ -127,8 +127,6 @@ ushd_tch_destroy_with_closing(ushd_tch_t *pTouch) {
 
     // close it anyway, no matter if it has been opened.
     ushd_tch_close(*pTouch);
-
-    ush_log(LOG_LVL_DETAIL, "free the mem of touch %p", *pTouch);
     free(*pTouch);
     pTouch = NULL;
 

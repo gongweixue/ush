@@ -31,7 +31,6 @@ ush_connect_sync_create(ush_connect_sync_t *pSync, ush_connect_t conn) {
         goto RET;
     }
 
-    ush_log(LOG_LVL_DETAIL, "init mutex and cond");
     if (0 != pthread_mutex_init(&pMem->mutex, NULL)) {
         ush_log(LOG_LVL_FATAL, "hello sync sync handle mutex create failed");
         ret = USH_RET_FAILED;
@@ -59,7 +58,6 @@ DESTROY_PTHREAD:
 
 
 FREE_MEM:
-    ush_log(LOG_LVL_DETAIL, "free pMem %p", pMem);
     free(pMem);
 
 RET:

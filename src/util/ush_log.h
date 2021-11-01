@@ -7,7 +7,6 @@ typedef enum USH_LOG_LVL {
     LOG_LVL_FATAL,  // routine exit
     LOG_LVL_ERROR,  // function return
     LOG_LVL_INFO,   // code block finished
-    LOG_LVL_DETAIL  // every step of the routine
 } USH_LOG_LVL;
 
 #ifndef USH_LOG_ON

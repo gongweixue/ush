@@ -116,11 +116,13 @@ ush_comm_realm_sigreg_get_pipe(const ush_comm_realm_sigreg_t msg) {
 ush_ret_t
 ush_comm_realm_sigreg_destroy(ush_comm_realm_sigreg_t *pMsg) {
     if (!pMsg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 
     ush_comm_realm_sigreg_t msg = *pMsg;
     if (!msg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 

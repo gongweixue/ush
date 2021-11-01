@@ -24,7 +24,6 @@ ush_realm_alloc(ush_realm_t *pRealm, const ush_char_t *fullname) {
         ush_log(LOG_LVL_FATAL, "realm alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
-    ush_log(LOG_LVL_DETAIL, "realm heap mem allocate, addr %p", tmp);
 
     tmp->mq = USH_INVALID_MQD_VALUE;
     strcpy(tmp->fullname, fullname);
@@ -42,7 +41,6 @@ ush_realm_open(ush_realm_t realm) {
         return USH_RET_OK;
     }
 
-    ush_log(LOG_LVL_DETAIL, "try to open realm, addr %p", realm);
 
     realm->mq = mq_open(realm->fullname, O_WRONLY);
     if (USH_INVALID_MQD_VALUE == realm->mq) { // failed
@@ -61,7 +59,6 @@ ush_realm_close(ush_realm_t realm) {
         return USH_RET_OK;
     }
 
-    ush_log(LOG_LVL_DETAIL, "close realm, addr %p", realm);
     if (0 != mq_close(realm->mq)) {
         ush_log(LOG_LVL_ERROR, "realm closed failed");
         return USH_RET_FAILED;
@@ -83,7 +80,6 @@ ush_realm_destroy_with_closing(ush_realm_t *pRealm) {
     // close it anyway, no matter if it has been opened.
     ush_realm_close(*pRealm);
 
-    ush_log(LOG_LVL_DETAIL, "free mem of realm %p", *pRealm);
     free(*pRealm);
     pRealm = NULL;
 

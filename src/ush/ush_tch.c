@@ -37,7 +37,7 @@ ush_tch_send(const ush_tch_t   touch,
         ush_log(LOG_LVL_FATAL, "send msg failed.");
         ret = USH_RET_FAILED;
     }
-    ush_log(LOG_LVL_DETAIL, "send return");
+    ush_log(LOG_LVL_INFO, "send return");
 
     return ret;
 }
@@ -62,7 +62,7 @@ ush_tch_send_hello(const ush_tch_t                touch,
                 ret = USH_RET_FAILED;
             }
         }
-        ush_log(LOG_LVL_DETAIL, "timedsend return");
+        ush_log(LOG_LVL_INFO, "timedsend return");
     } else {
         ret = ush_tch_send(touch, pMsg, sz, USH_COMM_TCH_SEND_PRIO_HELLO);
     }
@@ -78,7 +78,7 @@ ush_tch_close(ush_tch_t touch) {
         return USH_RET_OK;
     }
 
-    ush_log(LOG_LVL_DETAIL, "close touch, addr %p", touch);
+    ush_log(LOG_LVL_INFO, "close touch, addr %p", touch);
     if (0 != mq_close(touch->mq)) {
         ush_log(LOG_LVL_ERROR, "touch closed failed");
         return USH_RET_FAILED;
@@ -97,7 +97,7 @@ ush_tch_open(ush_tch_t touch) {
         return USH_RET_OK;
     }
 
-    ush_log(LOG_LVL_DETAIL, "try to open touch, addr %p", touch);
+    ush_log(LOG_LVL_INFO, "try to open touch, addr %p", touch);
     for (int counter = 0; counter < USH_TCH_OPEN_RETRY_CNT; ++counter) {
         touch->mq = mq_open(USH_COMM_TCH_Q_PATH, O_WRONLY);
         if (USH_INVALID_MQD_VALUE != touch->mq) { // done
@@ -128,7 +128,7 @@ ush_tch_alloc(ush_tch_t *pTouch) {
         ush_log(LOG_LVL_FATAL, "touch alloc failed");
         return USH_RET_OUT_OF_MEM;
     }
-    ush_log(LOG_LVL_DETAIL, "touch mem allocate, addr %p", tmp);
+    ush_log(LOG_LVL_INFO, "touch mem allocate, addr %p", tmp);
 
     tmp->mq = USH_INVALID_MQD_VALUE;
     *pTouch = tmp;
@@ -147,7 +147,6 @@ ush_tch_destroy_with_closing(ush_tch_t *pTouch) {
     // close it anyway, no matter if it has been opened.
     ush_tch_close(*pTouch);
 
-    ush_log(LOG_LVL_DETAIL, "free mem of touch %p", *pTouch);
     free(*pTouch);
     pTouch = NULL;
 

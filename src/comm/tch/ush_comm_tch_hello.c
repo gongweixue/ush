@@ -50,7 +50,6 @@ ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
         ush_log(LOG_LVL_FATAL, "no mem for hello");
         return USH_RET_OUT_OF_MEM;
     }
-    ush_log(LOG_LVL_DETAIL, "allocate memory for msg %p", tmp);
 
     tmp->desc.desc.port = USH_COMM_PORT_TCH;
     tmp->desc.catalog   = USH_COMM_TCH_MSG_CATALOG_HELLO;
@@ -79,7 +78,6 @@ ush_comm_tch_hello_destroy(ush_comm_tch_hello_t *pHello) {
         return USH_RET_OK;
     }
 
-    ush_log(LOG_LVL_DETAIL, "free memory for msg %p", *pHello);
     // just free it self, do not destroy sync
     free(*pHello);
     *pHello = NULL;
@@ -112,13 +110,19 @@ ush_comm_tch_hello_sync_of(const ush_comm_tch_hello_t msg) {
 
 ush_cert_t
 ush_comm_tch_hello_cert_of(const ush_comm_tch_hello_t msg) {
-    ush_assert(msg);
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return USH_INVALID_CERT_VALUE;
+    }
     return msg->cert;
 }
 
 ush_s64_t
 ush_comm_tch_hello_deadline_of(const ush_comm_tch_hello_t msg) {
-    ush_assert(msg);
+    if (!msg) {
+        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
+        return 0;
+    }
     return msg->deadline;
 }
 

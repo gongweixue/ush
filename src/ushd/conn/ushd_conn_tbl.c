@@ -60,7 +60,6 @@ ushd_conn_tbl_init(void) {
 
     tbl.cursor = USHD_INVALID_CONN_IDX_VALUE;
 
-    ushd_log(LOG_LVL_DETAIL, "conn table init finished");
 
     return USH_RET_OK;
 }

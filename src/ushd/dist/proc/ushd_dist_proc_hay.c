@@ -18,7 +18,7 @@ void ushd_dist_proc_hay_send(ushd_dist_thread_t       thread,
         return;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "sending hay_msg from %p ......", hay);
+    ushd_log(LOG_LVL_INFO, "sending hay_msg from %p ......", hay);
 
     ush_ret_t ret = ushd_dist_thread_send_msg(thread, hay,
                                               ush_comm_lstnr_hay_sizeof(),

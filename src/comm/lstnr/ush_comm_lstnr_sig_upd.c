@@ -41,6 +41,7 @@ ush_comm_lstnr_sig_upd_sizeof(void) {
 ush_sig_cb_rcv_t
 ush_comm_lstnr_sig_upd_get_rcv(const ush_comm_lstnr_sig_upd_t msg) {
     if (!msg) {
+        ush_log(LOG_LVL_ERROR, "msg ptr null");
         return NULL;
     }
 
@@ -50,7 +51,10 @@ ush_comm_lstnr_sig_upd_get_rcv(const ush_comm_lstnr_sig_upd_t msg) {
 ush_sig_val_t
 ush_comm_lstnr_sig_upd_get_value(const ush_comm_lstnr_sig_upd_t msg) {
     if (!msg) {
-        return (ush_sig_val_t)0;
+        ush_log(LOG_LVL_ERROR, "msg ptr null");
+        ush_sig_val_t ret;
+        ret.dataMAX = 0;
+        return ret;
     }
 
     return msg->val;
@@ -59,6 +63,7 @@ ush_comm_lstnr_sig_upd_get_value(const ush_comm_lstnr_sig_upd_t msg) {
 ush_sig_id_t
 ush_comm_lstnr_sig_upd_get_sigid(const ush_comm_lstnr_sig_upd_t msg) {
     if (!msg) {
+        ush_log(LOG_LVL_ERROR, "msg ptr null");
         return USH_SIG_ID_INVALID;
     }
 
@@ -68,11 +73,13 @@ ush_comm_lstnr_sig_upd_get_sigid(const ush_comm_lstnr_sig_upd_t msg) {
 ush_ret_t
 ush_comm_lstnr_sig_upd_destroy(ush_comm_lstnr_sig_upd_t *pMsg) {
     if (!pMsg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 
     ush_comm_lstnr_sig_upd_t msg = *pMsg;
     if (!msg) {
+        ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 

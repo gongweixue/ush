@@ -36,14 +36,14 @@ tch_thread_create(void) {
         newMem->tid    = USH_INVALID_TID; // maybe a valid value
     }
 
-    ushd_log(LOG_LVL_DETAIL, "tch_thread singleton init, %p", newMem);
+    ushd_log(LOG_LVL_INFO, "tch_thread singleton init, %p", newMem);
     return newMem;
 }
 
 static void *
 ushd_tch_thread_entry(void *arg) {
     (void)arg;
-    ushd_log(LOG_LVL_DETAIL, "starting the touch thread entry");
+    ushd_log(LOG_LVL_INFO, "starting the touch thread entry");
     thread = tch_thread_create();
     if (!thread) {
         ushd_log(LOG_LVL_FATAL, "singleton touch thread NULL");
@@ -56,7 +56,7 @@ ushd_tch_thread_entry(void *arg) {
     if (USH_RET_OK != ushd_tch_open(thread->touch)) {
         goto TERMINATE;
     }
-    ushd_log(LOG_LVL_DETAIL, "touch been opened %p", thread->touch);
+    ushd_log(LOG_LVL_INFO, "touch been opened %p", thread->touch);
 
     while (1) {
         ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
@@ -95,7 +95,7 @@ ushd_tch_thread_start(void) {
         return USH_RET_FAILED;
     }
 
-    ushd_log(LOG_LVL_DETAIL, "ushd_tch_thread_s start with tid %lu", tid);
+    ushd_log(LOG_LVL_INFO, "ushd_tch_thread_s start with tid %lu", tid);
 
     if (0 != pthread_detach(tid)) {
         ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.");
