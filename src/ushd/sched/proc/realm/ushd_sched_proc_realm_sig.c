@@ -82,7 +82,8 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
 static void notify_handle(ush_connidx_t connidx,
                           ush_sig_id_t  sigid,
                           ush_sig_val_t val,
-                          ush_pvoid_t   rcv) {
+                          ush_pvoid_t   rcv,
+                          ush_u32_t     cntr) {
     if (!ushd_conn_tbl_get_active_flg(connidx)) {
         ushd_log(LOG_LVL_INFO, "inactive idx:%d value of tbl", connidx);
         return;
@@ -93,6 +94,7 @@ static void notify_handle(ush_connidx_t connidx,
     msg.sigid       = sigid;
     msg.val.dataMAX = val.dataMAX;
     msg.rcv         = rcv;
+    msg.cntr        = cntr;
 
     ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(connidx);
     if (!dist) {

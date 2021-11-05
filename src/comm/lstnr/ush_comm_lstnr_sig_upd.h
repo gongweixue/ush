@@ -8,7 +8,8 @@ typedef struct lstnr_sig_upd_s * ush_comm_lstnr_sig_upd_t;
 ush_comm_lstnr_sig_upd_t
 ush_comm_lstnr_sig_upd_create(ush_sig_id_t  sigid,
                               ush_sig_val_t val,
-                              ush_pvoid_t   rcv);
+                              ush_pvoid_t   rcv,
+                              ush_u32_t     cntr);
 
 ush_size_t
 ush_comm_lstnr_sig_upd_sizeof(void);
@@ -21,6 +22,9 @@ ush_comm_lstnr_sig_upd_get_value(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_sig_id_t
 ush_comm_lstnr_sig_upd_get_sigid(const ush_comm_lstnr_sig_upd_t msg);
+
+ush_u32_t
+ush_comm_lstnr_sig_upd_get_cntr(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_ret_t
 ush_comm_lstnr_sig_upd_destroy(ush_comm_lstnr_sig_upd_t *pMsg);

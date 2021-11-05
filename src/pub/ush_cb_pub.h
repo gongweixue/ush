@@ -18,8 +18,12 @@ extern "C" {
 typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
                                       ush_sig_id_t       id,      // signal id
                                       ush_bool_t         success);
+
+
 // when signal receive
-typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sig_id_t id, ush_sig_val_t val);
+typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sig_id_t  id,
+                                      ush_sig_val_t val,
+                                      ush_u32_t     cntr);
 
 
 

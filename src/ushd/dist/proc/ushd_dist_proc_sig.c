@@ -47,7 +47,7 @@ ushd_dist_proc_sig_send_update(ushd_dist_thread_t thread,
     }
 
     ush_comm_lstnr_sig_upd_t upd =
-        ush_comm_lstnr_sig_upd_create(msg->sigid, msg->val, msg->rcv);
+        ush_comm_lstnr_sig_upd_create(msg->sigid, msg->val, msg->rcv, msg->cntr);
     if (!upd) {
         ushd_log(LOG_LVL_ERROR, "update msg mem alloc failed.");
         return USH_RET_OUT_OF_MEM;

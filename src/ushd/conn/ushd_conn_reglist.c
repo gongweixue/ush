@@ -85,14 +85,15 @@ ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
 
     ushd_log(LOG_LVL_INFO, "begin sending notify to listeners");
     // cb to notify all observers.
-    ush_sig_val_t           val   = reglist.signals[sigid].value;
-    ush_reglist_sig_node_t *nodes = reglist.signals[sigid].nodes;
+    ush_sig_val_t           val     = reglist.signals[sigid].value;
+    ush_u32_t               counter = reglist.signals[sigid].rollingcounter;
+    ush_reglist_sig_node_t *nodes   = reglist.signals[sigid].nodes;
     for (ush_connidx_t connidx= 0; connidx < USH_CONN_IDX_MAX; ++connidx) {
         if (!ushd_conn_tbl_get_active_flg(connidx) || !nodes[connidx].rcv) {
             continue;
         }
 
-        func(connidx, sigid, val, nodes[connidx].rcv);
+        func(connidx, sigid, val, nodes[connidx].rcv, counter);
     }
 
     return USH_RET_OK;

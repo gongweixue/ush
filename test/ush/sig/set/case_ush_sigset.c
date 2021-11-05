@@ -10,9 +10,12 @@ static ush_sig_val_t ref;
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
-static ush_ret_t onRcv_XYZ(ush_sig_id_t sigid, const ush_sig_val_t val) {
+static ush_ret_t onRcv_XYZ(ush_sig_id_t sigid,
+                           const ush_sig_val_t val,
+                           ush_u32_t rollingcounter) {
     ush_assert(USH_SIG_ID_XYZ_xyz_U64 == sigid);
     ush_assert(ref.dataU64 == val.dataU64);
+    ush_assert(0 != rollingcounter);
 
     // trigger the main thread moving on.
     pthread_mutex_lock(&mutex);
