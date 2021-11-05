@@ -15,6 +15,7 @@
 #define USH_COMM_TCH_SEND_PRIO_HELLO             (0)
 
 #define USH_COMM_REALM_SEND_PRIO_SIGSET           (0)
+#define USH_COMM_REALM_SEND_PRIO_SIGTEASE         (0)
 #define USH_COMM_REALM_SEND_PRIO_SIGREG           (1)
 
 #define USH_COMM_LSTNR_SEND_PRIO_HAY             (0)

@@ -21,6 +21,7 @@
 #include "realm/sig/ush_comm_realm_sig.h"
 #include "realm/sig/ush_comm_realm_sigreg.h"
 #include "realm/sig/ush_comm_realm_sigset.h"
+#include "realm/sig/ush_comm_realm_sigtease.h"
 
 
 typedef struct ush_connect_s {
@@ -309,6 +310,11 @@ ush_connect_send(ush_connect_t conn, const ush_comm_d *msg) {
             case USH_COMM_REALM_SIG_INTENT_SET:
                 sz = ush_comm_realm_sigset_sizeof();
                 prio = USH_COMM_REALM_SEND_PRIO_SIGSET;
+                break;
+
+            case USH_COMM_REALM_SIG_INTENT_TEASE:
+                sz = ush_comm_realm_sigtease_sizeof();
+                prio = USH_COMM_REALM_SEND_PRIO_SIGTEASE;
                 break;
 
             default:

@@ -3,11 +3,10 @@
 #include "ush_log.h"
 #include "ush_sig_pub.h"
 
-#include "realm/sig/ush_comm_realm_sigset.h"
-
+#include "realm/sig/ush_comm_realm_sigtease.h"
 
 ush_ret_t
-ush_sigset(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_sig_val_t value) {
+ush_sigtease(ush_pipe_t pipe, ush_sig_id_t sigid) {
     if (USH_INVALID_PIPE == pipe || !ush_sig_id_check(sigid)) {
         ush_log(LOG_LVL_ERROR, "parameters not correct!");
         return USH_RET_WRONG_PARAM;
@@ -32,11 +31,11 @@ ush_sigset(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_sig_val_t value) {
         return USH_RET_WRONG_SEQ;
     }
 
-    ush_comm_realm_sigset_t msg = NULL;
+    ush_comm_realm_sigtease_t msg = NULL;
     ush_ret_t ret =
-        ush_comm_realm_sigset_create(&msg, idx, cert, sigid, value);
+        ush_comm_realm_sigtease_create(&msg, idx, cert, sigid);
     if (USH_RET_OK != ret) {
-        ush_log(LOG_LVL_ERROR, "sigset_msg create failed");
+        ush_log(LOG_LVL_ERROR, "sigtease_msg create failed");
         return ret;
     }
 
@@ -44,7 +43,7 @@ ush_sigset(ush_pipe_t pipe, ush_sig_id_t sigid, const ush_sig_val_t value) {
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sent sigid reg msg failed");
     }
-    ush_comm_realm_sigset_destroy(&msg); // destroy in any case
+    ush_comm_realm_sigtease_destroy(&msg); // destroy in any case
 
     return ret;
 }

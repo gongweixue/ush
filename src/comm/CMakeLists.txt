@@ -7,6 +7,7 @@ set(SRC_USH_COMM
     tch/ush_comm_tch_hello.c
     realm/sig/ush_comm_realm_sigreg.c
     realm/sig/ush_comm_realm_sigset.c
+    realm/sig/ush_comm_realm_sigtease.c
 )
 
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS}-Wlarger-than=128)

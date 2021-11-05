@@ -108,7 +108,7 @@ ushd_conn_tbl_connidx_check(ush_connidx_t idx) {
 ush_bool_t
 ushd_conn_tbl_get_active_flg(ush_connidx_t idx) {
     if (!ushd_conn_tbl_connidx_check(idx)) {
-        return 0;
+        return USH_FALSE;
     }
 
     ush_bool_t ret = tbl.items[idx].active;

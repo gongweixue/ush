@@ -13,6 +13,7 @@ set(SRC_USH
     pipe/ush_pipe_create.c
     sig/ush_sigreg.c
     sig/ush_sigset.c
+    sig/ush_sigtease.c
 )
 
 include_directories(

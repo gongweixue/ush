@@ -11,6 +11,7 @@
 #include "realm/sig/ush_comm_realm_sig.h"
 #include "realm/sig/ush_comm_realm_sigreg.h"
 #include "realm/sig/ush_comm_realm_sigset.h"
+#include "realm/sig/ush_comm_realm_sigtease.h"
 
 #include "dist/ushd_dist_fifo.h"
 #include "dist/ushd_dist_fifo_msg.h"
@@ -145,8 +146,49 @@ static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
         ushd_log(LOG_LVL_INFO, "signal %d value update failed", sigid);
         return;
     }
-    if (USH_RET_OK != ushd_conn_reglist_notify(sigid, notify_handle)) {
+
+    ush_ret_t res = ushd_conn_reglist_notify(
+        sigid, USHD_INVALID_CONN_IDX_VALUE, notify_handle);
+    if (USH_RET_OK != res) {
         ushd_log(LOG_LVL_ERROR, "notify sigid %d update failed", sigid);
+        return;
+    }
+
+    return;
+}
+
+static void ushd_sched_proc_realm_sigtease(const ush_comm_realm_sigtease_t msg) {
+    ush_assert(msg);
+    if (!msg) {
+        ushd_log(LOG_LVL_ERROR, "NULL sig-tease msg");
+        return;
+    }
+
+    // check idx
+    ush_connidx_t idx = ush_comm_realm_sigtease_get_connidx(msg);
+    if (!ushd_conn_tbl_get_active_flg(idx)) {
+        ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
+        return;
+    }
+
+    // check cert
+    const ush_cert_t cert = ush_comm_realm_sigtease_get_cert(msg);
+    const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
+    if (ref != cert) {
+        ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
+        return;
+    }
+
+    // check sigid valid
+    ush_sig_id_t sigid = ush_comm_realm_sigtease_get_sigid(msg);
+    if (!ush_sig_id_check(sigid)) {
+        ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
+        return;
+    }
+
+    ush_ret_t res = ushd_conn_reglist_notify(sigid, idx, notify_handle);
+    if (USH_RET_OK != res) {
+        ushd_log(LOG_LVL_ERROR, "notify sig:%d to conn:%d failed", sigid, idx);
         return;
     }
 
@@ -169,6 +211,10 @@ void ushd_sched_proc_realm_sig(const ush_pvoid_t msg) {
 
     case USH_COMM_REALM_SIG_INTENT_SET:
         ushd_sched_proc_realm_sigset((const ush_comm_realm_sigset_t)msg);
+        break;
+
+    case USH_COMM_REALM_SIG_INTENT_TEASE:
+        ushd_sched_proc_realm_sigtease((const ush_comm_realm_sigtease_t)msg);
         break;
 
     default:

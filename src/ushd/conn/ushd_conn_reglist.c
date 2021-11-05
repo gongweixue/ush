@@ -62,7 +62,8 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
     }
 
     ush_ret_t ret = USH_RET_FAILED;
-    if (val.dataMAX != reglist.signals[sigid].value.dataMAX) { // new value
+    if (val.dataMAX != reglist.signals[sigid].value.dataMAX ||
+        0 == reglist.signals[sigid].rollingcounter) { // new-value/first-assign
         reglist.signals[sigid].value.dataMAX = val.dataMAX;
         reglist.signals[sigid].rollingcounter += 1;
         ret = USH_RET_OK;
@@ -73,8 +74,11 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
     return ret;
 }
 
+// notify all observers of this sigid if idx == USHD_INVALID_CONN_IDX_VALUE
 ush_ret_t
-ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
+ushd_conn_reglist_notify(ush_sig_id_t  sigid,
+                         ush_connidx_t connidx,
+                         notify_func_t func) {
     if (!func || !ush_sig_id_check(sigid)) {
         return USH_RET_WRONG_PARAM;
     }
@@ -88,13 +92,25 @@ ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
     ush_sig_val_t           val     = reglist.signals[sigid].value;
     ush_u32_t               counter = reglist.signals[sigid].rollingcounter;
     ush_reglist_sig_node_t *nodes   = reglist.signals[sigid].nodes;
-    for (ush_connidx_t connidx= 0; connidx < USH_CONN_IDX_MAX; ++connidx) {
-        if (!ushd_conn_tbl_get_active_flg(connidx) || !nodes[connidx].rcv) {
-            continue;
+
+    // for any single conn
+    if (ushd_conn_tbl_get_active_flg(connidx)) {
+        if (nodes[connidx].rcv) { // has a receive callback
+            func(connidx, sigid, val, nodes[connidx].rcv, counter);
+            ushd_log(LOG_LVL_INFO, "notify single observer, sig:%d", sigid);
         }
 
-        func(connidx, sigid, val, nodes[connidx].rcv, counter);
+    } else if (USHD_INVALID_CONN_IDX_VALUE == connidx) { // for all observers
+        for (ush_connidx_t idx= 0; idx < USH_CONN_IDX_MAX; ++idx) {
+            if (!ushd_conn_tbl_get_active_flg(idx) || !nodes[idx].rcv) {
+                continue;
+            }
+
+            func(idx, sigid, val, nodes[idx].rcv, counter);
+        }
     }
+
+
 
     return USH_RET_OK;
 }

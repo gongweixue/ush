@@ -5,21 +5,19 @@
 #include "ush_log.h"
 #include "realm/ush_comm_realm.h"
 #include "realm/sig/ush_comm_realm_sig.h"
-#include "realm/sig/ush_comm_realm_sigset.h"
+#include "realm/sig/ush_comm_realm_sigtease.h"
 
 
-typedef struct comm_realm_sigset_s {
+typedef struct comm_realm_sigtease_s {
     ush_comm_realm_sig_d         desc;
-    ush_sig_val_t                val;
-} USH_COMM_MSG_PACKED  * ush_comm_realm_sigset_t;
+} USH_COMM_MSG_PACKED  * ush_comm_realm_sigtease_t;
 
 
 ush_ret_t
-ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
-                             ush_connidx_t             connidx,
-                             ush_cert_t                cert,
-                             ush_sig_id_t              sigid,
-                             ush_sig_val_t             val)
+ush_comm_realm_sigtease_create(ush_comm_realm_sigtease_t  *pMsg,
+                               ush_connidx_t               connidx,
+                               ush_cert_t                  cert,
+                               ush_sig_id_t                sigid)
 {
     if (!pMsg) {
         ush_log(LOG_LVL_ERROR, "ptr NULL");
@@ -35,8 +33,8 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
         return USH_RET_WRONG_PARAM;
     }
 
-    ush_comm_realm_sigset_t tmp =
-        (ush_comm_realm_sigset_t)malloc(sizeof(struct comm_realm_sigset_s));
+    ush_comm_realm_sigtease_t tmp =
+        (ush_comm_realm_sigtease_t)malloc(sizeof(struct comm_realm_sigtease_s));
     if (!tmp) {
         ush_log(LOG_LVL_ERROR, "out of mem");
         *pMsg = NULL;
@@ -45,11 +43,10 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
 
     tmp->desc.desc.desc.port = USH_COMM_PORT_REALM;
     tmp->desc.desc.catalog   = USH_COMM_REALM_MSG_CATALOG_SIG;
-    tmp->desc.intent         = USH_COMM_REALM_SIG_INTENT_SET;
+    tmp->desc.intent         = USH_COMM_REALM_SIG_INTENT_TEASE;
     tmp->desc.connidx        = connidx;
     tmp->desc.cert           = cert;
     tmp->desc.sigid          = sigid;
-    tmp->val.dataMAX         = val.dataMAX;
 
     *pMsg = tmp;
 
@@ -57,7 +54,7 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
 }
 
 ush_s32_t
-ush_comm_realm_sigset_get_connidx(const ush_comm_realm_sigset_t msg) {
+ush_comm_realm_sigtease_get_connidx(const ush_comm_realm_sigtease_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return 0;
@@ -66,7 +63,7 @@ ush_comm_realm_sigset_get_connidx(const ush_comm_realm_sigset_t msg) {
 }
 
 ush_cert_t
-ush_comm_realm_sigset_get_cert(const ush_comm_realm_sigset_t msg) {
+ush_comm_realm_sigtease_get_cert(const ush_comm_realm_sigtease_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_INVALID_CERT_VALUE;
@@ -75,7 +72,7 @@ ush_comm_realm_sigset_get_cert(const ush_comm_realm_sigset_t msg) {
 }
 
 ush_sig_id_t
-ush_comm_realm_sigset_get_sigid(const ush_comm_realm_sigset_t msg) {
+ush_comm_realm_sigtease_get_sigid(const ush_comm_realm_sigtease_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_SIG_ID_INVALID;
@@ -83,23 +80,14 @@ ush_comm_realm_sigset_get_sigid(const ush_comm_realm_sigset_t msg) {
     return msg->desc.sigid;
 }
 
-ush_sig_val_t
-ush_comm_realm_sigset_get_val(const ush_comm_realm_sigset_t msg) {
-    if (!msg) {
-        ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
-        return (ush_sig_val_t)(0);
-    }
-    return msg->val;
-}
-
 ush_ret_t
-ush_comm_realm_sigset_destroy(ush_comm_realm_sigset_t *pMsg) {
+ush_comm_realm_sigtease_destroy(ush_comm_realm_sigtease_t *pMsg) {
     if (!pMsg) {
         ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
     }
 
-    ush_comm_realm_sigset_t msg = *pMsg;
+    ush_comm_realm_sigtease_t msg = *pMsg;
     if (!msg) {
         ush_log(LOG_LVL_INFO, "msg ptr null");
         return USH_RET_OK;
@@ -112,6 +100,6 @@ ush_comm_realm_sigset_destroy(ush_comm_realm_sigset_t *pMsg) {
 }
 
 ush_size_t
-ush_comm_realm_sigset_sizeof(void) {
-    return sizeof(struct comm_realm_sigset_s);
+ush_comm_realm_sigtease_sizeof(void) {
+    return sizeof(struct comm_realm_sigtease_s);
 }

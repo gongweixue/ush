@@ -20,6 +20,8 @@ typedef void (*notify_func_t)(
     ush_pvoid_t,
     ush_u32_t);
 
-ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func);
+ush_ret_t ushd_conn_reglist_notify(ush_sig_id_t  sigid,
+                                   ush_connidx_t connidx,
+                                   notify_func_t func);
 
 #endif // USHD_CONN_REGLIST_H

@@ -9,9 +9,6 @@
 
 typedef struct comm_realm_sigreg_s {
     ush_comm_realm_sig_d         desc;
-    ush_connidx_t                connidx;
-    ush_cert_t                   cert;
-    ush_sig_id_t                 sigid;
     ush_pvoid_t                  done;
     ush_pvoid_t                  rcv;
     ush_pipe_t                   pipe;
@@ -42,9 +39,9 @@ ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
     tmp->desc.desc.desc.port = USH_COMM_PORT_REALM;
     tmp->desc.desc.catalog   = USH_COMM_REALM_MSG_CATALOG_SIG;
     tmp->desc.intent         = USH_COMM_REALM_SIG_INTENT_REG;
-    tmp->connidx             = connidx;
-    tmp->cert                = cert;
-    tmp->sigid               = sigid;
+    tmp->desc.connidx        = connidx;
+    tmp->desc.cert           = cert;
+    tmp->desc.sigid          = sigid;
     tmp->done                = done;
     tmp->rcv                 = rcv;
     tmp->pipe                = pipe;
@@ -61,7 +58,7 @@ ush_comm_realm_sigreg_get_cert(const ush_comm_realm_sigreg_t msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_INVALID_CERT_VALUE;
     }
-    return msg->cert;
+    return msg->desc.cert;
 }
 
 ush_s32_t
@@ -70,7 +67,7 @@ ush_comm_realm_sigreg_get_connidx(const ush_comm_realm_sigreg_t msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return 0;
     }
-    return msg->connidx;
+    return msg->desc.connidx;
 }
 
 ush_sig_id_t
@@ -79,7 +76,7 @@ ush_comm_realm_sigreg_get_sigid(const ush_comm_realm_sigreg_t msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_SIG_ID_INVALID;
     }
-    return msg->sigid;
+    return msg->desc.sigid;
 }
 
 ush_pvoid_t
