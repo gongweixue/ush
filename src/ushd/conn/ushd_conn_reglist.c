@@ -31,7 +31,7 @@ static ush_reglist_t reglist; // static var, all 0 while loading.
 
 ush_ret_t ushd_conn_reglist_init(void) {
     static ush_bool_t flag = USH_FALSE;
-    if (USH_TRUE == flag) {
+    if (USH_FALSE != flag) {
         ushd_log(LOG_LVL_INFO, "reglist has been alreay init.");
         return USH_RET_OK;
     }
