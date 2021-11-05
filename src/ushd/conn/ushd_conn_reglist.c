@@ -20,7 +20,7 @@ typedef struct ush_reglist_sig_node_s {
 typedef struct ush_reglist_sig_s {
     ush_reglist_sig_node_t  nodes[USH_CONN_IDX_MAX];
     ush_sig_val_t           value; // current value of the signal
-    ush_bool_t              valid; // is current value valid to use
+    ush_u32_t               rollingcounter; // increse by 1 each time
 } ush_reglist_sig_ty;
 
 typedef struct ush_reglist_s {
@@ -62,18 +62,14 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
     }
 
     ush_ret_t ret = USH_RET_FAILED;
-    if (1 != reglist.signals[sigid].valid) { // first time to assigned
+    if (val.dataMAX != reglist.signals[sigid].value.dataMAX) { // new value
         reglist.signals[sigid].value.dataMAX = val.dataMAX;
-        reglist.signals[sigid].valid = USH_TRUE;
+        reglist.signals[sigid].rollingcounter += 1;
         ret = USH_RET_OK;
     } else {
-        if (val.dataMAX != reglist.signals[sigid].value.dataMAX) { // new value
-            reglist.signals[sigid].value.dataMAX = val.dataMAX;
-            ret = USH_RET_OK;
-        } else { // same value, no need to update, return failed.
-            ret = USH_RET_FAILED;
-        }
+        ret = USH_FALSE;
     }
+
     return ret;
 }
 
@@ -83,7 +79,7 @@ ushd_conn_reglist_notify(ush_sig_id_t sigid, notify_func_t func) {
         return USH_RET_WRONG_PARAM;
     }
 
-    if (USH_FALSE == reglist.signals[sigid].valid) { // sig must be meaningful
+    if (0 == reglist.signals[sigid].rollingcounter) { // sig must be meaningful
         return USH_RET_FAILED;
     }
 
