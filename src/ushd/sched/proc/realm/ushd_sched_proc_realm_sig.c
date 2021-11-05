@@ -1,5 +1,3 @@
-#include "string.h"
-
 #include "ush_assert.h"
 #include "ush_log.h"
 

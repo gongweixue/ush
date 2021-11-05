@@ -1,6 +1,5 @@
 
 #include "stdlib.h"
-#include "string.h"
 
 #include "ush_log.h"
 #include "realm/ush_comm_realm.h"

@@ -1,8 +1,6 @@
 #ifndef USHD_TCH_THREAD_H
 #define USHD_TCH_THREAD_H
 
-#include "pthread.h"
-
 #include "ush_type_pub.h"
 
 typedef struct ushd_tch_thread_s * ushd_tch_thread_t;

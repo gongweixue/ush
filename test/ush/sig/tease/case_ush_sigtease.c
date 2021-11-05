@@ -2,9 +2,7 @@
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
 #include "ush_sig_id.h"
-#include "ush_string.h"
 #include "pthread.h"
-#include "time.h"
 
 static ush_sig_val_t ref;
 

@@ -1,5 +1,3 @@
-#include "pthread.h"
-#include "string.h"
 
 #include "ush_log.h"
 #include "ush_type_pub.h"

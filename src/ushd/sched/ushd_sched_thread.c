@@ -1,5 +1,4 @@
 #include "pthread.h"
-#include "stdlib.h"
 
 #include "tch/ush_comm_tch.h"
 #include "tch/ush_comm_tch_hello.h"

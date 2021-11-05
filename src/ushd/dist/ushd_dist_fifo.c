@@ -1,5 +1,4 @@
-#include "pthread.h"
-#include "stdlib.h"
+
 #include "string.h"
 
 #include "ush_assert.h"
