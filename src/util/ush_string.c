@@ -5,13 +5,14 @@
 
 
 void ush_itoa(char *str, long num) {
+    static const long base = 10;
     char *beg = str;
     long sign;
     if ((sign = num) < 0) {num = -num;}
 
     do {
-        *str++ = (char)('0' + num % 10);
-    } while((num /= 10) > 0);
+        *str++ = (char)('0' + num % base);
+    } while((num /= base) > 0);
 
     if (sign < 0) {*str++ = '-';}
 
