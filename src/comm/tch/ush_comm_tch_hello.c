@@ -54,7 +54,7 @@ ush_comm_tch_hello_create(ush_comm_tch_hello_t    *pHello,
     tmp->desc.desc.port = USH_COMM_PORT_TCH;
     tmp->desc.catalog   = USH_COMM_TCH_MSG_CATALOG_HELLO;
 
-    strcpy(tmp->name, name);
+    strncpy(tmp->name, name, sizeof(tmp->name));
 
     tmp->sync          = (ush_pvoid_t)sync;
     tmp->cert          = cert;

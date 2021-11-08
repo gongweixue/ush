@@ -43,10 +43,10 @@ void ush_string_gen_lstnr_fullname(char *dst, size_t dstsz,
                  + strlen(certstr);
     assert(dstsz > total);
 
-    strcpy(dst, USH_COMM_LSTNR_Q_PATH_PREFIX);
-    strcat(dst, shortname_ts);
-    strcat(dst, "-");
-    strcat(dst,certstr);
+    strncpy(dst, USH_COMM_LSTNR_Q_PATH_PREFIX, dstsz);
+    strncat(dst, shortname_ts, 20+1+10);
+    strncat(dst, "-", 1);
+    strncat(dst, certstr, 10);
 }
 
 #define USH_COMM_REALM_Q_PATH_PREFIX "/USH-REALM-"
@@ -66,8 +66,8 @@ void ush_string_gen_realm_fullname(char *dst, size_t dstsz,
                  + strlen(certstr);
     assert(dstsz > total);
 
-    strcpy(dst, USH_COMM_REALM_Q_PATH_PREFIX);
-    strcat(dst, shortname_ts);
-    strcat(dst, "-");
-    strcat(dst,certstr);
+    strncpy(dst, USH_COMM_REALM_Q_PATH_PREFIX, dstsz);
+    strncat(dst, shortname_ts, 20+1+10);
+    strncat(dst, "-", 1);
+    strncat(dst, certstr, 10);
 }

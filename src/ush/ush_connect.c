@@ -59,9 +59,9 @@ gen_name_ts(ush_char_t *name, ush_size_t sz, const ush_char_t *shortname) {
     }
 
     // name = shortname
-    strcpy(name, timestamp);
-    strcat(name, "-");
-    strcat(name, shortname);
+    strncpy(name, timestamp, sz);
+    strncat(name, "-", 1);
+    strncat(name, shortname, USH_COMM_CONN_SHORTNAME_LEN_MAX);
 }
 
 ush_ret_t

@@ -26,7 +26,7 @@ ush_realm_alloc(ush_realm_t *pRealm, const ush_char_t *fullname) {
     }
 
     tmp->mq = USH_INVALID_MQD_VALUE;
-    strcpy(tmp->fullname, fullname);
+    strncpy(tmp->fullname, fullname, sizeof(tmp->fullname));
 
     *pRealm = tmp;
 

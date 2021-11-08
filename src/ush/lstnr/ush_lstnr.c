@@ -50,7 +50,7 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
     }
     ush_log(LOG_LVL_INFO, "the lstnr queue opened, %p", tmp);
 
-    strcpy(tmp->fullname, fullname);
+    strncpy(tmp->fullname, fullname, sizeof(tmp->fullname));
 
 
     if (0 != pthread_create(&tmp->tid, NULL, lstnr_thread_entry, tmp)) {

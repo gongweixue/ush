@@ -26,8 +26,8 @@ ush_pipe_create(
     *pPipe = USH_INVALID_PIPE; // NULL for error return;
 
     // pipe name validation
-    if (USH_COMM_CONN_SHORTNAME_LEN_MAX < strlen(pName)) {
-        ush_log(LOG_LVL_FATAL, "name too long, limited to %d",
+    if (USH_COMM_CONN_SHORTNAME_LEN_MAX < strlen(pName) || 0 == strlen(pName)) {
+        ush_log(LOG_LVL_FATAL, "len of name not valie, limited to 0-%d",
                 USH_COMM_CONN_SHORTNAME_LEN_MAX);
         return USH_RET_NOT_SUPPORT;
     }

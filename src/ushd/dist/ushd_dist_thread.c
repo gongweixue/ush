@@ -45,7 +45,7 @@ ushd_dist_thread_create(const ush_char_t *name) {
         free(thread);
         return NULL;
     }
-    strcpy(thread->fullname, name);
+    strncpy(thread->fullname, name, sizeof(thread->fullname));
 
     thread->fifo = ushd_dist_fifo_create();
     if (!thread->fifo) {

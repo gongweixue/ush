@@ -78,7 +78,8 @@ ushd_conn_tbl_add(const ush_char_t         *name,
         goto BAILED;
     }
 
-    strcpy(tbl.items[tbl.cursor].name, name);
+    strncpy(tbl.items[tbl.cursor].name, name,
+            sizeof(tbl.items[tbl.cursor].name));
     tbl.items[tbl.cursor].cert      = cert;
     tbl.items[tbl.cursor].dist      = dist;
     tbl.items[tbl.cursor].realm     = realm;
