@@ -34,6 +34,8 @@ typedef struct ush_connect_s {
     ush_u64_t            fingerprint;
 } * ush_connect_t;
 
+#define USH_INVALID_CONNECT_FINGERPRINT (0)
+
 static ush_u64_t cal_fingerprint(const ush_connect_t conn) {
     ush_u64_t ret = 0;
     ret ^= (ush_u64_t)conn->cert;
@@ -339,4 +341,44 @@ ush_connect_valid(const ush_connect_t conn) {
         (conn->fingerprint == cal_fingerprint(conn)) ? USH_TRUE : USH_FALSE;
 
     return ret;
+}
+
+ush_ret_t
+ush_connect_goodbye(ush_connect_t conn) {
+    if (!conn) {
+        return USH_RET_WRONG_PARAM;
+    }
+
+    if (USH_INVALID_CONNECT_FINGERPRINT == conn->fingerprint) {
+        ush_log(LOG_LVL_ERROR, "connection has been deprecated");
+        return USH_RET_WRONG_SEQ;
+    }
+
+    // send goodbye msg
+    ush_comm_tch_goodbye_t msg = NULL;
+    if (USH_RET_OK != ush_comm_tch_goodbye_create(&msg, idx, cert)) {
+        return USH_RET_OUT_OF_MEM;
+    }
+
+    ush_ret_t ret = ush_tch_send(conn->touch, msg,
+                                 ush_comm_tch_goodbye_sizeof(),
+                                 USH_COMM_TCH_SEND_PRIO_GOODBYE);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "sending goodbye for conn %p failed", conn);
+        return USH_RET_FAILED;
+    }
+
+    // deprecate this connection after sending goodbye msg
+    conn->fingerprint = USH_INVALID_CONNECT_FINGERPRINT;
+
+    // close realm queue
+    ush_realm_destroy_with_closing(&(conn->realm));
+
+    // close tch queue
+    ush_tch_destroy_with_closing(&(conn->touch));
+
+    // close&unlink lstnr queue & stop lstnr thread
+    ush_lstnr_stop_close(&(conn->listener));
+
+    return USH_RET_OK;
 }

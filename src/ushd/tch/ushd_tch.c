@@ -127,6 +127,7 @@ ushd_tch_destroy_with_closing(ushd_tch_t *pTouch) {
 
     // close it anyway, no matter if it has been opened.
     ushd_tch_close(*pTouch);
+    mq_unlink(USH_COMM_TCH_Q_PATH);
     free(*pTouch);
     pTouch = NULL;
 

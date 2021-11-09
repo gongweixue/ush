@@ -15,6 +15,7 @@
 typedef struct ushd_realm_thread_s {
     pthread_t        tid;    // thread id for the ushd realm thread
     mqd_t            mq;     // mq handle
+    ush_char_t       fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
 } * ushd_realm_thread_t;
 
 static ush_ret_t realm_mq_open(ushd_realm_thread_t, const ush_char_t *);
@@ -39,6 +40,7 @@ ushd_realm_thread_create(const ush_char_t *name) {
         free(thread);
         return NULL;
     }
+    strncpy(thread->fullname, name, sizeof(thread->fullname));
 
     return thread;
 }
@@ -68,6 +70,7 @@ ushd_realm_thread_stop_destroy(ushd_realm_thread_t *pThread) {
     if (USH_INVALID_MQD_VALUE != (*pThread)->mq) {
         mq_close((*pThread)->mq);
         (*pThread)->mq = USH_INVALID_MQD_VALUE;
+        mq_unlink((*pThread)->fullname);
     }
 
     if (USH_INVALID_TID != (*pThread)->tid) {

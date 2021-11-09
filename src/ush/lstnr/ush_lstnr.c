@@ -90,7 +90,8 @@ ush_lstnr_stop_close(ush_lstnr_t *pPtr) {
     if (USH_INVALID_MQD_VALUE != (*pPtr)->mq) {
         mq_close((*pPtr)->mq);
         (*pPtr)->mq = USH_INVALID_MQD_VALUE;
-        ush_log(LOG_LVL_INFO, "listener mq closed.");
+        mq_unlink((*pPtr)->fullname);
+        ush_log(LOG_LVL_INFO, "listener mq closed and unlink.");
     }
 
     free(*pPtr);

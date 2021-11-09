@@ -37,9 +37,8 @@ ush_ret_t ush_pipe_create(
 
 /*
  * Destory a pipe connecting with the hub
- * sync call: Y
  * ret: OK FAILED WRONG_PARAM WRONG_SEQ
- * restriction: handle should be not NULL
+ * restriction: handle should be not NULL, Non-thread-safe
  * detail: handle be delete, invalid pipe leads UB
 */
 ush_ret_t ush_pipe_delete(ush_pipe_t pipe);
