@@ -53,7 +53,7 @@ ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
 
 
 ush_cert_t
-ush_comm_realm_sigreg_get_cert(const ush_comm_realm_sigreg_t msg) {
+ush_comm_realm_sigreg_cert_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_INVALID_CERT_VALUE;
@@ -62,7 +62,7 @@ ush_comm_realm_sigreg_get_cert(const ush_comm_realm_sigreg_t msg) {
 }
 
 ush_s32_t
-ush_comm_realm_sigreg_get_connidx(const ush_comm_realm_sigreg_t msg) {
+ush_comm_realm_sigreg_connidx_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return 0;
@@ -71,7 +71,7 @@ ush_comm_realm_sigreg_get_connidx(const ush_comm_realm_sigreg_t msg) {
 }
 
 ush_sig_id_t
-ush_comm_realm_sigreg_get_sigid(const ush_comm_realm_sigreg_t msg) {
+ush_comm_realm_sigreg_sigid_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_SIG_ID_INVALID;
@@ -80,7 +80,7 @@ ush_comm_realm_sigreg_get_sigid(const ush_comm_realm_sigreg_t msg) {
 }
 
 ush_pvoid_t
-ush_comm_realm_sigreg_get_cb_done(const ush_comm_realm_sigreg_t msg) {
+ush_comm_realm_sigreg_cb_done_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: null")
         return NULL;
@@ -90,7 +90,7 @@ ush_comm_realm_sigreg_get_cb_done(const ush_comm_realm_sigreg_t msg) {
 }
 
 ush_pvoid_t
-ush_comm_realm_sigreg_get_cb_rcv(const ush_comm_realm_sigreg_t msg) {
+ush_comm_realm_sigreg_cb_rcv_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: null")
         return NULL;
@@ -100,7 +100,7 @@ ush_comm_realm_sigreg_get_cb_rcv(const ush_comm_realm_sigreg_t msg) {
 }
 
 ush_pipe_t
-ush_comm_realm_sigreg_get_pipe(const ush_comm_realm_sigreg_t msg) {
+ush_comm_realm_sigreg_pipe_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: null")
         return USH_INVALID_PIPE;

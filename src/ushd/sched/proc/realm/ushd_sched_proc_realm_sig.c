@@ -24,14 +24,14 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     }
 
     // check idx
-    ush_connidx_t idx = ush_comm_realm_sigreg_get_connidx(msg);
+    ush_connidx_t idx = ush_comm_realm_sigreg_connidx_of(msg);
     if (!ushd_conn_tbl_get_active_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
 
     // check cert
-    const ush_cert_t cert = ush_comm_realm_sigreg_get_cert(msg);
+    const ush_cert_t cert = ush_comm_realm_sigreg_cert_of(msg);
     const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
     if (ref != cert) {
         ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
@@ -39,7 +39,7 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_realm_sigreg_get_sigid(msg);
+    ush_sig_id_t sigid = ush_comm_realm_sigreg_sigid_of(msg);
     if (!ush_sig_id_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
@@ -50,11 +50,11 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     ack.desc.type = USHD_DIST_FIFO_MSG_TYPE_SIGREG_ACK;
     ack.success   = USH_FALSE;
     ack.sigid     = sigid;
-    ack.pipe      = ush_comm_realm_sigreg_get_pipe(msg);
-    ack.done      = ush_comm_realm_sigreg_get_cb_done(msg);
+    ack.pipe      = ush_comm_realm_sigreg_pipe_of(msg);
+    ack.done      = ush_comm_realm_sigreg_cb_done_of(msg);
 
     // add cb func to the sigid domain of conn in the idx.
-    ush_pvoid_t rcv  = ush_comm_realm_sigreg_get_cb_rcv(msg);
+    ush_pvoid_t rcv  = ush_comm_realm_sigreg_cb_rcv_of(msg);
     if (USH_RET_OK != ushd_conn_reglist_set_rcv(idx, sigid, rcv)) {
         ack.success = USH_FALSE;
         ushd_log(LOG_LVL_ERROR, "callback register failed");
@@ -117,14 +117,14 @@ static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
     }
 
     // check idx
-    ush_connidx_t idx = ush_comm_realm_sigset_get_connidx(msg);
+    ush_connidx_t idx = ush_comm_realm_sigset_connidx_of(msg);
     if (!ushd_conn_tbl_get_active_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
 
     // check cert
-    const ush_cert_t cert = ush_comm_realm_sigset_get_cert(msg);
+    const ush_cert_t cert = ush_comm_realm_sigset_cert_of(msg);
     const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
     if (ref != cert) {
         ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
@@ -132,14 +132,14 @@ static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_realm_sigset_get_sigid(msg);
+    ush_sig_id_t sigid = ush_comm_realm_sigset_sigid_of(msg);
     if (!ush_sig_id_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
     }
 
     // update the sig value in reglist
-    ush_sig_val_t val = ush_comm_realm_sigset_get_val(msg);
+    ush_sig_val_t val = ush_comm_realm_sigset_value_of(msg);
     if (USH_RET_OK != ushd_conn_reglist_cas(sigid, val)) {
         ushd_log(LOG_LVL_INFO, "signal %d value update failed", sigid);
         return;
@@ -163,14 +163,14 @@ static void ushd_sched_proc_realm_sigtease(const ush_comm_realm_sigtease_t msg) 
     }
 
     // check idx
-    ush_connidx_t idx = ush_comm_realm_sigtease_get_connidx(msg);
+    ush_connidx_t idx = ush_comm_realm_sigtease_connidx_of(msg);
     if (!ushd_conn_tbl_get_active_flg(idx)) {
         ushd_log(LOG_LVL_ERROR, "Invalid idx:%d value of tbl", idx);
         return;
     }
 
     // check cert
-    const ush_cert_t cert = ush_comm_realm_sigtease_get_cert(msg);
+    const ush_cert_t cert = ush_comm_realm_sigtease_cert_of(msg);
     const ush_cert_t ref  = ushd_conn_tbl_get_cert(idx);
     if (ref != cert) {
         ushd_log(LOG_LVL_ERROR, "cert:%d, idx:%d, ref:%d", cert, ref, idx);
@@ -178,7 +178,7 @@ static void ushd_sched_proc_realm_sigtease(const ush_comm_realm_sigtease_t msg) 
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_realm_sigtease_get_sigid(msg);
+    ush_sig_id_t sigid = ush_comm_realm_sigtease_sigid_of(msg);
     if (!ush_sig_id_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;

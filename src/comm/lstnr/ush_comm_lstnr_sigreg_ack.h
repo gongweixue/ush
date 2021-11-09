@@ -15,16 +15,16 @@ ush_size_t
 ush_comm_lstnr_sigreg_ack_sizeof(void);
 
 ush_sig_cb_reg_t
-ush_comm_lstnr_sigreg_ack_get_done(const ush_comm_lstnr_sigreg_ack_t msg);
+ush_comm_lstnr_sigreg_ack_callback_of(const ush_comm_lstnr_sigreg_ack_t msg);
 
 ush_pipe_t
-ush_comm_lstnr_sigreg_ack_get_pipe(const ush_comm_lstnr_sigreg_ack_t msg);
+ush_comm_lstnr_sigreg_ack_pipe_of(const ush_comm_lstnr_sigreg_ack_t msg);
 
 ush_sig_id_t
-ush_comm_lstnr_sigreg_ack_get_sigid(const ush_comm_lstnr_sigreg_ack_t msg);
+ush_comm_lstnr_sigreg_ack_sigid_of(const ush_comm_lstnr_sigreg_ack_t msg);
 
 ush_bool_t
-ush_comm_lstnr_sigreg_ack_get_success(const ush_comm_lstnr_sigreg_ack_t msg);
+ush_comm_lstnr_sigreg_ack_succ_of(const ush_comm_lstnr_sigreg_ack_t msg);
 
 ush_ret_t
 ush_comm_lstnr_sigreg_ack_destroy(ush_comm_lstnr_sigreg_ack_t *pMsg);

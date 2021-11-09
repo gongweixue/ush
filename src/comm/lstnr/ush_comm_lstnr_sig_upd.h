@@ -15,16 +15,16 @@ ush_size_t
 ush_comm_lstnr_sig_upd_sizeof(void);
 
 ush_sig_cb_rcv_t
-ush_comm_lstnr_sig_upd_get_rcv(const ush_comm_lstnr_sig_upd_t msg);
+ush_comm_lstnr_sig_callback_of(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_sig_val_t
-ush_comm_lstnr_sig_upd_get_value(const ush_comm_lstnr_sig_upd_t msg);
+ush_comm_lstnr_sig_value_of(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_sig_id_t
-ush_comm_lstnr_sig_upd_get_sigid(const ush_comm_lstnr_sig_upd_t msg);
+ush_comm_lstnr_sig_sigid_of(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_u32_t
-ush_comm_lstnr_sig_upd_get_cntr(const ush_comm_lstnr_sig_upd_t msg);
+ush_comm_lstnr_sig_cntr_of(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_ret_t
 ush_comm_lstnr_sig_upd_destroy(ush_comm_lstnr_sig_upd_t *pMsg);

@@ -13,16 +13,16 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
                              ush_sig_val_t             val);
 
 ush_connidx_t
-ush_comm_realm_sigset_get_connidx(const ush_comm_realm_sigset_t msg);
+ush_comm_realm_sigset_connidx_of(const ush_comm_realm_sigset_t msg);
 
 ush_cert_t
-ush_comm_realm_sigset_get_cert(const ush_comm_realm_sigset_t msg);
+ush_comm_realm_sigset_cert_of(const ush_comm_realm_sigset_t msg);
 
 ush_sig_id_t
-ush_comm_realm_sigset_get_sigid(const ush_comm_realm_sigset_t msg);
+ush_comm_realm_sigset_sigid_of(const ush_comm_realm_sigset_t msg);
 
 ush_sig_val_t
-ush_comm_realm_sigset_get_val(const ush_comm_realm_sigset_t msg);
+ush_comm_realm_sigset_value_of(const ush_comm_realm_sigset_t msg);
 
 ush_size_t
 ush_comm_realm_sigset_sizeof(void);
