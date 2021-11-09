@@ -96,8 +96,25 @@ ushd_conn_tbl_remove(ush_connidx_t idx) {
     if (!ushd_conn_tbl_connidx_check(idx)) {
         return 1;
     }
-    tbl.items[idx].active = USH_FALSE;
-    return 1;
+    tbl.items[idx].active  = USH_FALSE; // deactive first, anyway
+
+
+    if (USH_RET_OK != ushd_realm_thread_stop_destroy(&(tbl.items[idx].realm))) {
+        ushd_log(LOG_LVL_ERROR, "realm %s destroy failed", tbl.items[idx].name);
+    } else {
+        tbl.items[idx].realm = NULL;
+    }
+
+
+    if (USH_RET_OK != ushd_dist_thread_stop_destroy(&(tbl.items[idx].dist))) {
+        ushd_log(LOG_LVL_ERROR, "dist %s destroy failed", tbl.items[idx].name);
+    } else {
+        tbl.items[idx].dist = NULL;
+    }
+
+    tbl.items[idx].name[0] = '\0';
+
+    return USH_RET_OK;
 }
 
 ush_bool_t

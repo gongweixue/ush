@@ -5,6 +5,7 @@ set(SRC_USH_COMM
     lstnr/ush_comm_lstnr_sig_upd.c
     lstnr/ush_comm_lstnr_sigreg_ack.c
     tch/ush_comm_tch_hello.c
+    tch/ush_comm_tch_goodbye.c
     realm/sig/ush_comm_realm_sigreg.c
     realm/sig/ush_comm_realm_sigset.c
     realm/sig/ush_comm_realm_sigtease.c

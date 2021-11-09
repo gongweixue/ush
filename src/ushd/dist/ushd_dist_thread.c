@@ -93,6 +93,10 @@ ushd_dist_thread_stop_destroy(ushd_dist_thread_t *pThread) {
         mq_close((*pThread)->mq);
         (*pThread)->mq = USH_INVALID_MQD_VALUE;
     }
+
+    free(*pThread);
+    *pThread = NULL;
+
     return USH_RET_OK;
 }
 

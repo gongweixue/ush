@@ -356,13 +356,13 @@ ush_connect_goodbye(ush_connect_t conn) {
 
     // send goodbye msg
     ush_comm_tch_goodbye_t msg = NULL;
+    ush_connidx_t          idx = conn->connidx;
+    ush_cert_t            cert = conn->cert;
     if (USH_RET_OK != ush_comm_tch_goodbye_create(&msg, idx, cert)) {
         return USH_RET_OUT_OF_MEM;
     }
 
-    ush_ret_t ret = ush_tch_send(conn->touch, msg,
-                                 ush_comm_tch_goodbye_sizeof(),
-                                 USH_COMM_TCH_SEND_PRIO_GOODBYE);
+    ush_ret_t ret = ush_tch_send_goodbye(conn->touch, msg);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sending goodbye for conn %p failed", conn);
         return USH_RET_FAILED;

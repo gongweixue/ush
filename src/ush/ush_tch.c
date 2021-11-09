@@ -70,6 +70,22 @@ ush_tch_send_hello(const ush_tch_t                touch,
     return ret;
 }
 
+ush_ret_t
+ush_tch_send_goodbye(const ush_tch_t touch,
+                     const ush_comm_tch_goodbye_t goodbye) {
+    ush_assert(touch && goodbye);
+    if (!touch || !goodbye) {
+        ush_log(LOG_LVL_ERROR, "bad ptr of parameters");
+        return USH_RET_WRONG_PARAM;
+    }
+
+    const ush_char_t *pMsg = (const ush_char_t *)goodbye;
+
+    ush_size_t sz = ush_comm_tch_goodbye_sizeof();
+
+    return ush_tch_send(touch, pMsg, sz, USH_COMM_TCH_SEND_PRIO_GOODBYE);
+}
+
 static ush_ret_t
 ush_tch_close(ush_tch_t touch) {
     ush_assert(touch);
@@ -148,7 +164,7 @@ ush_tch_destroy_with_closing(ush_tch_t *pTouch) {
     ush_tch_close(*pTouch);
 
     free(*pTouch);
-    pTouch = NULL;
+    *pTouch = NULL;
 
     return USH_RET_OK;
 }

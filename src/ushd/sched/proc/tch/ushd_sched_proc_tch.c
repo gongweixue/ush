@@ -4,6 +4,7 @@
 #include "ush_log.h"
 #include "ushd_sched_proc_tch.h"
 #include "ushd_sched_proc_tch_hello.h"
+#include "ushd_sched_proc_tch_goodbye.h"
 
 void ushd_sched_proc_tch(const ush_pvoid_t ptr) {
 
@@ -14,6 +15,9 @@ void ushd_sched_proc_tch(const ush_pvoid_t ptr) {
         ushd_sched_proc_tch_hello(ptr);
         break;
 
+    case USH_COMM_TCH_MSG_CATALOG_GOODBYE:
+        ushd_sched_proc_tch_goodbye(ptr);
+        break;
     default:
         ushd_log(LOG_LVL_ERROR, "wrong catalog #%d", pDest->catalog);
         break;

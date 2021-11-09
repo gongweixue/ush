@@ -103,7 +103,7 @@ RET:                                                                            
                                                                                 \
 ush_ret_t                                                                       \
 NAME##_fifo_destroy(NAME##_fifo_t *pFifo) {                                     \
-    if (pFifo && *pFifo) {                                                      \
+    if (!pFifo || !(*pFifo)) {                                                  \
         ushd_log(LOG_LVL_ERROR, "destroy null ptr fifo of %s", #NAME);          \
         return USH_RET_WRONG_PARAM;                                             \
     }                                                                           \

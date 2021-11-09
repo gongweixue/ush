@@ -78,6 +78,9 @@ ushd_realm_thread_stop_destroy(ushd_realm_thread_t *pThread) {
         (*pThread)->tid = USH_INVALID_TID;
     }
 
+    free(*pThread);
+    *pThread = NULL;
+
     return USH_RET_OK;
 }
 

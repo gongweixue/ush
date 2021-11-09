@@ -81,7 +81,7 @@ ush_realm_destroy_with_closing(ush_realm_t *pRealm) {
     ush_realm_close(*pRealm);
 
     free(*pRealm);
-    pRealm = NULL;
+    *pRealm = NULL;
 
     return USH_RET_OK;
 }

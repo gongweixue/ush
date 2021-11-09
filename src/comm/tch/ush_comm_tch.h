@@ -7,7 +7,8 @@
 #include "ush_comm_desc.h"
 
 typedef enum USH_COMM_TCH_MSG_CATALOG {
-    USH_COMM_TCH_MSG_CATALOG_HELLO
+    USH_COMM_TCH_MSG_CATALOG_HELLO,
+    USH_COMM_TCH_MSG_CATALOG_GOODBYE
 } USH_COMM_TCH_MSG_CATALOG;
 
 typedef struct comm_tch_msg_desc_s {

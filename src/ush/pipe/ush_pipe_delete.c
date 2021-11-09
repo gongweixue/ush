@@ -35,5 +35,5 @@ ush_ret_t ush_pipe_delete(ush_pipe_t pipe) {
     ush_connect_destroy(&conn);
 
 
-    return USH_RET_FAILED;
+    return USH_RET_OK;
 }
