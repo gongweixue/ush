@@ -60,7 +60,7 @@ static void *entry(void *arg) {
     val.dataU16 = 0;
     while (sig_counter < 10) {
 
-        usleep(100 * 1000); // simulate real signal interval:100ms
+        usleep(10 * 1000); // simulate real signal interval:100ms
         val.dataU16 ++;
         ush_sigset(sPipe, USH_SIG_ID_TEST_10_U16, val);
         sig_counter++;
