@@ -28,7 +28,7 @@ typedef struct {
 
 static conn_tbl tbl; // all 0 when init
 
-static void move_cursor_to_next_empty_record(void) {
+static void move_cursor_to_next_empty_slot(void) {
     int pos = tbl.cursor;
     while (tbl.items[pos].active || USHD_INVALID_CONN_IDX_VALUE == pos) {
         pos = (pos + 1) % USH_CONN_IDX_MAX; // move to next
@@ -73,7 +73,7 @@ ushd_conn_tbl_add(const ush_char_t         *name,
 
     ush_connidx_t idx = USHD_INVALID_CONN_IDX_VALUE;
 
-    move_cursor_to_next_empty_record();
+    move_cursor_to_next_empty_slot();
     if (USHD_INVALID_CONN_IDX_VALUE == tbl.cursor) {
         idx = USHD_INVALID_CONN_IDX_VALUE;
         ushd_log(LOG_LVL_ERROR, "add conn record failed");
