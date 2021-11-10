@@ -3,11 +3,6 @@ set(EXE_NAME test-ush-all)
 
 set(SRC_LIST
     main.c
-    case_ush_all_thread_0.c
-    # case_thread_1.c
-    # case_thread_2.c
-    # case_thread_3.c
-    # case_thread_4.c
 )
 
 include_directories(
