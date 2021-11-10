@@ -44,6 +44,9 @@ static void case_normal(void) {
     ush_assert(1 == flg);   // coredump if failed.
 
     pthread_mutex_unlock(&mutex);
+
+    ret = ush_pipe_delete(pp);
+    ush_assert(OK == ret);
 }
 
 /////////////////////////////
@@ -74,6 +77,9 @@ static void case_wrong_param(void) {
     conf_invalid.sigid = USH_SIG_ID_INVALID;
     ret = ush_sigreg(pp, &conf_invalid);
     ush_assert(OK != ret);
+
+    ret = ush_pipe_delete(pp);
+    ush_assert(OK == ret);
 }
 
 ///////////////////////
@@ -86,6 +92,9 @@ static void case_no_cb(void) {
 
     ush_sigreg_conf_t conf ={USH_SIG_ID_ABC_abc_FP32, NULL, NULL};
     ret = ush_sigreg(pp, &conf);
+    ush_assert(OK == ret);
+
+    ret = ush_pipe_delete(pp);
     ush_assert(OK == ret);
 }
 

@@ -25,6 +25,6 @@ set_target_properties(${EXE_NAME}
 add_custom_command(
     TARGET ${EXE_NAME}
     POST_BUILD
-    COMMAND ${TEST_OUTPUT_DIR}/${EXE_NAME} > ${TEST_LOG_FILE}
+    COMMAND ${TEST_OUTPUT_DIR}/${EXE_NAME} > ${TEST_LOG_FILE}.${EXE_NAME}
     COMMENT "Executing ${EXE_NAME} .........."
 )

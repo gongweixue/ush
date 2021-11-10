@@ -15,10 +15,14 @@ static void test_ush_pipe_create(void) {
     ret = ush_pipe_create(name, 0, 0, &pipe);
     ush_assert(OK == ret);
     ush_assert(USH_INVALID_PIPE != pipe);
+    ret = ush_pipe_delete(pipe);
+    ush_assert(OK == ret);
 
     ret = ush_pipe_create(name, 0, 3, &pipe);
     ush_assert(OK == ret);
     ush_assert(USH_INVALID_PIPE != pipe);
+    ret = ush_pipe_delete(pipe);
+    ush_assert(OK == ret);
 
     ret = ush_pipe_create(name, 0, 0, NULL);
     ush_assert(OK != ret);

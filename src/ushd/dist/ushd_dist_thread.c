@@ -153,9 +153,7 @@ dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
 
         } else { // failed
             if (ENOENT == errno) { // file has not been create
-                ush_log(LOG_LVL_ERROR,
-                        "retry after %d ms...",
-                        MQ_OPEN_RETRY_INTERVAL_MS);
+                ush_log(LOG_LVL_ERROR,"retry...");
                 ush_time_delay_ms(MQ_OPEN_RETRY_INTERVAL_MS);
                 continue;
             } else {

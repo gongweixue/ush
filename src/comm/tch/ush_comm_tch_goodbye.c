@@ -42,7 +42,6 @@ ush_comm_tch_goodbye_destroy(ush_comm_tch_goodbye_t *pGoodbye) {
         return USH_RET_OK;
     }
 
-    // just free it self, do not destroy sync
     free(*pGoodbye);
     *pGoodbye = NULL;
 

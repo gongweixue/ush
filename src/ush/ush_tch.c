@@ -121,7 +121,7 @@ ush_tch_open(ush_tch_t touch) {
             return USH_RET_OK;
         } else { // failed
             if (ENOENT == errno) { // file has not been create
-                ush_log(LOG_LVL_ERROR, "touch not exist, retry after 500ms...");
+                ush_log(LOG_LVL_ERROR, "touch not exist, retry...");
                 ush_time_delay_ms(USH_TCH_OPEN_INTERVAL_MS);
                 continue;
             } else {

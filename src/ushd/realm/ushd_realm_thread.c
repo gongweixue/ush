@@ -138,6 +138,7 @@ realm_thread_entry(void *arg) {
             continue; // skip to next loop.
         }
 
+        ushd_log(LOG_LVL_INFO, "msg arrived");
         ush_comm_realm_sigreg_testpoint((ush_comm_realm_sigreg_t)buf);
     };
 

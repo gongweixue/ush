@@ -50,6 +50,9 @@ static void case_normal(void) {
         pthread_cond_wait(&cond, &mutex); // wait the cb 'rcv' signal
         pthread_mutex_unlock(&mutex);
     }
+
+    ret = ush_pipe_delete(pipe);
+    ush_assert(OK == ret);
 }
 
 static void case_wrong(void) {
@@ -66,6 +69,9 @@ static void case_wrong(void) {
 
     ret = ush_sigset(pipe, USH_SIG_ID_MAX, ref);
     ush_assert(OK != ret);
+
+    ret = ush_pipe_delete(pipe);
+    ush_assert(OK == ret);
 
 }
 

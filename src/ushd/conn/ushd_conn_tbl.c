@@ -34,6 +34,7 @@ static void move_cursor_to_next_empty_record(void) {
         pos = (pos + 1) % USH_CONN_IDX_MAX; // move to next
         if (pos == tbl.cursor) { // empty slot not found
             tbl.cursor = USHD_INVALID_CONN_IDX_VALUE;
+            ushd_log(LOG_LVL_ERROR, "empty slot not found");
             goto BAILED;
         }
     }
@@ -75,6 +76,7 @@ ushd_conn_tbl_add(const ush_char_t         *name,
     move_cursor_to_next_empty_record();
     if (USHD_INVALID_CONN_IDX_VALUE == tbl.cursor) {
         idx = USHD_INVALID_CONN_IDX_VALUE;
+        ushd_log(LOG_LVL_ERROR, "add conn record failed");
         goto BAILED;
     }
 

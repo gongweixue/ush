@@ -145,8 +145,13 @@ static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
         return;
     }
 
+
+    ushd_log(LOG_LVL_INFO, "signal %d value update failed", sigid);
     ush_ret_t res = ushd_conn_reglist_notify(
         sigid, USHD_INVALID_CONN_IDX_VALUE, notify_handle);
+
+    ushd_log(LOG_LVL_INFO, "notify the observer");
+
     if (USH_RET_OK != res) {
         ushd_log(LOG_LVL_ERROR, "notify sigid %d update failed", sigid);
         return;
@@ -204,14 +209,17 @@ void ushd_sched_proc_realm_sig(const ush_pvoid_t msg) {
 
     switch (pDesc->intent) {
     case USH_COMM_REALM_SIG_INTENT_REG:
+        ushd_log(LOG_LVL_INFO, "proc sigreg");
         ushd_sched_proc_realm_sigreg((const ush_comm_realm_sigreg_t)msg);
         break;
 
     case USH_COMM_REALM_SIG_INTENT_SET:
+        ushd_log(LOG_LVL_INFO, "proc sigset");
         ushd_sched_proc_realm_sigset((const ush_comm_realm_sigset_t)msg);
         break;
 
     case USH_COMM_REALM_SIG_INTENT_TEASE:
+        ushd_log(LOG_LVL_INFO, "proc sigtease");
         ushd_sched_proc_realm_sigtease((const ush_comm_realm_sigtease_t)msg);
         break;
 
