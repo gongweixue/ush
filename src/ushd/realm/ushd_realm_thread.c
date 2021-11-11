@@ -8,6 +8,7 @@
 #include "ush_log.h"
 
 #include "ush_comm_def.h"
+#include "ush_comm_desc.h"
 #include "realm/sig/ush_comm_realm_sigreg.h"
 
 #include "sched/ushd_sched_fifo.h"
@@ -138,6 +139,11 @@ realm_thread_entry(void *arg) {
                 break;
             }
             continue; // skip to next loop.
+        }
+
+        if (USH_COMM_PORT_REALM != ((ush_comm_d *)buf)->port) {
+            ushd_log(LOG_LVL_ERROR, "msg type not support");
+            continue;
         }
 
         ushd_log(LOG_LVL_INFO, "msg arrived");

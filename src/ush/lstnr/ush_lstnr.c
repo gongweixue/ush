@@ -114,6 +114,12 @@ lstnr_thread_entry(void *arg) {
             ush_log(LOG_LVL_ERROR, "listener %p receive msg failed", listener);
             continue;
         }
+
+        if (USH_COMM_PORT_LSTNR != ((ush_comm_d *)buf)->port) {
+            ushd_log(LOG_LVL_ERROR, "msg type not support");
+            continue;
+        }
+
         ush_log(LOG_LVL_INFO, "listener %p receive msg %p", listener, buf);
 
         if (USH_COMM_PORT_LSTNR != ((ush_comm_d*)buf)->port) {

@@ -71,6 +71,11 @@ ushd_tch_thread_entry(void *arg) {
             continue;
         }
 
+        if (USH_COMM_PORT_TCH != ((ush_comm_d *)buf)->port) {
+            ushd_log(LOG_LVL_ERROR, "msg type not support");
+            continue;
+        }
+
         // push msg
         ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();
         if (USH_RET_OK != ushd_sched_fifo_push(fifo, buf, sizeof(buf))) {
