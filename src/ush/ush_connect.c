@@ -349,6 +349,11 @@ ush_connect_goodbye(ush_connect_t conn) {
         return USH_RET_WRONG_PARAM;
     }
 
+    if (!ush_connect_valid(conn)) {
+        ush_log(LOG_LVL_ERROR, "connection is invalid");
+        return USH_RET_WRONG_SEQ;
+    }
+
     if (USH_INVALID_CONNECT_FINGERPRINT == conn->fingerprint) {
         ush_log(LOG_LVL_ERROR, "connection has been deprecated");
         return USH_RET_WRONG_SEQ;
