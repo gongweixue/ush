@@ -18,10 +18,6 @@
 
 #include "ush_realm.h"
 #include "realm/ush_comm_realm.h"
-#include "realm/sig/ush_comm_realm_sig.h"
-#include "realm/sig/ush_comm_realm_sigreg.h"
-#include "realm/sig/ush_comm_realm_sigset.h"
-#include "realm/sig/ush_comm_realm_sigtease.h"
 
 
 typedef struct ush_connect_s {
@@ -295,39 +291,28 @@ BAILED:
 }
 
 ush_ret_t
-ush_connect_send(ush_connect_t conn, const ush_comm_d *msg) {
-    (void)msg;
-    ush_ret_t ret = USH_RET_FAILED;
-    if (USH_COMM_PORT_REALM == msg->port) {
-        const ush_comm_realm_msg_d *realm_d = (const ush_comm_realm_msg_d*)msg;
-        if (USH_COMM_REALM_MSG_CATALOG_SIG == realm_d->catalog) {
-            size_t sz = 0;
-            ush_u32_t prio = 255;
-            switch (((const ush_comm_realm_sig_d*)msg)->intent) {
-            case USH_COMM_REALM_SIG_INTENT_REG:
-                sz = ush_comm_realm_sigreg_sizeof();
-                prio = USH_COMM_REALM_SEND_PRIO_SIGREG;
-                break;
-
-            case USH_COMM_REALM_SIG_INTENT_SET:
-                sz = ush_comm_realm_sigset_sizeof();
-                prio = USH_COMM_REALM_SEND_PRIO_SIGSET;
-                break;
-
-            case USH_COMM_REALM_SIG_INTENT_TEASE:
-                sz = ush_comm_realm_sigtease_sizeof();
-                prio = USH_COMM_REALM_SEND_PRIO_SIGTEASE;
-                break;
-
-            default:
-                ushd_log(LOG_LVL_ERROR, "wrong realm sig msg type");
-                break;
-            }
-            ret = ush_tch_send(conn->touch, (const ush_char_t *)msg, sz, prio);
-        }
+ush_connect_send_to_realm(ush_connect_t conn, const ush_comm_d *msg) {
+    if (!conn || !msg) {
+        ushd_log(LOG_LVL_ERROR, "NULL ptr of params");
+        return USH_RET_WRONG_PARAM;
     }
 
-    return ret;
+    if (USH_COMM_PORT_REALM != msg->port) {
+        ushd_log(LOG_LVL_ERROR, "invalid msg sent by realm");
+        return USH_RET_WRONG_PARAM;
+    }
+
+    if (!ush_connect_valid(conn)) {
+        ushd_log(LOG_LVL_ERROR, "invalid connection");
+        return USH_RET_WRONG_PARAM;
+    }
+
+    if (!conn->realm) {
+        ushd_log(LOG_LVL_ERROR, "NULL ptr of realm");
+        return USH_RET_WRONG_SEQ;
+    }
+
+    return ush_realm_send(conn->realm, (const ush_comm_realm_msg_d*)msg);
 }
 
 

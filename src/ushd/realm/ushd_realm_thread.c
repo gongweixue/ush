@@ -10,6 +10,8 @@
 #include "ush_comm_def.h"
 #include "realm/sig/ush_comm_realm_sigreg.h"
 
+#include "sched/ushd_sched_fifo.h"
+
 #include "ushd_realm_thread.h"
 
 typedef struct ushd_realm_thread_s {
@@ -139,7 +141,14 @@ realm_thread_entry(void *arg) {
         }
 
         ushd_log(LOG_LVL_INFO, "msg arrived");
-        ush_comm_realm_sigreg_testpoint((ush_comm_realm_sigreg_t)buf);
+
+
+        // push msg
+        ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();
+        if (USH_RET_OK != ushd_sched_fifo_push(fifo, buf, sizeof(buf))) {
+            ushd_log(LOG_LVL_ERROR, "sched fifo push failed %p", buf);
+            continue;
+        }
     };
 
 TERMINATE:

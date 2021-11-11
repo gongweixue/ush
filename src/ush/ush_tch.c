@@ -17,7 +17,7 @@ typedef struct ush_tch_s {
 } * ush_tch_t;
 
 
-ush_ret_t
+static ush_ret_t
 ush_tch_send(const ush_tch_t   touch,
              const ush_char_t *ptr,
              ush_size_t        sz,

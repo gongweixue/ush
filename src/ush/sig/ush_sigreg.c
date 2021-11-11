@@ -51,7 +51,7 @@ ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf) {
         return ret;
     }
 
-    ret = ush_connect_send(conn, (const ush_comm_d *)msg);
+    ret = ush_connect_send_to_realm(conn, (const ush_comm_d *)msg);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sent sigid reg msg failed");
     }

@@ -15,6 +15,10 @@ void ushd_sched_proc_realm(const ush_pvoid_t ptr) {
         ushd_sched_proc_realm_sig(ptr);
         break;
 
+    case USH_COMM_REALM_MSG_CATALOG_CMD:
+        ushd_log(LOG_LVL_ERROR, "REALM_MSG_CATALOG_CMD shouldn't be deal here");
+        break;
+
     default:
         ushd_log(LOG_LVL_ERROR, "wrong catalog #%d", pDest->catalog);
         break;
