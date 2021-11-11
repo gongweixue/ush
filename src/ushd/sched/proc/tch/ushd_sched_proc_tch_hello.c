@@ -45,7 +45,7 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     ushd_realm_thread_t realm = ushd_realm_thread_create(fullname);
     if (!realm) {
         ushd_log(LOG_LVL_ERROR, "%s dist thread create failed.", fullname);
-        ushd_dist_thread_stop_destroy(&dist);
+        ushd_dist_thread_request_stop(&dist);
         return;
     }
 
@@ -53,8 +53,8 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     ush_connidx_t connidx = ushd_conn_tbl_add(shortname_ts, cert, dist, realm);
     if (USHD_INVALID_CONN_IDX_VALUE == connidx) {
         ushd_log(LOG_LVL_ERROR, "%s can not add to the table", shortname_ts);
-        ushd_dist_thread_stop_destroy(&dist);
-        ushd_realm_thread_stop_destroy(&realm);
+        ushd_dist_thread_request_stop(&dist);
+        ushd_realm_thread_request_stop(&realm);
         return;
     }
     ushd_log(LOG_LVL_INFO, "info added to conn table, idx %d", connidx);
@@ -63,8 +63,8 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     if (USH_RET_OK != ushd_realm_thread_start(realm)) {
         ushd_log(LOG_LVL_ERROR, "%s realm thread can not start", fullname);
         ushd_conn_tbl_remove(connidx);
-        ushd_dist_thread_stop_destroy(&dist);
-        ushd_realm_thread_stop_destroy(&realm);
+        ushd_dist_thread_request_stop(&dist);
+        ushd_realm_thread_request_stop(&realm);
         return;
     }
 
@@ -72,8 +72,8 @@ void ushd_sched_proc_tch_hello(const ush_pvoid_t msg) {
     if (USH_RET_OK != ushd_dist_thread_start(dist)) {
         ushd_log(LOG_LVL_ERROR, "%s dist thread can not start", fullname);
         ushd_conn_tbl_remove(connidx);
-        ushd_dist_thread_stop_destroy(&dist);
-        ushd_realm_thread_stop_destroy(&realm);
+        ushd_dist_thread_request_stop(&dist);
+        ushd_realm_thread_request_stop(&realm);
     } else {
         dist_fifo_msg_hay hay = {
             {USHD_DIST_FIFO_MSG_TYPE_HAY}, sync, connidx, cert, deadline};

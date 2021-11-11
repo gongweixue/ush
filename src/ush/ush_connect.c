@@ -18,6 +18,7 @@
 
 #include "ush_realm.h"
 #include "realm/ush_comm_realm.h"
+#include "realm/cmd/ush_comm_realm_cmd.h"
 
 
 typedef struct ush_connect_s {
@@ -330,7 +331,7 @@ ush_connect_valid(const ush_connect_t conn) {
 
 ush_ret_t
 ush_connect_goodbye(ush_connect_t conn) {
-    if (!conn) {
+    if (!conn || !conn->realm || !conn->touch) {
         return USH_RET_WRONG_PARAM;
     }
 
@@ -344,31 +345,40 @@ ush_connect_goodbye(ush_connect_t conn) {
         return USH_RET_WRONG_SEQ;
     }
 
-    // send goodbye msg
-    ush_comm_tch_goodbye_t msg = NULL;
+    // send goodbye request
+    ush_comm_tch_goodbye_t goodbye = NULL;
     ush_connidx_t          idx = conn->connidx;
     ush_cert_t            cert = conn->cert;
-    if (USH_RET_OK != ush_comm_tch_goodbye_create(&msg, idx, cert)) {
+    if (USH_RET_OK != ush_comm_tch_goodbye_create(&goodbye, idx, cert)) {
         return USH_RET_OUT_OF_MEM;
     }
-
-    ush_ret_t ret = ush_tch_send_goodbye(conn->touch, msg);
-    if (USH_RET_OK != ret) {
+    if (USH_RET_OK != ush_tch_send_goodbye(conn->touch, goodbye)) {
         ush_log(LOG_LVL_ERROR, "sending goodbye for conn %p failed", conn);
         return USH_RET_FAILED;
     }
-
-    // deprecate this connection after sending goodbye msg
-    conn->fingerprint = USH_INVALID_CONNECT_FINGERPRINT;
-
-    // close realm queue
-    ush_realm_destroy_with_closing(&(conn->realm));
-
     // close tch queue
     ush_tch_destroy_with_closing(&(conn->touch));
 
-    // close&unlink lstnr queue & stop lstnr thread
-    ush_lstnr_stop_close(&(conn->listener));
+
+    // send request msg to ushd, to close the realm thread on service end.
+    ush_comm_realm_cmd_t realm_cmd = NULL;
+    ush_ret_t ret = ush_comm_realm_cmd_create(&realm_cmd,
+                                              USH_COMM_REALM_CMD_ID_CLOSE);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "out of mem for realm_cmd create");
+        return USH_RET_OUT_OF_MEM;
+    }
+    ret = ush_realm_send(conn->realm, (ush_comm_realm_msg_d*)&realm_cmd);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "request to close realm thread&queue of ushd");
+        return USH_RET_FAILED;
+    }
+    // close realm queue
+    ush_realm_destroy_with_closing(&(conn->realm));
+
+
+    // deprecate this connection after sending goodbye msg
+    conn->fingerprint = USH_INVALID_CONNECT_FINGERPRINT;
 
     return USH_RET_OK;
 }

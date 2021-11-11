@@ -75,27 +75,39 @@ ushd_dist_thread_start(ushd_dist_thread_t thread) {
 }
 
 ush_ret_t
-ushd_dist_thread_stop_destroy(ushd_dist_thread_t *pThread) {
+ushd_dist_thread_request_stop(ushd_dist_thread_t *pThread) {
     if (!pThread || !(*pThread)) {
         return USH_RET_OK;
     }
 
-    if (USH_INVALID_TID != (*pThread)->tid) {
-        pthread_cancel((*pThread)->tid);
-        (*pThread)->tid = USH_INVALID_TID;
+    ushd_dist_fifo_t fifo = (*pThread)->fifo;
+    mqd_t              mq = (*pThread)->mq;
+    pthread_t         tid = (*pThread)->tid;
+    // means dist thread is not healthy
+    if (!fifo || USH_INVALID_TID == tid || USH_INVALID_MQD_VALUE == mq) {
+        ushd_log(LOG_LVL_FATAL, "dist thread not exists any more");
+        if (fifo) {
+            ushd_dist_fifo_destroy(&fifo);
+            (*pThread)->fifo = NULL;
+        }
+        if (USH_INVALID_TID != tid) {
+            pthread_cancel(tid);
+            (*pThread)->tid = USH_INVALID_TID;
+        }
+        if (USH_INVALID_MQD_VALUE != mq) {
+            mq_close(mq);
+            (*pThread)->mq = USH_INVALID_MQD_VALUE;
+            mq_unlink((*pThread)->fullname);
+        }
+
+        free(*pThread);
+        *pThread = NULL;
+        return USH_RET_WRONG_PARAM;
     }
 
-    if (NULL != (*pThread)->fifo) {
-        ushd_dist_fifo_destroy(&((*pThread)->fifo));
-    }
-
-    if (USH_INVALID_MQD_VALUE != (*pThread)->mq) {
-        mq_close((*pThread)->mq);
-        (*pThread)->mq = USH_INVALID_MQD_VALUE;
-    }
-
-    free(*pThread);
-    *pThread = NULL;
+    dist_fifo_msg_stop msg;
+    msg.desc.type = USHD_DIST_FIFO_MSG_TYPE_STOP;
+    ushd_dist_fifo_push(fifo, (dist_fifo_msg_d*)&msg, sizeof(msg));
 
     return USH_RET_OK;
 }

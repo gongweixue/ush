@@ -9,6 +9,8 @@
 
 #include "ush_comm_def.h"
 #include "ush_comm_desc.h"
+#include "realm/ush_comm_realm.h"
+#include "realm/cmd/ush_comm_realm_cmd.h"
 #include "realm/sig/ush_comm_realm_sigreg.h"
 
 #include "sched/ushd_sched_fifo.h"
@@ -65,23 +67,60 @@ ushd_realm_thread_start(ushd_realm_thread_t thread) {
 
 
 ush_ret_t
-ushd_realm_thread_stop_destroy(ushd_realm_thread_t *pThread) {
+ushd_realm_thread_request_stop(ushd_realm_thread_t *pThread) {
     if (!pThread || !(*pThread)) {
         return USH_RET_OK;
     }
 
-    if (USH_INVALID_MQD_VALUE != (*pThread)->mq) {
-        mq_close((*pThread)->mq);
-        (*pThread)->mq = USH_INVALID_MQD_VALUE;
-        mq_unlink((*pThread)->fullname);
+    // realm appears not healthy
+    mqd_t      mq = (*pThread)->mq;
+    pthread_t tid = (*pThread)->tid;
+    if (USH_INVALID_MQD_VALUE == mq || USH_INVALID_TID == tid) {
+        ushd_log(LOG_LVL_FATAL, "wrong param");
+        if (USH_INVALID_TID != tid) {
+            // realm thread can't receive the msg
+            pthread_cancel(tid);
+            (*pThread)->tid = USH_INVALID_TID;
+
+        }
+        if (USH_INVALID_MQD_VALUE != mq) {
+            // no running realm thread to closes this mq
+            mq_close(mq);
+            mq_unlink((*pThread)->fullname);
+            (*pThread)->mq = USH_INVALID_MQD_VALUE;
+        }
+
+        free(*pThread);
+        *pThread = NULL;
+        return USH_RET_WRONG_PARAM;
     }
 
-    if (USH_INVALID_TID != (*pThread)->tid) {
-        pthread_cancel((*pThread)->tid);
-        (*pThread)->tid = USH_INVALID_TID;
+    // prepare msg
+    ush_size_t sz = ush_comm_realm_cmd_sizeof();
+    if (sz >= USH_COMM_REALM_Q_MSG_MAX_LEN) {
+        ush_log(LOG_LVL_FATAL, "msg tooooooooo long!!!!");
+        return USH_RET_FAILED;
     }
 
-    free(*pThread);
+    ush_u32_t prio = USH_COMM_REALM_SEND_PRIO_CMD;
+
+    ush_comm_realm_cmd_t realm_cmd = NULL;
+    ush_ret_t ret = ush_comm_realm_cmd_create(&realm_cmd,
+                                              USH_COMM_REALM_CMD_ID_CLOSE);
+    if (USH_RET_OK != ret) {
+        ush_log(LOG_LVL_ERROR, "out of mem for realm_cmd create");
+        return USH_RET_OUT_OF_MEM;
+    }
+
+    // send a request into the queue
+    int i = mq_send((*pThread)->mq, (const ush_char_t *)realm_cmd, sz, prio);
+    if (-1 == i) {
+        ush_log(LOG_LVL_FATAL, "send realm msg failed.");
+        return USH_RET_FAILED;
+    }
+
+    // DO NOT free thread object, cause the real deatroy action will
+    // be performed in realm thread itself
     *pThread = NULL;
 
     return USH_RET_OK;
@@ -148,6 +187,21 @@ realm_thread_entry(void *arg) {
 
         ushd_log(LOG_LVL_INFO, "msg arrived");
 
+        // need to exit or not
+        ush_comm_realm_msg_d *pRealm = (ush_comm_realm_msg_d*)buf;
+        if (USH_COMM_REALM_MSG_CATALOG_CMD == pRealm->catalog) {
+            ush_comm_realm_cmd_t cmd = (ush_comm_realm_cmd_t)buf;
+            if (USH_COMM_REALM_CMD_ID_CLOSE == ush_comm_realm_cmd_id_of(cmd)) {
+                if (USH_INVALID_MQD_VALUE != thread->mq) {
+                    mq_close(thread->mq);
+                    thread->mq = USH_INVALID_MQD_VALUE;
+                    mq_unlink(thread->fullname);
+                    thread->fullname[0] = '\0';
+                    free(thread);
+                    goto TERMINATE;
+                }
+            }
+        }
 
         // push msg
         ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();
@@ -158,5 +212,5 @@ realm_thread_entry(void *arg) {
     };
 
 TERMINATE:
-    exit(0);
+    pthread_exit(NULL);
 }

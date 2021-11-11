@@ -7,6 +7,7 @@
 #include "dist/proc/ushd_dist_proc.h"
 #include "dist/proc/ushd_dist_proc_hay.h"
 #include "dist/proc/ushd_dist_proc_sig.h"
+#include "dist/proc/ushd_dist_proc_cmd.h"
 
 void
 ushd_dist_proc(ushd_dist_thread_t thread, ush_char_t *buf) {
@@ -31,6 +32,11 @@ ushd_dist_proc(ushd_dist_thread_t thread, ush_char_t *buf) {
         ushd_log(LOG_LVL_INFO, "sending sig_upd msg %p", buf);
         ushd_dist_proc_sig_send_update(
             thread, (const dist_fifo_msg_sig_upd *)buf);
+        break;
+
+    case USHD_DIST_FIFO_MSG_TYPE_STOP:
+        ushd_log(LOG_LVL_INFO, "request to stop the dist thread");
+        ushd_dist_proc_cmd_stop_dist(thread);
         break;
 
     default:

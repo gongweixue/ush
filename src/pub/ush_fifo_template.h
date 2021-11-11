@@ -112,6 +112,7 @@ NAME##_fifo_destroy(NAME##_fifo_t *pFifo) {                                     
     pthread_cond_destroy(&((*pFifo)->cond_consumer));                           \
     NAME##_fifo_cs_exit(*pFifo);                                                \
     pthread_mutex_destroy(&((*pFifo)->mutex));                                  \
+    *pFifo = NULL;                                                              \
     return USH_RET_OK;                                                          \
 }                                                                               \
                                                                                 \

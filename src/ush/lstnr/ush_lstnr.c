@@ -127,7 +127,7 @@ lstnr_thread_entry(void *arg) {
             continue;
         }
 
-        ush_lstnr_proc((ush_comm_lstnr_msg_d *)buf);
+        ush_lstnr_proc(listener, (ush_comm_lstnr_msg_d *)buf);
     }
 
     return 0;

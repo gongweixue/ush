@@ -18,10 +18,12 @@
 #define USH_COMM_REALM_SEND_PRIO_SIGSET           (0)
 #define USH_COMM_REALM_SEND_PRIO_SIGTEASE         (0)
 #define USH_COMM_REALM_SEND_PRIO_SIGREG           (1)
+#define USH_COMM_REALM_SEND_PRIO_CMD              (2)
 
 #define USH_COMM_LSTNR_SEND_PRIO_HAY             (0)
 #define USH_COMM_LSTNR_SEND_PRIO_SIGREG_ACK      (0)
 #define USH_COMM_LSTNR_SEND_PRIO_SIG_UPD         (1)
+#define USH_COMM_LSTNR_SEND_PRIO_STOP            (2)
 
 
 #endif // USH_DEFINE_H

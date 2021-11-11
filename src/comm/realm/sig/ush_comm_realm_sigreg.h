@@ -9,12 +9,12 @@ typedef struct comm_realm_sigreg_s * ush_comm_realm_sigreg_t;
 
 ush_ret_t
 ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
-                             ush_connidx_t           connidx,
-                             ush_cert_t              cert,
-                             ush_sig_id_t            sigid,
-                             const ush_pvoid_t       done,
-                             const ush_pvoid_t       rcv,
-                             ush_pipe_t              pipe);
+                             ush_connidx_t             connidx,
+                             ush_cert_t                cert,
+                             ush_sig_id_t              sigid,
+                             const ush_pvoid_t         done,
+                             const ush_pvoid_t         rcv,
+                             ush_pipe_t                pipe);
 
 ush_cert_t
 ush_comm_realm_sigreg_cert_of(const ush_comm_realm_sigreg_t msg);

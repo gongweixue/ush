@@ -30,9 +30,15 @@ void ushd_sched_proc_tch_goodbye(const ush_pvoid_t msg) {
         return;
     }
 
+    // get a dist ptr before remove it from tbl
+    ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(connidx);
+
     if (USH_RET_OK != ushd_conn_tbl_remove(connidx)) {
         ushd_log(LOG_LVL_ERROR, "connidx: %d can not be deactive", connidx);
     }
+
+    // kill the dist, and the record in tbl is all NULL
+    ushd_dist_thread_request_stop(&dist);
 
     return;
 }

@@ -13,6 +13,6 @@ ushd_realm_thread_start(ushd_realm_thread_t thread);
 
 
 ush_ret_t
-ushd_realm_thread_stop_destroy(ushd_realm_thread_t *pThread);
+ushd_realm_thread_request_stop(ushd_realm_thread_t *pThread);
 
 #endif // USHD_REALM_THREAD_H

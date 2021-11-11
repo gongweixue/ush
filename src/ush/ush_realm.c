@@ -8,6 +8,7 @@
 #include "ush_log.h"
 
 #include "ush_realm.h"
+#include "realm/cmd/ush_comm_realm_cmd.h"
 #include "realm/sig/ush_comm_realm_sig.h"
 #include "realm/sig/ush_comm_realm_sigreg.h"
 #include "realm/sig/ush_comm_realm_sigset.h"
@@ -72,9 +73,8 @@ ush_realm_send(ush_realm_t realm, const ush_comm_realm_msg_d *msg) {
 
     // prepare the sz and prio
     if (USH_COMM_REALM_MSG_CATALOG_CMD == msg->catalog) {
-        ush_assert(0);
-        // sz = ush_comm_realm_cmd_close_sizeof();
-        // prio = USH_COMM_REALM_SEND_PRIO_CMD;
+        sz = ush_comm_realm_cmd_sizeof();
+        prio = USH_COMM_REALM_SEND_PRIO_CMD;
 
     } else if (USH_COMM_REALM_MSG_CATALOG_SIG == msg->catalog) {
         switch (((const ush_comm_realm_sig_d*)msg)->intent) {

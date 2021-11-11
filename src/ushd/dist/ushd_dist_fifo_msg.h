@@ -9,7 +9,8 @@
 typedef enum DIST_FIFO_MSG_TYPE {
     USHD_DIST_FIFO_MSG_TYPE_HAY,
     USHD_DIST_FIFO_MSG_TYPE_SIGREG_ACK,
-    USHD_DIST_FIFO_MSG_TYPE_SIG_UPD
+    USHD_DIST_FIFO_MSG_TYPE_SIG_UPD,
+    USHD_DIST_FIFO_MSG_TYPE_STOP
 } DIST_FIFO_MSG_TYPE;
 
 // base
@@ -42,5 +43,9 @@ typedef struct dist_fifo_msg_sig_upd_s {
     ush_pvoid_t                rcv;
     ush_u32_t                  cntr;
 } dist_fifo_msg_sig_upd;
+
+typedef struct dist_fifo_msg_stop_s {
+    dist_fifo_msg_d    desc;
+} dist_fifo_msg_stop;
 
 #endif // USHD_DIST_FIFO_MSG_H

@@ -6,6 +6,7 @@ set(SRC_USHD_DIST
     proc/ushd_dist_proc.c
     proc/ushd_dist_proc_hay.c
     proc/ushd_dist_proc_sig.c
+    proc/ushd_dist_proc_cmd.c
 )
 
 include_directories(
