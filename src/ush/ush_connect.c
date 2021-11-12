@@ -199,7 +199,7 @@ realize_timespec(struct timespec *ptr, ush_u16_t timeout) {
         return USH_RET_WRONG_PARAM;
     }
 
-    if (-1 == clock_gettime(CLOCK_MONOTONIC, ptr)) {
+    if (-1 == clock_gettime(CLOCK_REALTIME, ptr)) {
         ush_log(LOG_LVL_ERROR, "clock_gettime failed");
         return USH_RET_FAILED;
     }

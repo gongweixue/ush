@@ -86,7 +86,7 @@ ush_comm_lstnr_hay_outofdate(ush_comm_lstnr_hay_t msg) {
     }
 
     struct timespec ts;
-    if (-1 == clock_gettime(CLOCK_MONOTONIC, &ts)) {
+    if (-1 == clock_gettime(CLOCK_REALTIME, &ts)) {
         return USH_TRUE;
     }
 

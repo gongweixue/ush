@@ -17,6 +17,8 @@
 
 #include "ushd_realm_thread.h"
 
+#define REALM_QUEUE_SENDING_TIMEOUT_SEC (2)
+
 typedef struct ushd_realm_thread_s {
     pthread_t        tid;    // thread id for the ushd realm thread
     mqd_t            mq;     // mq handle
@@ -104,16 +106,18 @@ ushd_realm_thread_request_stop(ushd_realm_thread_t *pThread) {
 
     ush_u32_t prio = USH_COMM_REALM_SEND_PRIO_CMD;
 
-    ush_comm_realm_cmd_t realm_cmd = NULL;
-    ush_ret_t ret = ush_comm_realm_cmd_create(&realm_cmd,
-                                              USH_COMM_REALM_CMD_ID_CLOSE);
+    ush_comm_realm_cmd_t cmd = NULL;
+    ush_ret_t ret = ush_comm_realm_cmd_create(&cmd,USH_COMM_REALM_CMD_ID_CLOSE);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "out of mem for realm_cmd create");
         return USH_RET_OUT_OF_MEM;
     }
 
-    // send a request into the queue
-    int i = mq_send((*pThread)->mq, (const ush_char_t *)realm_cmd, sz, prio);
+    // send a request into the queue with timeout to avoid thread blocked
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += REALM_QUEUE_SENDING_TIMEOUT_SEC;
+    int i = mq_timedsend((*pThread)->mq, (const ush_char_t*)cmd, sz, prio, &ts);
     if (-1 == i) {
         ush_log(LOG_LVL_FATAL, "send realm msg failed.");
         return USH_RET_FAILED;

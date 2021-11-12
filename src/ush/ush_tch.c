@@ -9,6 +9,7 @@
 #include "ush_time.h"
 #include "ush_tch.h"
 
+#define TCH_QUEUE_SENDING_TIMEOUT_SEC (2)
 #define USH_TCH_OPEN_RETRY_CNT    (3)
 #define USH_TCH_OPEN_INTERVAL_MS  (10)
 
@@ -32,7 +33,11 @@ ush_tch_send(const ush_tch_t   touch,
     ush_ret_t ret = USH_RET_OK;
     const ush_char_t *pMsg = (const ush_char_t *)ptr;
 
-    int i = mq_send(touch->mq, pMsg, sz, prio);
+    // timedsend to avoid the client thread blocked that caused by mqueue jam
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += TCH_QUEUE_SENDING_TIMEOUT_SEC;
+    int i = mq_timedsend(touch->mq, pMsg, sz, prio, &ts);
     if (-1 == i) {
         ush_log(LOG_LVL_FATAL, "send msg failed.");
         ret = USH_RET_FAILED;

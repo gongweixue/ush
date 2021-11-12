@@ -14,6 +14,8 @@
 #include "realm/sig/ush_comm_realm_sigset.h"
 #include "realm/sig/ush_comm_realm_sigtease.h"
 
+#define REALM_QUEUE_SENDING_TIMEOUT_VALUE  (2)
+
 typedef struct ush_realm_s {
     mqd_t      mq;
     ush_char_t fullname[USH_COMM_CONN_FULL_NAME_LEN_MAX];
@@ -104,7 +106,11 @@ ush_realm_send(ush_realm_t realm, const ush_comm_realm_msg_d *msg) {
         return USH_RET_FAILED;
     }
 
-    int i = mq_send(realm->mq, (const ush_char_t *)msg, sz, prio);
+    // use REAL_TIME clock to avoid mqueue blocked caused by queue jam
+    struct timespec timeout;
+    clock_gettime(CLOCK_REALTIME, &timeout);
+    timeout.tv_sec += REALM_QUEUE_SENDING_TIMEOUT_VALUE;
+    int i = mq_timedsend(realm->mq, (const ush_char_t*)msg, sz, prio, &timeout);
     if (-1 == i) {
         ush_log(LOG_LVL_FATAL, "send realm msg failed.");
         return USH_RET_FAILED;
