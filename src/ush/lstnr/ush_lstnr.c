@@ -56,6 +56,7 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
     if (0 != pthread_create(&tmp->tid, NULL, lstnr_thread_entry, tmp)) {
         ush_log(LOG_LVL_FATAL, "lstnr %s thread start failed", fullname);
         mq_close(tmp->mq);
+        mq_unlink(tmp->fullname);
         free(tmp);
         return USH_RET_FAILED;
     }
@@ -64,6 +65,7 @@ ush_lstnr_open_start(ush_lstnr_t *pPtr, const ush_char_t *fullname) {
         ush_log(LOG_LVL_FATAL, "detach lstnr %s thread failed", fullname);
         pthread_cancel(tmp->tid);
         mq_close(tmp->mq);
+        mq_unlink(tmp->fullname);
         free(tmp);
         return USH_RET_FAILED;
     }

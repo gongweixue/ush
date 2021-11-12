@@ -125,6 +125,7 @@ ush_realm_close(ush_realm_t realm) {
         ush_log(LOG_LVL_ERROR, "realm closed failed");
         return USH_RET_FAILED;
     }
+    mq_unlink(realm->fullname);
 
     realm->mq = USH_INVALID_MQD_VALUE;
 
