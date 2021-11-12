@@ -368,7 +368,7 @@ ush_connect_goodbye(ush_connect_t conn) {
         ush_log(LOG_LVL_ERROR, "out of mem for realm_cmd create");
         return USH_RET_OUT_OF_MEM;
     }
-    ret = ush_realm_send(conn->realm, (ush_comm_realm_msg_d*)&realm_cmd);
+    ret = ush_realm_send(conn->realm, (ush_comm_realm_msg_d*)realm_cmd);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "request to close realm thread&queue of ushd");
         return USH_RET_FAILED;
