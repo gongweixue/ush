@@ -4,6 +4,7 @@
 #include "time.h"
 #include "mqueue.h"
 
+// uncomment this macro to generate the code for QNX platform(extended POSIX)
 // #define QNX
 
 #ifndef USH_CLOCK_ID

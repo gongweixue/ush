@@ -12,14 +12,14 @@ static void init(ush_pvoid_t fifo) {
     (void)fifo;
 }
 
-typedef struct msg {
+typedef struct {
     size_t     flag;
     ush_s32_t  data;
     ush_s32_t  random;
     ush_s32_t  chk;
-} msg_t;
+} msg_s;
 
-static void write_elem(msg_t *dst, const ush_s32_t *src, ush_size_t sz) {
+static void write_elem(msg_s *dst, const ush_s32_t *src, ush_size_t sz) {
     (void)src;
     (void)sz;
     ush_assert(dst);
@@ -31,7 +31,7 @@ static void write_elem(msg_t *dst, const ush_s32_t *src, ush_size_t sz) {
     cnt++;
 }
 
-static ush_size_t read_elem(ush_pvoid_t dst, const msg_t *src, ush_size_t sz) {
+static ush_size_t read_elem(ush_pvoid_t dst, const msg_s *src, ush_size_t sz) {
     ush_assert(src->flag == 1);
     (void)dst;
     (void)sz;
@@ -46,7 +46,9 @@ static ush_size_t read_elem(ush_pvoid_t dst, const msg_t *src, ush_size_t sz) {
 
 USH_FIFO_DECL_CODE_GEN(ush_test);
 
-USH_FIFO_IMPL_CODE_GEN(ush_test, 10, msg_t, init, write_elem, read_elem, sizeof(msg_t));
+USH_FIFO_IMPL_CODE_GEN(ush_test, 10, msg_s, init,
+                       write_elem, read_elem,
+                       sizeof(msg_s));
 
 
 
@@ -60,7 +62,7 @@ static void *thread_push(void *arg) {
 
 static void *thread_pop(void *arg) {
     while(cnt < max) {
-        ush_test_fifo_pop((ush_test_fifo_t)arg, arg, sizeof(msg_t));
+        ush_test_fifo_pop((ush_test_fifo_t)arg, arg, sizeof(msg_s));
     }
     return 0;
 }
