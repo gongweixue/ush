@@ -4,23 +4,20 @@
 #include "time.h"
 #include "mqueue.h"
 
-// uncomment this macro to generate the code for QNX platform(extended POSIX)
-// #define QNX
-
 #ifndef USH_CLOCK_ID
-    #ifdef QNX
+    #ifdef __QNXNTO__
         #define USH_CLOCK_ID CLOCK_MONOTONIC
     #else
         #define USH_CLOCK_ID CLOCK_REALTIME
-    #endif // QNX
+    #endif // __QNXNTO__
 #endif // USH_CLOCK_ID
 
 #ifndef USH_MQ_TIMEDSEND
-    #ifdef QNX
+    #ifdef __QNXNTO__
         #define USH_MQ_TIMEDSEND mq_timedsend_monotonic
     #else
         #define USH_MQ_TIMEDSEND mq_timedsend
-    #endif // QNX
+    #endif // __QNXNTO__
 #endif // USH_MQ_TIMEDSEND
 
 #define USH_TCH_QUEUE_SENDING_TIMEOUT_SEC (2)
