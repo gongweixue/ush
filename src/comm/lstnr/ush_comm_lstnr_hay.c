@@ -6,6 +6,7 @@
 #include "ush_comm_lstnr_hay.h"
 #include "ush_log.h"
 #include "ush_time.h"
+#include "ush_porting.h"
 
 typedef struct lstnr_hay_s {
     ush_comm_lstnr_msg_d         desc;
@@ -86,7 +87,7 @@ ush_comm_lstnr_hay_outofdate(ush_comm_lstnr_hay_t msg) {
     }
 
     struct timespec ts;
-    if (-1 == clock_gettime(CLOCK_REALTIME, &ts)) {
+    if (-1 == clock_gettime(USH_CLOCK_ID, &ts)) {
         return USH_TRUE;
     }
 

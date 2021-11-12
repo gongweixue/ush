@@ -8,6 +8,7 @@
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
+#include "ush_porting.h"
 #include "ush_random.h"
 #include "ush_string.h"
 #include "ush_sync.h"
@@ -199,7 +200,7 @@ realize_timespec(struct timespec *ptr, ush_u16_t timeout) {
         return USH_RET_WRONG_PARAM;
     }
 
-    if (-1 == clock_gettime(CLOCK_REALTIME, ptr)) {
+    if (-1 == clock_gettime(USH_CLOCK_ID, ptr)) {
         ush_log(LOG_LVL_ERROR, "clock_gettime failed");
         return USH_RET_FAILED;
     }

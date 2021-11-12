@@ -37,7 +37,7 @@ static void case_normal(void) {
     for (int i = 0; i < 5; ++i) {
         // gen a random num for reference val, ensure the callback be invoked.
         struct timespec ts;
-        clock_gettime(CLOCK_REALTIME, &ts);
+        clock_gettime(USH_CLOCK_ID, &ts);
         srand((unsigned int)ts.tv_nsec);
         ref.dataU64 = (U64)rand();
 

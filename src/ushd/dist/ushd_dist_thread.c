@@ -5,6 +5,7 @@
 
 #include "ush_assert.h"
 #include "ush_log.h"
+#include "ush_porting.h"
 #include "ush_time.h"
 
 #include "ush_comm_def.h"
@@ -12,8 +13,6 @@
 #include "ushd_dist_fifo.h"
 #include "ushd_dist_thread.h"
 #include "proc/ushd_dist_proc.h"
-
-#define DIST_QUEUE_SENDING_TIMEOUT_VALUE  (2);
 
 typedef struct dist_thread_s {
     pthread_t           tid;
@@ -194,10 +193,10 @@ ushd_dist_thread_send_msg(ushd_dist_thread_t thread,
     }
 
     // use a timedsend to avoid queue jam or dist-fifo jam
-    struct timespec timeout;
-    clock_gettime(CLOCK_REALTIME, &timeout);
-    timeout.tv_sec += DIST_QUEUE_SENDING_TIMEOUT_VALUE;
-    if (0 != mq_timedsend(thread->mq, (const char *)buf, sz, prio, &timeout)) {
+    struct timespec ts;
+    clock_gettime(USH_CLOCK_ID, &ts);
+    ts.tv_sec += USH_DIST_QUEUE_SENDING_TIMEOUT_SEC;
+    if (0 != USH_MQ_TIMEDSEND(thread->mq, (const char *)buf, sz, prio, &ts)) {
         ush_log(LOG_LVL_ERROR, "dist thread sending msg failed");
         return USH_RET_FAILED;
     }

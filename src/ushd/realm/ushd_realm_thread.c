@@ -6,6 +6,7 @@
 
 #include "ush_assert.h"
 #include "ush_log.h"
+#include "ush_porting.h"
 
 #include "ush_comm_def.h"
 #include "ush_comm_desc.h"
@@ -16,8 +17,6 @@
 #include "sched/ushd_sched_fifo.h"
 
 #include "ushd_realm_thread.h"
-
-#define REALM_QUEUE_SENDING_TIMEOUT_SEC (2)
 
 typedef struct ushd_realm_thread_s {
     pthread_t        tid;    // thread id for the ushd realm thread
@@ -115,9 +114,9 @@ ushd_realm_thread_request_stop(ushd_realm_thread_t *pThread) {
 
     // send a request into the queue with timeout to avoid thread blocked
     struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
-    ts.tv_sec += REALM_QUEUE_SENDING_TIMEOUT_SEC;
-    int i = mq_timedsend((*pThread)->mq, (const ush_char_t*)cmd, sz, prio, &ts);
+    clock_gettime(USH_CLOCK_ID, &ts);
+    ts.tv_sec += USH_REALM_QUEUE_SENDING_TIMEOUT_SEC;
+    int i = USH_MQ_TIMEDSEND((*pThread)->mq, (const ush_char_t*)cmd, sz, prio, &ts);
     if (-1 == i) {
         ush_log(LOG_LVL_FATAL, "send realm msg failed.");
         return USH_RET_FAILED;

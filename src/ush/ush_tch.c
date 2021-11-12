@@ -6,10 +6,10 @@
 #include "ush_assert.h"
 #include "ush_comm_def.h"
 #include "ush_log.h"
+#include "ush_porting.h"
 #include "ush_time.h"
 #include "ush_tch.h"
 
-#define TCH_QUEUE_SENDING_TIMEOUT_SEC (2)
 #define USH_TCH_OPEN_RETRY_CNT    (3)
 #define USH_TCH_OPEN_INTERVAL_MS  (10)
 
@@ -35,9 +35,9 @@ ush_tch_send(const ush_tch_t   touch,
 
     // timedsend to avoid the client thread blocked that caused by mqueue jam
     struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
-    ts.tv_sec += TCH_QUEUE_SENDING_TIMEOUT_SEC;
-    int i = mq_timedsend(touch->mq, pMsg, sz, prio, &ts);
+    clock_gettime(USH_CLOCK_ID, &ts);
+    ts.tv_sec += USH_TCH_QUEUE_SENDING_TIMEOUT_SEC;
+    int i = USH_MQ_TIMEDSEND(touch->mq, pMsg, sz, prio, &ts);
     if (-1 == i) {
         ush_log(LOG_LVL_FATAL, "send msg failed.");
         ret = USH_RET_FAILED;
@@ -57,7 +57,8 @@ ush_tch_send_hello(const ush_tch_t                touch,
 
     ush_size_t sz = ush_comm_tch_hello_sizeof();
     if (pDL) { // with timeout
-        int i = mq_timedsend(touch->mq, pMsg, sz, USH_COMM_TCH_SEND_PRIO_HELLO, pDL);
+        int i = USH_MQ_TIMEDSEND(
+            touch->mq, pMsg, sz, USH_COMM_TCH_SEND_PRIO_HELLO, pDL);
         if (-1 == i) {
             if ((errno == EINTR) || (errno == ETIMEDOUT)) {
                 ush_log(LOG_LVL_FATAL, "send hello timeout");
