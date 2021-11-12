@@ -45,7 +45,7 @@ ush_ret_t ush_sigset(ush_pipe_t    pipe,
 
 
 /*
- * Request a signal value notify from the pipe asynchronous
+ * Request a signal value notify from the pipe asynchronously
  * Sync call: n
  * Ret: OK FAILED WRONG_PARAM WRONG_SEQ
  * Usage: Function call will return immediately when the request send out.

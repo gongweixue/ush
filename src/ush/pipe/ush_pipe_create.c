@@ -10,7 +10,7 @@
 ush_ret_t
 ush_pipe_create(
     const ush_char_t *pName,
-    ush_u32_t         flag,
+    ush_u64_t         flag,
     ush_u16_t         timeout,
     ush_pipe_t       *pPipe)
 {

@@ -31,7 +31,7 @@ extern "C" {
 */
 ush_ret_t ush_pipe_create(
     const ush_char_t *pName,         // pipe name
-    ush_u32_t         flag,          // bit-mask
+    ush_u64_t         flag,          // bit-mask
     ush_u16_t         timeout,       // the unit is 1s at least, 0 is forever.
     ush_pipe_t       *pPipe);
 
