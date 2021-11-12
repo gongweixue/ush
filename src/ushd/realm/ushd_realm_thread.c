@@ -6,7 +6,6 @@
 
 #include "ush_assert.h"
 #include "ush_log.h"
-#include "ush_porting.h"
 
 #include "ush_comm_def.h"
 #include "ush_comm_desc.h"

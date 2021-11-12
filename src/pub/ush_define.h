@@ -1,6 +1,8 @@
 #ifndef USH_DEFINE_H
 #define USH_DEFINE_H
 
+#include "ush_porting.h"
+
 #define USH_INVALID_CERT_VALUE         (-1)
 
 #define USH_INVALID_TID                (0xFFFFFFFFFFFFFFFF) // 64bits addr
@@ -25,5 +27,10 @@
 #define USH_COMM_LSTNR_SEND_PRIO_SIG_UPD         (1)
 #define USH_COMM_LSTNR_SEND_PRIO_STOP            (2)
 
+
+
+#define USH_TCH_QUEUE_SENDING_TIMEOUT_SEC   (2)
+#define USH_DIST_QUEUE_SENDING_TIMEOUT_SEC  (2)
+#define USH_REALM_QUEUE_SENDING_TIMEOUT_SEC (2)
 
 #endif // USH_DEFINE_H

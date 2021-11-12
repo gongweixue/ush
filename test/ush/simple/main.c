@@ -67,7 +67,7 @@ static void *entry(void *arg) {
 
     }
 
-    while(1);
+    sleep(1);
 
     return NULL;
 }

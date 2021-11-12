@@ -6,7 +6,6 @@
 #include "ush_comm_lstnr_hay.h"
 #include "ush_log.h"
 #include "ush_time.h"
-#include "ush_porting.h"
 
 typedef struct lstnr_hay_s {
     ush_comm_lstnr_msg_d         desc;

@@ -8,7 +8,6 @@
 #include "ush_connect.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
-#include "ush_porting.h"
 #include "ush_random.h"
 #include "ush_string.h"
 #include "ush_sync.h"
