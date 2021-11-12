@@ -62,7 +62,7 @@ ushd_sched_thread_start(void) {
         return USH_RET_FAILED;
     }
 
-    ushd_log(LOG_LVL_INFO, "ushd_sched_thread start with tid %lu", tid);
+    ushd_log(LOG_LVL_INFO, "ushd_sched_thread starts");
 
     ushd_log(LOG_LVL_INFO, "detaching sched daemon thread...");
     if (0 != pthread_detach(tid)) {

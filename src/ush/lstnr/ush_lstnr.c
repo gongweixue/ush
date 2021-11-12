@@ -86,7 +86,7 @@ ush_lstnr_stop_close(ush_lstnr_t *pPtr) {
     if (USH_INVALID_TID != (*pPtr)->tid) {
         pthread_cancel((*pPtr)->tid);
         (*pPtr)->tid = USH_INVALID_TID;
-        ush_log(LOG_LVL_INFO, "listener thread %lu cancel", (*pPtr)->tid);
+        ush_log(LOG_LVL_INFO, "listener thread %s cancel", (*pPtr)->fullname);
     }
 
     if (USH_INVALID_MQD_VALUE != (*pPtr)->mq) {

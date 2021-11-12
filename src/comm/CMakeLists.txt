@@ -24,7 +24,7 @@ include_directories(
 add_library(${LIB_USH_COMM} STATIC ${SRC_USH_COMM})
 
 target_link_libraries(${LIB_USH_COMM}
-    rt
+    ${RUNTIME_LIBS}
     ush_util
 )
 

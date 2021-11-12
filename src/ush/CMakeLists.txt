@@ -27,7 +27,7 @@ include_directories(
 
 add_library(${LIB_USH} STATIC ${SRC_USH})
 
-target_link_libraries(${LIB_USH}  rt pthread ush_util ush_comm)
+target_link_libraries(${LIB_USH}  ${RUNTIME_LIBS} ush_util ush_comm)
 
 set_target_properties(${LIB_USH}
     PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

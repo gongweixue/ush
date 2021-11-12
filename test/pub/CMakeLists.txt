@@ -12,7 +12,7 @@ include_directories(
 
 add_executable(${EXE_NAME} ${SRC_LIST})
 
-target_link_libraries(${EXE_NAME} rt pthread ush_util)
+target_link_libraries(${EXE_NAME} ${RUNTIME_LIBS} ush_util)
 
 
 set_target_properties(${EXE_NAME}

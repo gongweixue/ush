@@ -21,7 +21,7 @@ include_directories(
 add_library(${LIB_USHD_SCHED} STATIC ${SRC_USHD_SCHED})
 
 target_link_libraries(${LIB_USHD_SCHED}
-    rt
+    ${RUNTIME_LIBS}
     ush_comm
     ush_util
     ushd_conn

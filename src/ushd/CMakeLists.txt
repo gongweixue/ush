@@ -21,8 +21,7 @@ include_directories(
 add_executable(${EXE_USHD} ${SRC_USHD})
 
 target_link_libraries(${EXE_USHD}
-    rt
-    pthread
+    ${RUNTIME_LIBS}
     ushd_tch
     ushd_sched
     ushd_dist

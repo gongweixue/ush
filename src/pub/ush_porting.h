@@ -20,4 +20,14 @@
     #endif // __QNXNTO__
 #endif // USH_MQ_TIMEDSEND
 
+#ifndef USH_INVALID_THREAD_ID
+    #ifdef __QNXNTO__
+        // int32 for QNX
+        #define USH_INVALID_THREAD_ID (-1)
+    #else
+        // 64bits addr for linux
+        #define USH_INVALID_THREAD_ID (0xFFFFFFFFFFFFFFFF)
+    #endif // __QNXNTO__
+#endif // USH_INVALID_THREAD_ID
+
 #endif // USH_PORTING_H

@@ -14,8 +14,7 @@ include_directories(
 add_library(${LIB_USHD_REALM} STATIC ${SRC_USHD_REALM})
 
 target_link_libraries(${LIB_USHD_REALM}
-    rt
-    pthread
+    ${RUNTIME_LIBS}
     ush_comm
     ush_util
 )
