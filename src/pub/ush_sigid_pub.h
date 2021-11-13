@@ -1,5 +1,5 @@
-#ifndef USH_SIG_ID_H
-#define USH_SIG_ID_H
+#ifndef USH_SIGID_PUB_H
+#define USH_SIGID_PUB_H
 
 #include "ush_type_pub.h"
 
@@ -14,8 +14,8 @@ extern "C" {
 #endif
 
 // test sig-id redeclaration by dropping the type of sigid
-#define USH_ADD_SIG_ID(GRP, NAME, TY) USH_SIG_ID_##GRP##_##NAME,
-enum TEST_SIG_REDECLARATION {
+#define USH_ADD_SIG_ID(GRP, NAME, TY) REDECLARATION_CHECK_##GRP##_##NAME,
+enum USH_REDECLARATION_CHECK {
 #include "ush_sig_conf"
 };
 #undef USH_ADD_SIG_ID // disable the macro
@@ -25,14 +25,14 @@ typedef enum {
     USH_SIG_ID_INVALID,
 #include "ush_sig_conf"
     USH_SIG_ID_MAX
-} ush_sig_id_t;
+} ush_sigid_t;
 
 #ifdef USH_ADD_SIG_ID
 #undef USH_ADD_SIG_ID
 #endif
 
 // sig-id validation
-static inline ush_bool_t ush_sig_id_check(ush_sig_id_t id) {
+static inline ush_bool_t ush_sigid_check(ush_sigid_t id) {
     ush_bool_t ret = (id > USH_SIG_ID_INVALID && id < USH_SIG_ID_MAX);
     return ret;
 }
@@ -44,4 +44,4 @@ static inline ush_bool_t ush_sig_id_check(ush_sig_id_t id) {
 #endif
 
 
-#endif // USH_SIG_ID_H
+#endif // USH_SIGID_PUB_H

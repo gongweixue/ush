@@ -1,7 +1,7 @@
 #ifndef USH_SIG_PUB_H
 #define USH_SIG_PUB_H
 
-#include "ush_sig_id.h"
+#include "ush_sigid_pub.h"
 #include "ush_type_pub.h"
 
 #include "ush_cb_pub.h"
@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 typedef struct ush_sigreg_conf_s {
-    ush_sig_id_t     sigid;
+    ush_sigid_t      sigid;
     ush_sig_cb_reg_t done;
     ush_sig_cb_rcv_t rcv;
 } ush_sigreg_conf_t;
@@ -40,7 +40,7 @@ ush_ret_t ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf);
  * Caution: Wrong pipe id will lead a UB
  */
 ush_ret_t ush_sigset(ush_pipe_t    pipe,
-                     ush_sig_id_t  sigid,
+                     ush_sigid_t   sigid,
                      ush_sig_val_t value);
 
 
@@ -54,7 +54,7 @@ ush_ret_t ush_sigset(ush_pipe_t    pipe,
           Do what you want in the callback.
  * Caution: Wrong pipe id will lead a UB
  */
-ush_ret_t ush_sigtease(ush_pipe_t pipe, ush_sig_id_t sigid);
+ush_ret_t ush_sigtease(ush_pipe_t pipe, ush_sigid_t sigid);
 
 
 // implement with burst reg mode

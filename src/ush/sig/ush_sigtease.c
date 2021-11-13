@@ -6,8 +6,8 @@
 #include "realm/sig/ush_comm_realm_sigtease.h"
 
 ush_ret_t
-ush_sigtease(ush_pipe_t pipe, ush_sig_id_t sigid) {
-    if (USH_INVALID_PIPE == pipe || !ush_sig_id_check(sigid)) {
+ush_sigtease(ush_pipe_t pipe, ush_sigid_t sigid) {
+    if (USH_INVALID_PIPE == pipe || !ush_sigid_check(sigid)) {
         ush_log(LOG_LVL_ERROR, "parameters not correct!");
         return USH_RET_WRONG_PARAM;
     }

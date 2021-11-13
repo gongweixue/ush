@@ -17,7 +17,7 @@ ush_ret_t
 ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
                              ush_connidx_t             connidx,
                              ush_cert_t                cert,
-                             ush_sig_id_t              sigid,
+                             ush_sigid_t               sigid,
                              ush_sig_val_t             val)
 {
     if (!pMsg) {
@@ -28,7 +28,7 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
     if (USHD_INVALID_CONN_IDX_VALUE == connidx ||
         USH_CONN_IDX_MAX <= connidx            ||
         USH_INVALID_CERT_VALUE == cert         ||
-        !ush_sig_id_check(sigid) ) {
+        !ush_sigid_check(sigid) ) {
         ush_log(LOG_LVL_ERROR, "wrong parameters");
         *pMsg = NULL;
         return USH_RET_WRONG_PARAM;
@@ -73,7 +73,7 @@ ush_comm_realm_sigset_cert_of(const ush_comm_realm_sigset_t msg) {
     return msg->desc.cert;
 }
 
-ush_sig_id_t
+ush_sigid_t
 ush_comm_realm_sigset_sigid_of(const ush_comm_realm_sigset_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");

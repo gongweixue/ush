@@ -18,7 +18,7 @@ typedef struct ush_comm_realm_sig_desc_s {
     USH_COMM_REALM_SIG_INTENT   intent;
     ush_connidx_t               connidx;
     ush_cert_t                  cert;
-    ush_sig_id_t                sigid;
+    ush_sigid_t                 sigid;
 } USH_COMM_MSG_PACKED ush_comm_realm_sig_d;
 
 

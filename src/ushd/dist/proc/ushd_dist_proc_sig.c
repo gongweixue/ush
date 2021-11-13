@@ -12,7 +12,7 @@ ushd_dist_proc_sig_send_reg_ack(ushd_dist_thread_t thread,
     }
 
     ush_bool_t   success = msg->success;
-    ush_sig_id_t sigid   = msg->sigid;
+    ush_sigid_t  sigid   = msg->sigid;
     ush_pipe_t   pipe    = msg->pipe;
     ush_pvoid_t  done    = msg->done;
 

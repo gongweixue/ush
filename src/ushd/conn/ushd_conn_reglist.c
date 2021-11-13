@@ -1,7 +1,7 @@
 
 #include "ush_log.h"
 #include "ush_type_pub.h"
-#include "ush_sig_id.h"
+#include "ush_sigid_pub.h"
 
 #include "ushd_conn_tbl.h"
 #include "ushd_conn_reglist.h"
@@ -39,10 +39,8 @@ ush_ret_t ushd_conn_reglist_init(void) {
 }
 
 ush_ret_t
-ushd_conn_reglist_set_rcv(ush_connidx_t idx,
-                          ush_sig_id_t  sigid,
-                          ush_pvoid_t   rcv) {
-    if (!ushd_conn_tbl_connidx_check(idx) || !ush_sig_id_check(sigid)) {
+ushd_conn_reglist_set_rcv(ush_connidx_t idx,ush_sigid_t sigid,ush_pvoid_t rcv) {
+    if (!ushd_conn_tbl_connidx_check(idx) || !ush_sigid_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "idx or sigid is out of bound");
         return USH_RET_FAILED;
     }
@@ -53,8 +51,8 @@ ushd_conn_reglist_set_rcv(ush_connidx_t idx,
 }
 
 ush_ret_t
-ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
-    if (!ush_sig_id_check(sigid)) {
+ushd_conn_reglist_cas(ush_sigid_t sigid, ush_sig_val_t val) {
+    if (!ush_sigid_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "idx or sigid is out of bound");
         return USH_RET_FAILED;
     }
@@ -74,10 +72,10 @@ ushd_conn_reglist_cas(ush_sig_id_t sigid, ush_sig_val_t val) {
 
 // notify all observers of this sigid if idx == USHD_INVALID_CONN_IDX_VALUE
 ush_ret_t
-ushd_conn_reglist_notify(ush_sig_id_t  sigid,
+ushd_conn_reglist_notify(ush_sigid_t   sigid,
                          ush_connidx_t connidx,
                          notify_func_t func) {
-    if (!func || !ush_sig_id_check(sigid)) {
+    if (!func || !ush_sigid_check(sigid)) {
         return USH_RET_WRONG_PARAM;
     }
 

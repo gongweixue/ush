@@ -8,14 +8,14 @@
 typedef struct lstnr_sigreg_ack_s {
     ush_comm_lstnr_msg_d         desc;
     ush_bool_t                   success;
-    ush_sig_id_t                 sigid;
+    ush_sigid_t                  sigid;
     ush_pipe_t                   pipe;
     ush_pvoid_t                  done;
 } USH_COMM_MSG_PACKED * ush_comm_lstnr_sigreg_ack_t;
 
 ush_comm_lstnr_sigreg_ack_t
 ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
-                                 ush_sig_id_t sigid,
+                                 ush_sigid_t  sigid,
                                  ush_pipe_t   pipe,
                                  ush_pvoid_t  done) {
     ush_comm_lstnr_sigreg_ack_t ret =
@@ -62,7 +62,7 @@ ush_comm_lstnr_sigreg_ack_pipe_of(const ush_comm_lstnr_sigreg_ack_t msg) {
     return msg->pipe;
 }
 
-ush_sig_id_t
+ush_sigid_t
 ush_comm_lstnr_sigreg_ack_sigid_of(const ush_comm_lstnr_sigreg_ack_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "msg ptr null");

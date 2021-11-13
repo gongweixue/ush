@@ -35,7 +35,7 @@ ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf) {
         return USH_RET_WRONG_SEQ;
     }
 
-    if (!ush_sig_id_check(pconf->sigid)) {
+    if (!ush_sigid_check(pconf->sigid)) {
         ush_log(LOG_LVL_ERROR, "wrong sigid id");
         return USH_RET_WRONG_PARAM;
     }

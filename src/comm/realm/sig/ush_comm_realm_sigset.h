@@ -9,7 +9,7 @@ ush_ret_t
 ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
                              ush_connidx_t             connidx,
                              ush_cert_t                cert,
-                             ush_sig_id_t              sigid,
+                             ush_sigid_t               sigid,
                              ush_sig_val_t             val);
 
 ush_connidx_t
@@ -18,7 +18,7 @@ ush_comm_realm_sigset_connidx_of(const ush_comm_realm_sigset_t msg);
 ush_cert_t
 ush_comm_realm_sigset_cert_of(const ush_comm_realm_sigset_t msg);
 
-ush_sig_id_t
+ush_sigid_t
 ush_comm_realm_sigset_sigid_of(const ush_comm_realm_sigset_t msg);
 
 ush_sig_val_t

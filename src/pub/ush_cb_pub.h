@@ -2,7 +2,7 @@
 #define USH_CB_PUB_H
 
 #include "ush_type_pub.h"
-#include "ush_sig_id.h"
+#include "ush_sigid_pub.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,12 +16,12 @@ extern "C" {
 */
 // when register done
 typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
-                                      ush_sig_id_t       id,      // signal id
+                                      ush_sigid_t        id,      // signal id
                                       ush_bool_t         success);
 
 
 // when signal receive
-typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sig_id_t  id,
+typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sigid_t   id,
                                       ush_sig_val_t val,
                                       ush_u32_t     cntr);
 

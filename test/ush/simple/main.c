@@ -9,7 +9,7 @@
 static ush_pipe_t sPipe = USH_INVALID_PIPE;
 static int sig_counter = 0;
 
-static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t succ) {
+static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, ush_sigid_t id, ush_bool_t succ) {
     assert(pp == sPipe);
     assert(USH_SIG_ID_TEST_10_U16 == id);
     assert(USH_TRUE == succ);
@@ -19,7 +19,7 @@ static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t succ) 
     return USH_RET_OK;
 }
 
-static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t succ) {
+static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, ush_sigid_t id, ush_bool_t succ) {
     assert(pp == sPipe);
     assert(USH_SIG_ID_TEST_10_U16 == id);
     assert(USH_TRUE == succ);
@@ -31,7 +31,7 @@ static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t su
     return USH_RET_OK;
 }
 
-static ush_ret_t rcv_cb_10_u16(ush_sig_id_t id, ush_sig_val_t val, ush_u32_t cntr) {
+static ush_ret_t rcv_cb_10_u16(ush_sigid_t id, ush_sig_val_t val, ush_u32_t cntr) {
     assert(id == USH_SIG_ID_TEST_10_U16);
 
     printf("USH_SIG_ID_TEST_10_U16: %08d, cntr=%d\n", val.dataU16, cntr);

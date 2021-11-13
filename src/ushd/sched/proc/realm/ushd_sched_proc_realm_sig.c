@@ -39,8 +39,8 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_realm_sigreg_sigid_of(msg);
-    if (!ush_sig_id_check(sigid)) {
+    ush_sigid_t sigid = ush_comm_realm_sigreg_sigid_of(msg);
+    if (!ush_sigid_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
     }
@@ -79,7 +79,7 @@ static void ushd_sched_proc_realm_sigreg(const ush_comm_realm_sigreg_t msg) {
 
 
 static void notify_handle(ush_connidx_t connidx,
-                          ush_sig_id_t  sigid,
+                          ush_sigid_t   sigid,
                           ush_sig_val_t val,
                           ush_pvoid_t   rcv,
                           ush_u32_t     cntr) {
@@ -132,8 +132,8 @@ static void ushd_sched_proc_realm_sigset(const ush_comm_realm_sigset_t msg) {
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_realm_sigset_sigid_of(msg);
-    if (!ush_sig_id_check(sigid)) {
+    ush_sigid_t sigid = ush_comm_realm_sigset_sigid_of(msg);
+    if (!ush_sigid_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
     }
@@ -183,8 +183,8 @@ static void ushd_sched_proc_realm_sigtease(const ush_comm_realm_sigtease_t msg) 
     }
 
     // check sigid valid
-    ush_sig_id_t sigid = ush_comm_realm_sigtease_sigid_of(msg);
-    if (!ush_sig_id_check(sigid)) {
+    ush_sigid_t sigid = ush_comm_realm_sigtease_sigid_of(msg);
+    if (!ush_sigid_check(sigid)) {
         ushd_log(LOG_LVL_ERROR, "Invalid sigid:%d", sigid);
         return;
     }

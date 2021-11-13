@@ -1,7 +1,7 @@
 #include "test-common.h"
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
-#include "ush_sig_id.h"
+#include "ush_sigid_pub.h"
 #include "ush_string.h"
 
 #include "pthread.h"
@@ -10,7 +10,7 @@
 static int flg = 0;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
-static ush_ret_t onReg_normal(ush_pipe_t pp, ush_sig_id_t id, ush_bool_t succ) {
+static ush_ret_t onReg_normal(ush_pipe_t pp, ush_sigid_t id, ush_bool_t succ) {
     ush_assert(pp == pp);
     ush_assert(USH_SIG_ID_ABC_abc_FP32 == id);
     ush_assert(USH_TRUE == succ);

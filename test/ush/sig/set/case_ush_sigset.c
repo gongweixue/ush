@@ -1,14 +1,14 @@
 #include "test-common.h"
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
-#include "ush_sig_id.h"
+#include "ush_sigid_pub.h"
 #include "pthread.h"
 
 static ush_sig_val_t ref;
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
-static ush_ret_t onRcv_XYZ(ush_sig_id_t sigid,
+static ush_ret_t onRcv_XYZ(ush_sigid_t sigid,
                            const ush_sig_val_t val,
                            ush_u32_t rollingcounter) {
     ush_assert(USH_SIG_ID_XYZ_xyz_U64 == sigid);

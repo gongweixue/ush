@@ -7,7 +7,7 @@ typedef struct lstnr_sigreg_ack_s * ush_comm_lstnr_sigreg_ack_t;
 
 ush_comm_lstnr_sigreg_ack_t
 ush_comm_lstnr_sigreg_ack_create(ush_bool_t   success,
-                                 ush_sig_id_t sigid,
+                                 ush_sigid_t  sigid,
                                  ush_pipe_t   pipe,
                                  ush_pvoid_t  done);
 
@@ -20,7 +20,7 @@ ush_comm_lstnr_sigreg_ack_callback_of(const ush_comm_lstnr_sigreg_ack_t msg);
 ush_pipe_t
 ush_comm_lstnr_sigreg_ack_pipe_of(const ush_comm_lstnr_sigreg_ack_t msg);
 
-ush_sig_id_t
+ush_sigid_t
 ush_comm_lstnr_sigreg_ack_sigid_of(const ush_comm_lstnr_sigreg_ack_t msg);
 
 ush_bool_t
