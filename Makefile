@@ -12,8 +12,8 @@ export BUILD_DIR := $(CUR_DIR)/build
 
 ifeq ($(USH_QNX), 1)
     QNX_HOST_TOOL_DIR := usr/bin
-    export AR     := $(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-ar
-    export CC     := $(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-gcc
+    export AR     := $(AT)$(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-ar
+    export GCC    := $(AT)$(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-gcc
     export LD     := $(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-ld
     export RANLIB := $(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-ranlib
     export STRP   := $(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-strip
@@ -72,12 +72,13 @@ SUBDIRS += $(TOP_DIR)/test
 
 
 #############################  targets  ########################################
-.PHONY: all clean autogen $(SUBDIRS)
-all: autogen $(SUBDIRS)
+.PHONY: all clean $(SUBDIRS)
+all: $(CUR_DIR)/gen/ush_sig_conf $(SUBDIRS)
 	$(ECHO) @@@ Everything is done. @@@
 
-autogen:
-	$(AT) ls $(CUR_DIR)/src/plugin/* | xargs cat  > $(CUR_DIR)/gen/ush_sig_conf
+$(CUR_DIR)/gen/ush_sig_conf:
+	echo $(AR)
+	$(AT) ls $(CUR_DIR)/src/plugin/*.ush | xargs cat  > $@
 
 $(SUBDIRS):
 	$(MKDIR) $(subst $(CUR_DIR), $(BUILD_DIR), $@)

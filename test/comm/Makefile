@@ -26,7 +26,11 @@ OBJ_FILES   := $(SRC_FILES:%.c=$(BUILD_SUBDIR)/%.o)
 
 
 #############################  command  ########################################
+ifeq ($(USH_QNX), 1)
+RUN_COMMAND :=
+else
 RUN_COMMAND := $(AT) $(BUILD_DIR)/$(TARGET_EXE) > $(TEST_LOG_FILE).$(TARGET_EXE)
+endif
 
 
 #############################  targets  ########################################
