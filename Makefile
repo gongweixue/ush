@@ -44,8 +44,9 @@ export CFLAGS := -Wall -Wbad-function-cast -Wbool-compare -Wcast-align \
             -Wwrite-strings -finline-functions -fmax-errors=10 \
             -fno-strict-aliasing
 
-export INCLUDE_DIR = $(CUR_DIR)/gen
-export LIBRARY_DIR = $(patsubst %, -l%, $(RUNTIME_LIBS))
+export INCLUDE_DIR := $(CUR_DIR)/gen
+export LIBRARY_DIR :=
+export LIBRARYS    := $(RUNTIME_LIBS)
 
 ifneq ($(USH_DEBUG), 0)
     CFLAGS += -g -O0

@@ -6,6 +6,16 @@ INCLUDE_DIR += $(TOP_DIR)/src/ushd/
 INCLUDE_DIR += $(TOP_DIR)/src/pub/
 INCLUDE_DIR += $(TOP_DIR)/src/util/
 
+LIBRARY_DIR += $(BUILD_DIR)
+
+LIBRARYS += ushd_sched
+LIBRARYS += ushd_dist
+LIBRARYS += ushd_tch
+LIBRARYS += ushd_realm
+LIBRARYS += ush_comm
+LIBRARYS += ushd_conn
+LIBRARYS += ush_util
+
 #############################  dirs  ###########################################
 SUBDIRS := $(CUR_DIR)/conn
 SUBDIRS += $(CUR_DIR)/dist
@@ -22,8 +32,9 @@ all: $(BUILD_DIR)/$(TARGET_EXE_USHD)
 
 $(BUILD_DIR)/$(TARGET_EXE_USHD):  $(SUBDIRS)
 	$(GCC) $(CFLAGS) -o $@ ushd_main.c \
-        $(addprefix -I,$(INCLUDE_DIR)) -L$(BUILD_DIR) \
-        -lushd_sched -lushd_dist -lushd_tch -lushd_realm -lush_comm -lushd_conn -lush_util -lpthread -lrt
+        $(addprefix -I, $(INCLUDE_DIR)) \
+        $(addprefix -L, $(LIBRARY_DIR)) \
+		-Wl,--start-group $(addprefix -l, $(LIBRARYS)) -Wl,--end-group
 
 
 $(SUBDIRS):
