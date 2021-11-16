@@ -11,7 +11,7 @@
 
 #include "ushd_dist_fifo.h"
 #include "ushd_dist_thread.h"
-#include "proc/ushd_dist_proc.h"
+#include "ushd_dist_proc.h"
 
 typedef struct dist_thread_s {
     pthread_t           tid;

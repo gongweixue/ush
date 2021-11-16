@@ -5,7 +5,7 @@
 #include "string.h"
 
 #include "ush_assert.h"
-#include "tch/ush_comm_tch.h"
+#include "ush_comm_tch.h"
 #include "ush_log.h"
 
 #include "ushd_tch.h"

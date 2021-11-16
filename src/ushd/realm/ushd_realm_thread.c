@@ -9,9 +9,9 @@
 
 #include "ush_comm_def.h"
 #include "ush_comm_desc.h"
-#include "realm/ush_comm_realm.h"
-#include "realm/cmd/ush_comm_realm_cmd.h"
-#include "realm/sig/ush_comm_realm_sigreg.h"
+#include "ush_comm_realm.h"
+#include "ush_comm_realm_cmd.h"
+#include "ush_comm_realm_sigreg.h"
 
 #include "sched/ushd_sched_fifo.h"
 

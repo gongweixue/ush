@@ -12,13 +12,13 @@
 #include "ush_string.h"
 #include "ush_sync.h"
 
-#include "lstnr/ush_lstnr.h"
+#include "ush_lstnr.h"
 #include "ush_tch.h"
 #include "ush_time.h"
 
 #include "ush_realm.h"
-#include "realm/ush_comm_realm.h"
-#include "realm/cmd/ush_comm_realm_cmd.h"
+#include "ush_comm_realm.h"
+#include "ush_comm_realm_cmd.h"
 
 
 typedef struct ush_connect_s {

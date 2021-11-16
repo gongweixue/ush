@@ -1,13 +1,13 @@
 #include "pthread.h"
 
-#include "tch/ush_comm_tch.h"
-#include "tch/ush_comm_tch_hello.h"
+#include "ush_comm_tch.h"
+#include "ush_comm_tch_hello.h"
 
 #include "ush_log.h"
 #include "ush_time.h"
 
 #include "conn/ushd_conn_tbl.h"
-#include "proc/ushd_sched_proc.h"
+#include "ushd_sched_proc.h"
 #include "ushd_sched_fifo.h"
 #include "ushd_sched_thread.h"
 

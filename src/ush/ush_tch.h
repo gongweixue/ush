@@ -6,8 +6,8 @@ typedef struct ush_tch_s *  ush_tch_t;
 #include "time.h"
 
 #include "ush_type_pub.h"
-#include "tch/ush_comm_tch_hello.h"
-#include "tch/ush_comm_tch_goodbye.h"
+#include "ush_comm_tch_hello.h"
+#include "ush_comm_tch_goodbye.h"
 
 ush_ret_t ush_tch_send_hello(const ush_tch_t              touch,
                              const ush_comm_tch_hello_t   hello,

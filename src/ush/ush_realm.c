@@ -8,11 +8,11 @@
 #include "ush_log.h"
 
 #include "ush_realm.h"
-#include "realm/cmd/ush_comm_realm_cmd.h"
-#include "realm/sig/ush_comm_realm_sig.h"
-#include "realm/sig/ush_comm_realm_sigreg.h"
-#include "realm/sig/ush_comm_realm_sigset.h"
-#include "realm/sig/ush_comm_realm_sigtease.h"
+#include "ush_comm_realm_cmd.h"
+#include "ush_comm_realm_sig.h"
+#include "ush_comm_realm_sigreg.h"
+#include "ush_comm_realm_sigset.h"
+#include "ush_comm_realm_sigtease.h"
 
 typedef struct ush_realm_s {
     mqd_t      mq;

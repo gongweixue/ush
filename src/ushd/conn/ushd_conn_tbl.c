@@ -5,7 +5,7 @@
 #include "ush_type_pub.h"
 
 #include "ush_comm_desc.h"
-#include "tch/ush_comm_tch_hello.h"
+#include "ush_comm_tch_hello.h"
 
 #include "ushd_conn_tbl.h"
 

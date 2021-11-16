@@ -2,7 +2,7 @@
 #define USH_REALM_H
 
 #include "ush_type_pub.h"
-#include "realm/ush_comm_realm.h"
+#include "ush_comm_realm.h"
 
 typedef struct ush_realm_s * ush_realm_t;
 
