@@ -1,8 +1,8 @@
 #include "test-common.h"
 
 #include "ush_comm_desc.h"
-#include "lstnr/ush_comm_lstnr.h"
-#include "lstnr/ush_comm_lstnr_hay.h"
+#include "ush_comm_lstnr.h"
+#include "ush_comm_lstnr_hay.h"
 
 static void test_hay_create(void) {
     ush_ret_t ret = USH_RET_OK;

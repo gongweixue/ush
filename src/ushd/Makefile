@@ -23,18 +23,16 @@ SUBDIRS += $(CUR_DIR)/realm
 SUBDIRS += $(CUR_DIR)/sched
 SUBDIRS += $(CUR_DIR)/tch
 
-BUILD_SUBDIRS := $(subst $(CUR_DIR), $(BUILD_DIR), $(SUBDIRS))
 
 #############################  targets  ########################################
 .PHONY: all $(SUBDIRS)
 all: $(BUILD_DIR)/$(TARGET_EXE_USHD)
 
 
-$(BUILD_DIR)/$(TARGET_EXE_USHD):  $(SUBDIRS)
+$(BUILD_DIR)/$(TARGET_EXE_USHD): ushd_main.c $(SUBDIRS)
 	$(GCC) $(CFLAGS) -o $@ ushd_main.c \
-        $(addprefix -I, $(INCLUDE_DIR)) \
-        $(addprefix -L, $(LIBRARY_DIR)) \
-		-Wl,--start-group $(addprefix -l, $(LIBRARYS)) -Wl,--end-group
+        $(addprefix -I, $(INCLUDE_DIR)) $(addprefix -L, $(LIBRARY_DIR)) \
+        -Wl,--start-group $(addprefix -l, $(LIBRARYS)) -Wl,--end-group
 
 
 $(SUBDIRS):

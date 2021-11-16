@@ -1,6 +1,6 @@
 #include "test-common.h"
 
-#include "tch/ush_comm_tch_hello.h"
+#include "ush_comm_tch_hello.h"
 
 static void test_hello_create(void) {
     ush_ret_t ret = USH_RET_OK;

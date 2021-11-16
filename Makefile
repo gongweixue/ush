@@ -19,8 +19,8 @@ ifeq ($(USH_QNX), 1)
     export STRP   := $(QNX_HOST)/$(QNX_HOST_TOOL_DIR)/ntoaarch64-strip
     export RUNTIME_LIBS := c
 else
-    export AR     := @ar
-    export GCC    := gcc
+    export AR     := $(AT)ar
+    export GCC    := $(AT)gcc
     export LD     := ld
     export RANLIB := ranlib
     export STRP   := strip
@@ -68,9 +68,8 @@ export TARGET_LIB_USHD_TCH   := libushd_tch.a
 
 #############################  dirs  ###########################################
 SUBDIRS := $(CUR_DIR)/src
-# SUBDIRS += $(TOP_DIR)/test
+SUBDIRS += $(TOP_DIR)/test
 
-BUILD_SUBDIRS := $(subst $(CUR_DIR), $(BUILD_DIR), $(SUBDIRS))
 
 #############################  targets  ########################################
 .PHONY: all clean autogen $(SUBDIRS)
