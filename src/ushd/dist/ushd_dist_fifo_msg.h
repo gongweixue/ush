@@ -2,6 +2,7 @@
 #define USHD_DIST_FIFO_MSG_H
 
 #include "ush_type_pub.h"
+#include "ush_sig_pub.h"
 #include "ush_sigid_pub.h"
 
 #define USHD_DIST_FIFO_MSG_MAX_SIZE  (128)
@@ -30,8 +31,8 @@ typedef struct dist_fifo_msg_hay_s {
 
 typedef struct dist_fifo_msg_sigreg_ack_s {
     dist_fifo_msg_d            desc;
-    ush_bool_t                 success;
-    ush_sigid_t                sigid;
+    ush_sigid_t                sigid[USH_SIGREG_CONF_MAX];
+    ush_bool_t                 success[USH_SIGREG_CONF_MAX];
     ush_pipe_t                 pipe;
     ush_pvoid_t                done;
 } dist_fifo_msg_sigreg_ack;

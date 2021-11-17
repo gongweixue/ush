@@ -6,6 +6,7 @@
 #include "ush_assert.h"
 #include "ush_comm_desc.h"
 #include "ush_connect.h"
+#include "ush_define.h"
 #include "ush_log.h"
 #include "ush_pipe_pub.h"
 #include "ush_random.h"

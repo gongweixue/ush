@@ -5,6 +5,7 @@
 
 #include "ush_assert.h"
 #include "ush_comm_def.h"
+#include "ush_define.h"
 #include "ush_log.h"
 
 #include "ush_realm.h"

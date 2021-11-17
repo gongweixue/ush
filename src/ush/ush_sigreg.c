@@ -1,5 +1,6 @@
 
 #include "ush_connect.h"
+#include "ush_define.h"
 #include "ush_log.h"
 #include "ush_sig_pub.h"
 
@@ -10,9 +11,14 @@
 #include "ush_comm_realm_sigset.h"
 
 ush_ret_t
-ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf) {
-    if (USH_INVALID_PIPE == pipe || NULL == pconf) {
+ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pConf) {
+    if (USH_INVALID_PIPE == pipe || NULL == pConf) {
         ush_log(LOG_LVL_ERROR, "passing 0 as the param");
+        return USH_RET_WRONG_PARAM;
+    }
+
+    if (pConf->count > USH_SIGREG_CONF_MAX || 0 == pConf->count) {
+        ush_log(LOG_LVL_ERROR, "count of sig num wrong");
         return USH_RET_WRONG_PARAM;
     }
 
@@ -29,23 +35,21 @@ ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf) {
         return USH_RET_WRONG_SEQ;
     }
 
-    ush_connidx_t idx = 0;
-    if (USH_RET_OK != ush_connect_get_connidx(conn, &idx)) {
+    ush_connidx_t connidx = 0;
+    if (USH_RET_OK != ush_connect_get_connidx(conn, &connidx)) {
         ush_log(LOG_LVL_ERROR, "remote conn idx getting failed");
         return USH_RET_WRONG_SEQ;
     }
 
-    if (!ush_sigid_check(pconf->sigid)) {
-        ush_log(LOG_LVL_ERROR, "wrong sigid id");
-        return USH_RET_WRONG_PARAM;
+    for (ush_u32_t idx = 0; idx < pConf->count; ++idx) {
+        if (!ush_sigid_check(pConf->sigid[idx])) {
+            ush_log(LOG_LVL_ERROR, "wrong sigid id");
+            return USH_RET_WRONG_PARAM;
+        }
     }
 
     ush_comm_realm_sigreg_t msg = NULL;
-    ush_ret_t ret = ush_comm_realm_sigreg_create(&msg, idx, cert,
-                                                 pconf->sigid,
-                                                 pconf->done,
-                                                 pconf->rcv,
-                                                 pipe);
+    ush_ret_t ret = ush_comm_realm_sigreg_create(&msg,connidx,cert,pipe,pConf);
     if (USH_RET_OK != ret) {
         ush_log(LOG_LVL_ERROR, "sigid reg msg create failed");
         return ret;

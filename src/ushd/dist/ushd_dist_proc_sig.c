@@ -1,3 +1,5 @@
+
+#include "ush_define.h"
 #include "ush_type_pub.h"
 #include "ush_comm_lstnr_sig_upd.h"
 #include "ush_comm_lstnr_sigreg_ack.h"
@@ -11,13 +13,13 @@ ushd_dist_proc_sig_send_reg_ack(ushd_dist_thread_t thread,
         return USH_RET_WRONG_PARAM;
     }
 
-    ush_bool_t   success = msg->success;
-    ush_sigid_t  sigid   = msg->sigid;
-    ush_pipe_t   pipe    = msg->pipe;
-    ush_pvoid_t  done    = msg->done;
+    const ush_bool_t  *pSucc  = msg->success;
+    const ush_sigid_t *pSigid = msg->sigid;
+    ush_pipe_t         pipe   = msg->pipe;
+    ush_pvoid_t        done   = msg->done;
 
     ush_comm_lstnr_sigreg_ack_t ack =
-        ush_comm_lstnr_sigreg_ack_create(success, sigid, pipe, done);
+        ush_comm_lstnr_sigreg_ack_create(pSucc, pSigid, pipe, done);
     if (!ack) {
         ushd_log(LOG_LVL_ERROR, "ack msg mem alloc failed.");
         return USH_RET_OUT_OF_MEM;

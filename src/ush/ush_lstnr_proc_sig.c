@@ -1,6 +1,6 @@
 #include "ush_log.h"
-
-#include "ush_cb_pub.h"
+#include "ush_type_pub.h"
+#include "ush_sigid_pub.h"
 #include "ush_lstnr_proc_sig.h"
 
 
@@ -10,15 +10,15 @@ void ush_lstnr_proc_sigreg_ack(const ush_comm_lstnr_sigreg_ack_t msg) {
             return; // nothing to do
     }
 
-    ush_pipe_t    pipe = ush_comm_lstnr_sigreg_ack_pipe_of(msg);
-    ush_sigid_t sigid = ush_comm_lstnr_sigreg_ack_sigid_of(msg);
-    ush_bool_t success = ush_comm_lstnr_sigreg_ack_succ_of(msg);
+    ush_pipe_t            pipe = ush_comm_lstnr_sigreg_ack_pipe_of(msg);
+    const ush_sigid_t  *pSigid = ush_comm_lstnr_sigreg_ack_sigid_of(msg);
+    const ush_bool_t *pSuccess = ush_comm_lstnr_sigreg_ack_succ_of(msg);
 
     ush_log(LOG_LVL_INFO,
-            "'registe done' callback invoke, pipe:%llu, sigid:%d, succ:%d",
-            pipe, sigid, success);
+            "'registe done' callback invoke, pipe:%llu, sigid:%p, succ:%p",
+            pipe, pSigid, pSuccess);
 
-    done_cb(pipe, sigid, success);
+    done_cb(pipe, pSigid, pSuccess);
 }
 
 

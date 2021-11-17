@@ -1,4 +1,5 @@
 #include "test-common.h"
+#include "ush_define.h"
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
 #include "ush_sigid_pub.h"
@@ -10,10 +11,12 @@
 static int flg = 0;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  cond  = PTHREAD_COND_INITIALIZER;
-static ush_ret_t onReg_normal(ush_pipe_t pp, ush_sigid_t id, ush_bool_t succ) {
+static ush_ret_t onReg_normal(ush_pipe_t pp,
+                              const ush_sigid_t *id,
+                              const ush_bool_t *succ) {
     ush_assert(pp == pp);
-    ush_assert(USH_SIG_ID_ABC_abc_FP32 == id);
-    ush_assert(USH_TRUE == succ);
+    ush_assert(USH_SIG_ID_ABC_abc_FP32 == id[0]);
+    ush_assert(USH_TRUE == succ[0]);
 
     pthread_mutex_lock(&mutex);
 
@@ -35,7 +38,7 @@ static void case_normal(void) {
 
     pthread_mutex_lock(&mutex);
 
-    ush_sigreg_conf_t conf ={USH_SIG_ID_ABC_abc_FP32, onReg_normal, NULL};
+    ush_sigreg_conf_t conf ={{USH_SIG_ID_ABC_abc_FP32}, onReg_normal, {NULL}, 1};
     ret = ush_sigreg(pp, &conf);
     ush_assert(OK == ret);
 
@@ -58,7 +61,7 @@ static void case_wrong_param(void) {
     ret = ush_pipe_create(name, 0, 0, &pp);
     ush_assert(OK == ret);
 
-    ush_sigreg_conf_t conf ={USH_SIG_ID_ABC_abc_FP32, onReg_normal, NULL};
+    ush_sigreg_conf_t conf ={{USH_SIG_ID_ABC_abc_FP32}, onReg_normal, {NULL}, 1};
 
     // invalid pipe
     ret = ush_sigreg(USH_INVALID_PIPE, &conf);
@@ -69,12 +72,12 @@ static void case_wrong_param(void) {
     ush_assert(OK != ret);
 
     // invalid sigid
-    ush_sigreg_conf_t conf_invalid ={USH_SIG_ID_MAX, onReg_normal, NULL};
+    ush_sigreg_conf_t conf_invalid ={{USH_SIG_ID_MAX}, onReg_normal, {NULL}, 1};
     ret = ush_sigreg(pp, &conf_invalid);
     ush_assert(OK != ret);
 
     // invalid sigid
-    conf_invalid.sigid = USH_SIG_ID_INVALID;
+    conf_invalid.sigid[0] = USH_SIG_ID_INVALID;
     ret = ush_sigreg(pp, &conf_invalid);
     ush_assert(OK != ret);
 
@@ -90,7 +93,7 @@ static void case_no_cb(void) {
     ret = ush_pipe_create(name, 0, 0, &pp);
     ush_assert(OK == ret);
 
-    ush_sigreg_conf_t conf ={USH_SIG_ID_ABC_abc_FP32, NULL, NULL};
+    ush_sigreg_conf_t conf ={{USH_SIG_ID_ABC_abc_FP32}, NULL, {NULL}, 1};
     ret = ush_sigreg(pp, &conf);
     ush_assert(OK == ret);
 

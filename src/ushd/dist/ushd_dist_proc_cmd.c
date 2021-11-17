@@ -1,4 +1,5 @@
 
+#include "ush_define.h"
 #include "ush_comm_lstnr_cmd_stop.h"
 
 #include "ushd_dist_proc_cmd.h"

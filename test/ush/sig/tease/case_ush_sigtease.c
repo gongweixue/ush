@@ -1,4 +1,5 @@
 #include "test-common.h"
+#include "ush_define.h"
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
 #include "ush_sigid_pub.h"
@@ -38,7 +39,7 @@ static void case_normal(void) {
 
 
 
-    ush_sigreg_conf_t conf ={USH_SIG_ID_XYZ_xyz_U64, NULL, onRcv_XYZ};
+    ush_sigreg_conf_t conf ={ {USH_SIG_ID_XYZ_xyz_U64}, NULL, {onRcv_XYZ}, 1};
     ret = ush_sigreg(pipe, &conf);
     ush_assert(OK == ret);
 

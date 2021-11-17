@@ -1,6 +1,7 @@
 
 #include "stdlib.h"
 
+#include "ush_define.h"
 #include "ush_log.h"
 #include "ush_comm_realm.h"
 #include "ush_comm_realm_sig.h"
@@ -10,7 +11,8 @@
 typedef struct comm_realm_sigreg_s {
     ush_comm_realm_sig_d         desc;
     ush_pvoid_t                  done;
-    ush_pvoid_t                  rcv;
+    ush_sigid_t                  sigid[USH_SIGREG_CONF_MAX];
+    ush_pvoid_t                  rcv[USH_SIGREG_CONF_MAX];
     ush_pipe_t                   pipe;
 } USH_COMM_MSG_PACKED  * ush_comm_realm_sigreg_t;
 
@@ -19,10 +21,8 @@ ush_ret_t
 ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
                              ush_connidx_t             connidx,
                              ush_cert_t                cert,
-                             ush_sigid_t               sigid,
-                             const ush_pvoid_t         done,
-                             const ush_pvoid_t         rcv,
-                             ush_pipe_t                pipe)
+                             ush_pipe_t                pipe,
+                             const ush_sigreg_conf_t  *pConf)
 {
     if (!pMsg) {
         ush_log(LOG_LVL_ERROR, "ptr NULL");
@@ -41,10 +41,20 @@ ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
     tmp->desc.intent         = USH_COMM_REALM_SIG_INTENT_REG;
     tmp->desc.connidx        = connidx;
     tmp->desc.cert           = cert;
-    tmp->desc.sigid          = sigid;
-    tmp->done                = done;
-    tmp->rcv                 = rcv;
+    tmp->desc.sigid          = USH_SIG_ID_INVALID; // real ids in reg conf
+    tmp->done                = pConf->done;
     tmp->pipe                = pipe;
+
+    // fill up the comm msg
+    ush_u32_t idx = 0;
+    for (; idx < pConf->count; ++idx) {
+        tmp->sigid[idx] = pConf->sigid[idx];
+        tmp->rcv[idx]   = pConf->rcv[idx];
+    }
+    for (; idx < USH_SIGREG_CONF_MAX; ++idx) {
+        tmp->sigid[idx] = USH_SIG_ID_INVALID;
+        tmp->rcv[idx]   = NULL;
+    }
 
     *pMsg = tmp;
 
@@ -70,13 +80,13 @@ ush_comm_realm_sigreg_connidx_of(const ush_comm_realm_sigreg_t msg) {
     return msg->desc.connidx;
 }
 
-ush_sigid_t
+const ush_sigid_t *
 ush_comm_realm_sigreg_sigid_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: NULL");
         return USH_SIG_ID_INVALID;
     }
-    return msg->desc.sigid;
+    return msg->sigid;
 }
 
 ush_pvoid_t
@@ -89,7 +99,7 @@ ush_comm_realm_sigreg_cb_done_of(const ush_comm_realm_sigreg_t msg) {
     return msg->done;
 }
 
-ush_pvoid_t
+const ush_pvoid_t *
 ush_comm_realm_sigreg_cb_rcv_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "wrong parameter: null")

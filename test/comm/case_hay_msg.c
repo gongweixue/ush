@@ -1,5 +1,6 @@
 #include "test-common.h"
 
+#include "ush_define.h"
 #include "ush_comm_desc.h"
 #include "ush_comm_lstnr.h"
 #include "ush_comm_lstnr_hay.h"

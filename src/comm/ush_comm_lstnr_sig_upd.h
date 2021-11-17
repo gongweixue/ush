@@ -1,7 +1,8 @@
 #ifndef USH_COMM_LSTNR_SIG_UPD_H
 #define USH_COMM_LSTNR_SIG_UPD_H
 
-#include "ush_cb_pub.h"
+#include "ush_sigid_pub.h"
+#include "ush_sig_pub.h"
 
 typedef struct lstnr_sig_upd_s * ush_comm_lstnr_sig_upd_t;
 

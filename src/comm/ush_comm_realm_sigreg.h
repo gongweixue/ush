@@ -1,8 +1,7 @@
 #ifndef USH_COMM_REALM_SIGREG_H
 #define USH_COMM_REALM_SIGREG_H
 
-#include "ush_type_pub.h"
-#include "ush_sigid_pub.h"
+#include "ush_sig_pub.h"
 
 typedef struct comm_realm_sigreg_s * ush_comm_realm_sigreg_t;
 
@@ -11,10 +10,8 @@ ush_ret_t
 ush_comm_realm_sigreg_create(ush_comm_realm_sigreg_t  *pMsg,
                              ush_connidx_t             connidx,
                              ush_cert_t                cert,
-                             ush_sigid_t               sigid,
-                             const ush_pvoid_t         done,
-                             const ush_pvoid_t         rcv,
-                             ush_pipe_t                pipe);
+                             ush_pipe_t                pipe,
+                             const ush_sigreg_conf_t  *pConf);
 
 ush_cert_t
 ush_comm_realm_sigreg_cert_of(const ush_comm_realm_sigreg_t msg);
@@ -22,13 +19,13 @@ ush_comm_realm_sigreg_cert_of(const ush_comm_realm_sigreg_t msg);
 ush_connidx_t
 ush_comm_realm_sigreg_connidx_of(const ush_comm_realm_sigreg_t msg);
 
-ush_sigid_t
+const ush_sigid_t *
 ush_comm_realm_sigreg_sigid_of(const ush_comm_realm_sigreg_t msg);
 
 ush_pvoid_t
 ush_comm_realm_sigreg_cb_done_of(const ush_comm_realm_sigreg_t msg);
 
-ush_pvoid_t
+const ush_pvoid_t *
 ush_comm_realm_sigreg_cb_rcv_of(const ush_comm_realm_sigreg_t msg);
 
 ush_pipe_t

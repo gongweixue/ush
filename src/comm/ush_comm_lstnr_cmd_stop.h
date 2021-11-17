@@ -1,7 +1,7 @@
 #ifndef USH_COMM_LSTNR_CMD_STOP_H
 #define USH_COMM_LSTNR_CMD_STOP_H
 
-#include "ush_cb_pub.h"
+#include "ush_type_pub.h"
 
 typedef struct lstnr_cmd_stop_s * ush_comm_lstnr_cmd_stop_t;
 

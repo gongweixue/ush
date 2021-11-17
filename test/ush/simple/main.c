@@ -3,26 +3,27 @@
 #include "assert.h"
 #include "unistd.h"
 
+#include "ush_define.h"
 #include "ush_pipe_pub.h"
 #include "ush_sig_pub.h"
 
 static ush_pipe_t sPipe = USH_INVALID_PIPE;
 static int sig_counter = 0;
 
-static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, ush_sigid_t id, ush_bool_t succ) {
+static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, const ush_sigid_t *ids, const ush_bool_t *succ) {
     assert(pp == sPipe);
-    assert(USH_SIG_ID_TEST_10_U16 == id);
-    assert(USH_TRUE == succ);
+    assert(USH_SIG_ID_TEST_10_U16 == ids[0]);
+    assert(USH_TRUE == succ[0]);
 
     printf("USH_SIG_ID_TEST_10_U16 registered successful.\n");
 
     return USH_RET_OK;
 }
 
-static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, ush_sigid_t id, ush_bool_t succ) {
+static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, const ush_sigid_t *ids, const ush_bool_t *succ) {
     assert(pp == sPipe);
-    assert(USH_SIG_ID_TEST_10_U16 == id);
-    assert(USH_TRUE == succ);
+    assert(USH_SIG_ID_TEST_10_U16 == ids[0]);
+    assert(USH_TRUE == succ[0]);
 
     printf("delete pipe\n");
     ush_pipe_delete(sPipe);
@@ -37,7 +38,8 @@ static ush_ret_t rcv_cb_10_u16(ush_sigid_t id, ush_sig_val_t val, ush_u32_t cntr
     printf("USH_SIG_ID_TEST_10_U16: %08d, cntr=%d\n", val.dataU16, cntr);
 
     if (10 <= sig_counter) {
-        ush_sigreg_conf_t conf ={USH_SIG_ID_TEST_10_U16, reg_cb_10_u16_del, NULL};
+        ush_sigreg_conf_t conf ={
+            {USH_SIG_ID_TEST_10_U16}, reg_cb_10_u16_del, {NULL}, 1};
         ush_sigreg(sPipe, &conf);
         printf("un-register signal USH_SIG_ID_TEST_10_U16\n");
     }
@@ -51,7 +53,8 @@ static void *entry(void *arg) {
 
     ush_pipe_create("thread0", 0, 0, &sPipe);
 
-    ush_sigreg_conf_t conf ={USH_SIG_ID_TEST_10_U16, reg_cb_10_u16, rcv_cb_10_u16};
+    ush_sigreg_conf_t conf ={
+        {USH_SIG_ID_TEST_10_U16}, reg_cb_10_u16, {rcv_cb_10_u16}, 1};
     ush_sigreg(sPipe, &conf);
 
 

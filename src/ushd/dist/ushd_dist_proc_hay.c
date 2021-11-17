@@ -1,4 +1,5 @@
 
+#include "ush_define.h"
 #include "ush_comm_lstnr_hay.h"
 
 #include "dist/ushd_dist_thread.h"

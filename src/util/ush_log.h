@@ -27,7 +27,7 @@ void ush_log_cs_exit(void);
         ush_log_cs_entry();                                                     \
         if (lvl <= USH_LOG_LVL_SELECTOR) {                                      \
             printf("*****" #owner"-"#lvl":\n");                                 \
-            printf("---- At :%s:%s:%d\n", __FILE__, __FUNCTION__, __LINE__);    \
+            printf("---- At: %s:%d %s\n", __FILE__, __LINE__, __FUNCTION__);    \
             printf("---- "); printf(__VA_ARGS__);                               \
             printf("\n\n");                                                     \
         }                                                                       \

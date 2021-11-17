@@ -1,3 +1,5 @@
+
+#include "ush_define.h"
 #include "ush_string.h"
 
 #include "ush_comm_desc.h"

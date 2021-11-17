@@ -4,6 +4,7 @@
 #include "ush_assert.h"
 #include "ush_comm_tch.h"
 #include "ush_comm_tch_hello.h"
+#include "ush_define.h"
 #include "ush_log.h"
 #include "ush_time.h"
 

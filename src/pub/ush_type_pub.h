@@ -7,9 +7,6 @@
 extern "C" {
 #endif
 
-
-#include "ush_define.h"
-
 typedef enum {
     USH_FALSE = 0,
     USH_TRUE = !USH_FALSE

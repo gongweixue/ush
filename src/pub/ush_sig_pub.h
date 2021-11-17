@@ -2,18 +2,41 @@
 #define USH_SIG_PUB_H
 
 #include "ush_sigid_pub.h"
-#include "ush_type_pub.h"
-
-#include "ush_cb_pub.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
+/*
+ * Binding CB for signal registering & signal value updating
+ * ret: OK FAILED WRONG_PARAM
+ * restriction: every new binding will be performed.
+ *              You should be clear how many signals had been registered,
+ *              and get them from pSigids and pSucc.
+*/
+// when register done
+typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
+                                      const ush_sigid_t *pSigids, // signal id
+                                      const ush_bool_t  *pSucc);
+
+
+// when signal receive
+typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sigid_t   id,
+                                      ush_sig_val_t val,
+                                      ush_u32_t     cntr);
+
+
+
+#ifndef USH_SIGREG_CONF_MAX
+#define USH_SIGREG_CONF_MAX    (6)
+#endif
+
 typedef struct ush_sigreg_conf_s {
-    ush_sigid_t      sigid;
+    ush_sigid_t      sigid[USH_SIGREG_CONF_MAX];
     ush_sig_cb_reg_t done;
-    ush_sig_cb_rcv_t rcv;
+    ush_sig_cb_rcv_t rcv[USH_SIGREG_CONF_MAX];
+    ush_u32_t        count;
 } ush_sigreg_conf_t;
 
 
@@ -25,9 +48,11 @@ typedef struct ush_sigreg_conf_s {
  *     the functions will be blocked if the msg not been sent out.
  *     but the return dose not mean the msg value has been set on the ushd.
  *     Pass NULL to reset the callbacks.
- * Caution: Wrong pipe id will lead a UB
+ * Caution: Wrong pipe id will lead a UB;
+ *          Max num of signals once is USH_SIGREG_CONF_MAX, take case yourself.
+ *          Wrong num of the signal will lead UB
  */
-ush_ret_t ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pconf);
+ush_ret_t ush_sigreg(ush_pipe_t pipe, const ush_sigreg_conf_t *pConf);
 
 /*
  * Update a signal value to signal bus

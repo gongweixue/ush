@@ -1,4 +1,5 @@
 #include "test-common.h"
+#include "ush_define.h"
 #include "ush_pipe_pub.h"
 #include "ush_string.h"
 

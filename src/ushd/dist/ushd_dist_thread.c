@@ -4,6 +4,7 @@
 #include "string.h"
 
 #include "ush_assert.h"
+#include "ush_define.h"
 #include "ush_log.h"
 #include "ush_time.h"
 

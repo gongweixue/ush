@@ -1,6 +1,7 @@
 
 #include "stdlib.h"
 
+#include "ush_define.h"
 #include "ush_log.h"
 #include "ush_comm_realm.h"
 #include "ush_comm_realm_sig.h"
