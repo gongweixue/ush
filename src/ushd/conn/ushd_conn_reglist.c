@@ -19,7 +19,7 @@ typedef struct ush_reglist_sig_node_s {
 typedef struct ush_reglist_sig_s {
     ush_reglist_sig_node_t  nodes[USH_CONN_IDX_MAX];
     ush_sig_val_t           value; // current value of the signal
-    ush_u32_t               rollingcounter; // increse by 1 each time
+    ush_u32_t               version; // increse by 1 each time
 } ush_reglist_sig_ty;
 
 typedef struct ush_reglist_s {
@@ -60,9 +60,9 @@ ushd_conn_reglist_cas(ush_sigid_t sigid, ush_sig_val_t val) {
 
     ush_ret_t ret = USH_RET_FAILED;
     if (val.dataMAX != reglist.signals[sigid].value.dataMAX ||
-        0 == reglist.signals[sigid].rollingcounter) { // new-value/first-assign
+        0 == reglist.signals[sigid].version) { // new-value/first-assign
         reglist.signals[sigid].value.dataMAX = val.dataMAX;
-        reglist.signals[sigid].rollingcounter += 1;
+        reglist.signals[sigid].version      += 1;
         ret = USH_RET_OK;
     } else {
         ret = USH_FALSE;
@@ -80,20 +80,20 @@ ushd_conn_reglist_notify(ush_sigid_t   sigid,
         return USH_RET_WRONG_PARAM;
     }
 
-    if (0 == reglist.signals[sigid].rollingcounter) { // sig must be meaningful
+    if (0 == reglist.signals[sigid].version) { // sig must be meaningful
         return USH_RET_FAILED;
     }
 
     ushd_log(LOG_LVL_INFO, "begin sending notify to listeners");
     // cb to notify all observers.
     ush_sig_val_t           val     = reglist.signals[sigid].value;
-    ush_u32_t               counter = reglist.signals[sigid].rollingcounter;
+    ush_u32_t               version = reglist.signals[sigid].version;
     ush_reglist_sig_node_t *nodes   = reglist.signals[sigid].nodes;
 
     // for any single conn
     if (ushd_conn_tbl_get_active_flg(connidx)) {
         if (nodes[connidx].rcv) { // has a receive callback
-            func(connidx, sigid, val, nodes[connidx].rcv, counter);
+            func(connidx, sigid, val, nodes[connidx].rcv, version);
             ushd_log(LOG_LVL_INFO, "notify single observer, sig:%d", sigid);
         }
 
@@ -103,7 +103,7 @@ ushd_conn_reglist_notify(ush_sigid_t   sigid,
                 continue;
             }
 
-            func(idx, sigid, val, nodes[idx].rcv, counter);
+            func(idx, sigid, val, nodes[idx].rcv, version);
         }
     }
 

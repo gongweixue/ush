@@ -10,7 +10,7 @@ ush_comm_lstnr_sig_upd_t
 ush_comm_lstnr_sig_upd_create(ush_sigid_t   sigid,
                               ush_sig_val_t val,
                               ush_pvoid_t   rcv,
-                              ush_u32_t     cntr);
+                              ush_u32_t     ver);
 
 ush_size_t
 ush_comm_lstnr_sig_upd_sizeof(void);
@@ -25,7 +25,7 @@ ush_sigid_t
 ush_comm_lstnr_sig_sigid_of(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_u32_t
-ush_comm_lstnr_sig_cntr_of(const ush_comm_lstnr_sig_upd_t msg);
+ush_comm_lstnr_sig_version_of(const ush_comm_lstnr_sig_upd_t msg);
 
 ush_ret_t
 ush_comm_lstnr_sig_upd_destroy(ush_comm_lstnr_sig_upd_t *pMsg);

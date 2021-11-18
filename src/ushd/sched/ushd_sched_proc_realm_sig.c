@@ -96,7 +96,7 @@ static void notify_handle(ush_connidx_t connidx,
                           ush_sigid_t   sigid,
                           ush_sig_val_t val,
                           ush_pvoid_t   rcv,
-                          ush_u32_t     cntr) {
+                          ush_u32_t     version) {
     if (!ushd_conn_tbl_get_active_flg(connidx)) {
         ushd_log(LOG_LVL_INFO, "inactive idx:%d value of tbl", connidx);
         return;
@@ -107,7 +107,7 @@ static void notify_handle(ush_connidx_t connidx,
     msg.sigid       = sigid;
     msg.val.dataMAX = val.dataMAX;
     msg.rcv         = rcv;
-    msg.cntr        = cntr;
+    msg.ver         = version;
 
     ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(connidx);
     if (!dist) {

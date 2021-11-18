@@ -42,7 +42,7 @@ typedef struct dist_fifo_msg_sig_upd_s {
     ush_sigid_t                sigid;
     ush_sig_val_t              val;
     ush_pvoid_t                rcv;
-    ush_u32_t                  cntr;
+    ush_u32_t                  ver;
 } dist_fifo_msg_sig_upd;
 
 typedef struct dist_fifo_msg_stop_s {

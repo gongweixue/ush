@@ -28,10 +28,9 @@ void ush_lstnr_proc_sig_upd(const ush_comm_lstnr_sig_upd_t msg) {
             return; // nothing to do
     }
 
-    ush_sigid_t  sigid = ush_comm_lstnr_sig_sigid_of(msg);
+    ush_sigid_t   sigid = ush_comm_lstnr_sig_sigid_of(msg);
     ush_sig_val_t value = ush_comm_lstnr_sig_value_of(msg);
+    ush_u32_t   version = ush_comm_lstnr_sig_version_of(msg);
 
-    ush_u32_t     rollingcounter = ush_comm_lstnr_sig_cntr_of(msg);
-
-    rcv_cb(sigid, value, rollingcounter);
+    rcv_cb(sigid, value, version);
 }

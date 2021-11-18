@@ -157,7 +157,7 @@ dist_mq_open(ushd_dist_thread_t thread, const ush_char_t *name) {
     }
 
     ushd_log(LOG_LVL_INFO, "open dist %p mq %s", thread, name);
-    for (int counter = 0; counter < MQ_OPEN_RETRY_CNT; ++counter) {
+    for (int i = 0; i < MQ_OPEN_RETRY_CNT; ++i) {
         thread->mq = mq_open(name, O_WRONLY);
         if (USH_INVALID_MQD_VALUE != thread->mq) { // done
             ush_log(LOG_LVL_INFO, "dist %p open done.", thread);

@@ -32,10 +32,10 @@ static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, const ush_sigid_t *ids, const 
     return USH_RET_OK;
 }
 
-static ush_ret_t rcv_cb_10_u16(ush_sigid_t id, ush_sig_val_t val, ush_u32_t cntr) {
+static ush_ret_t rcv_cb_10_u16(ush_sigid_t id, ush_sig_val_t val, ush_u32_t ver) {
     assert(id == USH_SIG_ID_TEST_10_U16);
 
-    printf("USH_SIG_ID_TEST_10_U16: %08d, cntr=%d\n", val.dataU16, cntr);
+    printf("USH_SIG_ID_TEST_10_U16: %08d, ver=%d\n", val.dataU16, ver);
 
     if (10 <= sig_counter) {
         ush_sigreg_conf_t conf ={

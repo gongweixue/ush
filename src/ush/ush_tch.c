@@ -120,7 +120,7 @@ ush_tch_open(ush_tch_t touch) {
     }
 
     ush_log(LOG_LVL_INFO, "try to open touch, addr %p", touch);
-    for (int counter = 0; counter < USH_TCH_OPEN_RETRY_CNT; ++counter) {
+    for (int i = 0; i < USH_TCH_OPEN_RETRY_CNT; ++i) {
         touch->mq = mq_open(USH_COMM_TCH_Q_PATH, O_WRONLY);
         if (USH_INVALID_MQD_VALUE != touch->mq) { // done
             ush_log(LOG_LVL_INFO, "touch open done.");

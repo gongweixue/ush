@@ -24,7 +24,7 @@ typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
 // when signal receive
 typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sigid_t   id,
                                       ush_sig_val_t val,
-                                      ush_u32_t     cntr);
+                                      ush_u32_t     ver);
 
 
 

@@ -10,14 +10,14 @@ typedef struct lstnr_sig_upd_s {
     ush_sigid_t                  sigid;
     ush_sig_val_t                val;
     ush_pvoid_t                  rcv;
-    ush_u32_t                    cntr;
+    ush_u32_t                    ver;
 } USH_COMM_MSG_PACKED * ush_comm_lstnr_sig_upd_t;
 
 ush_comm_lstnr_sig_upd_t
 ush_comm_lstnr_sig_upd_create(ush_sigid_t   sigid,
                               ush_sig_val_t val,
                               ush_pvoid_t   rcv,
-                              ush_u32_t     cntr) {
+                              ush_u32_t     ver) {
     ush_comm_lstnr_sig_upd_t ret =
         (ush_comm_lstnr_sig_upd_t)malloc(sizeof(struct lstnr_sig_upd_s));
 
@@ -31,7 +31,7 @@ ush_comm_lstnr_sig_upd_create(ush_sigid_t   sigid,
     ret->sigid          = sigid;
     ret->val.dataMAX    = val.dataMAX;
     ret->rcv            = rcv;
-    ret->cntr           = cntr;
+    ret->ver            = ver;
 
     return ret;
 }
@@ -74,13 +74,13 @@ ush_comm_lstnr_sig_sigid_of(const ush_comm_lstnr_sig_upd_t msg) {
 }
 
 ush_u32_t
-ush_comm_lstnr_sig_cntr_of(const ush_comm_lstnr_sig_upd_t msg) {
+ush_comm_lstnr_sig_version_of(const ush_comm_lstnr_sig_upd_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "msg ptr null");
         return 0;
     }
 
-    return msg->cntr;
+    return msg->ver;
 }
 
 ush_ret_t
