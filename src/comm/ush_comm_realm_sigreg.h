@@ -1,7 +1,9 @@
 #ifndef USH_COMM_REALM_SIGREG_H
 #define USH_COMM_REALM_SIGREG_H
 
+#include "ush_type_pub.h"
 #include "ush_sig_pub.h"
+#include "ush_def_pub.h"
 
 typedef struct comm_realm_sigreg_s * ush_comm_realm_sigreg_t;
 

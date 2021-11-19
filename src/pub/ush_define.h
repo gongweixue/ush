@@ -2,14 +2,13 @@
 #define USH_DEFINE_H
 
 #include "ush_porting.h"
+#include "ush_def_pub.h"
 
 #define USH_INVALID_CERT_VALUE         (-1)
 
 #define USH_INVALID_TID                (USH_INVALID_THREAD_ID)
 
 #define USH_INVALID_MQD_VALUE          (-1)
-
-#define USH_INVALID_PIPE               (0)
 
 #define USHD_INVALID_CONN_IDX_VALUE    (0)
 #define USH_CONN_IDX_MAX               (128)

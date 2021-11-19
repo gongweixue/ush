@@ -2,8 +2,7 @@
 #define USH_COMM_REALM_SIG_H
 
 #include "ush_type_pub.h"
-
-#include "ush_sig_pub.h"
+#include "ush_sigid_pub.h"
 #include "ush_comm_desc.h"
 
 typedef enum USH_COMM_REALM_SIG_INTENT {

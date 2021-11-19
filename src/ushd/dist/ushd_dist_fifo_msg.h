@@ -2,7 +2,6 @@
 #define USHD_DIST_FIFO_MSG_H
 
 #include "ush_type_pub.h"
-#include "ush_sig_pub.h"
 #include "ush_sigid_pub.h"
 
 #define USHD_DIST_FIFO_MSG_MAX_SIZE  (128)

@@ -2,6 +2,7 @@
 #define USH_COMM_REALM_SIGSET_H
 
 #include "ush_type_pub.h"
+#include "ush_sigid_pub.h"
 
 typedef struct comm_realm_sigset_s * ush_comm_realm_sigset_t;
 

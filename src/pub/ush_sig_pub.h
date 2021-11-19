@@ -1,44 +1,28 @@
 #ifndef USH_SIG_PUB_H
 #define USH_SIG_PUB_H
 
+#include "ush_cb_pub.h"
 #include "ush_sigid_pub.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
 /*
- * Binding CB for signal registering & signal value updating
- * ret: OK FAILED WRONG_PARAM
- * restriction: every new binding will be performed.
- *              You should be clear how many signals had been registered,
- *              and get them from pSigids and pSucc.
+ * ADT for the signal register action.
+ * 'USH_SIGREG_CONF_MAX' signals could be registered one time.
+ * The 'done' will be invoked after the register finished.
+ * Functions in 'rcv' will be invoked when the value of sigid changed.
+ * Use NULL to unregister a signal
+ * The 'count' shows how many sigids you want to register at once.
+ *
 */
-// when register done
-typedef ush_ret_t (*ush_sig_cb_reg_t)(ush_pipe_t         pipe,    // pipe handle
-                                      const ush_sigid_t *pSigids, // signal id
-                                      const ush_bool_t  *pSucc);
-
-
-// when signal receive
-typedef ush_ret_t (*ush_sig_cb_rcv_t)(ush_sigid_t   id,
-                                      ush_sig_val_t val,
-                                      ush_u32_t     ver);
-
-
-
-#ifndef USH_SIGREG_CONF_MAX
-#define USH_SIGREG_CONF_MAX    (6)
-#endif
-
 typedef struct ush_sigreg_conf_s {
     ush_sigid_t      sigid[USH_SIGREG_CONF_MAX];
     ush_sig_cb_reg_t done;
     ush_sig_cb_rcv_t rcv[USH_SIGREG_CONF_MAX];
     ush_u32_t        count;
 } ush_sigreg_conf_t;
-
 
 /*
  * Listen a sigid on the ush signal bus by the callback

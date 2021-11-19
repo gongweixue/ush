@@ -2,6 +2,7 @@
 #define USH_TYPE_PUB_H
 
 #include <stddef.h>
+#include "ush_def_pub.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,11 +44,6 @@ typedef ush_fp32_t         FP32;
 typedef ush_fp64_t         FP64;
 
 
-#ifndef NULL
-#define NULL ((ush_vptr_t)0)
-#endif
-
-
 #define USH_MASK_RET_CATALOG  ( 0x10 )
 typedef enum ush_ret {
     USH_RET_OK          = 0x00,
@@ -82,7 +78,6 @@ typedef union ush_sig_val_t {
     FP64    dataFP64;
     U64     dataMAX; // big data for union copy(syntax suggar)
 } ush_sig_val_t;
-
 
 #ifdef __cplusplus
 }

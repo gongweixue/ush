@@ -2,7 +2,7 @@
 #define USH_COMM_LSTNR_SIGREG_ACK_H
 
 #include "ush_type_pub.h"
-#include "ush_sig_pub.h"
+#include "ush_cb_pub.h"
 #include "ush_sigid_pub.h"
 
 typedef struct lstnr_sigreg_ack_s * ush_comm_lstnr_sigreg_ack_t;
