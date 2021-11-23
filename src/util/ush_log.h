@@ -23,7 +23,7 @@ void ush_log_cs_exit(void);
 #if !USH_LOG_ON
     #define log_def(owner, lvl, ...)
 #else
-    #define log_def(owner, lvl, ...)   {                                        \
+    #define log_def(owner, lvl, ...)   do {                                     \
         ush_log_cs_entry();                                                     \
         if (lvl <= USH_LOG_LVL_SELECTOR) {                                      \
             printf("*****" #owner"-"#lvl":\n");                                 \
@@ -32,13 +32,13 @@ void ush_log_cs_exit(void);
             printf("\n\n");                                                     \
         }                                                                       \
         ush_log_cs_exit();                                                      \
-    }
+    } while (0)
 #endif // !USH_LOG_ON
 
 
-#define ush_log(lvl, ...) { log_def(USH, lvl, __VA_ARGS__);}
+#define ush_log(lvl, ...) do { log_def(USH, lvl, __VA_ARGS__);} while(0)
 
 
-#define ushd_log(lvl, ...) { log_def(USHD, lvl, __VA_ARGS__);}
+#define ushd_log(lvl, ...) do { log_def(USHD, lvl, __VA_ARGS__);} while(0)
 
 #endif // USH_LOG_H

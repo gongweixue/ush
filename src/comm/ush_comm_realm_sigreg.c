@@ -92,7 +92,7 @@ ush_comm_realm_sigreg_sigid_of(const ush_comm_realm_sigreg_t msg) {
 ush_pvoid_t
 ush_comm_realm_sigreg_cb_done_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
-        ush_log(LOG_LVL_ERROR, "wrong parameter: null")
+        ush_log(LOG_LVL_ERROR, "wrong parameter: null");
         return NULL;
     }
 
@@ -102,7 +102,7 @@ ush_comm_realm_sigreg_cb_done_of(const ush_comm_realm_sigreg_t msg) {
 const ush_pvoid_t *
 ush_comm_realm_sigreg_cb_rcv_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
-        ush_log(LOG_LVL_ERROR, "wrong parameter: null")
+        ush_log(LOG_LVL_ERROR, "wrong parameter: null");
         return NULL;
     }
 
@@ -112,7 +112,7 @@ ush_comm_realm_sigreg_cb_rcv_of(const ush_comm_realm_sigreg_t msg) {
 ush_pipe_t
 ush_comm_realm_sigreg_pipe_of(const ush_comm_realm_sigreg_t msg) {
     if (!msg) {
-        ush_log(LOG_LVL_ERROR, "wrong parameter: null")
+        ush_log(LOG_LVL_ERROR, "wrong parameter: null");
         return USH_INVALID_PIPE;
     }
 
