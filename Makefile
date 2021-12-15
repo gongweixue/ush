@@ -77,7 +77,7 @@ all: $(CUR_DIR)/gen/ush_sig_conf $(SUBDIRS)
 	$(ECHO) @@@ Everything is done. @@@
 
 $(CUR_DIR)/gen/ush_sig_conf:
-	echo $(AR)
+	$(MKDIR) $(shell dirname $@)
 	$(AT) ls $(CUR_DIR)/src/plugin/*.ush | xargs cat  > $@
 
 $(SUBDIRS):
