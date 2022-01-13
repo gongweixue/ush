@@ -2,7 +2,15 @@
 
 ## Summary
 
-summary
+* The project with two parts: a service and a client-lib
+* The app calling the client-lib can send the msg to the service and subscribe any msg pre-defined
+* Msg could be defined by the auto-generated script.
+* Connect action is sync and other operations are all async since it should be un-blocked for the communications.
+* Multi-thread is used in the service to listen, to process, to publish msg, and to schedule all the actions internal.
+* All these threads cooperate by the queue(consumer-producer) which defined by the macro in the header file.
+* Posix MQ is used for IPC between client and service processes.
+* Multi-link could be used with all client, only if the number of links is under the limitations you define.
+* msg could be sent to service itself also, to do some trick(clean up that the client could not do when disconnect happends).
 
 ## Environment
 
