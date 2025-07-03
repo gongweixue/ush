@@ -73,11 +73,11 @@ ushd_tch_thread_entry(void *arg) {
         }
 
         if (USH_COMM_PORT_TCH != ((ush_comm_d *)buf)->port) {
-            ushd_log(LOG_LVL_ERROR, "msg type not support");
+            ushd_log(LOG_LVL_ERROR, "msg type not support"); // only for tch :)
             continue;
         }
 
-        // push msg
+        // push msg, then sched thread will deal with it
         ushd_sched_fifo_t fifo = ushd_sched_fifo_singleton();
         if (USH_RET_OK != ushd_sched_fifo_push(fifo, buf, sizeof(buf))) {
             ushd_log(LOG_LVL_ERROR, "sched fifo push failed %p", buf);

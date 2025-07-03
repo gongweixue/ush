@@ -73,6 +73,7 @@ ush_realm_send(ush_realm_t realm, const ush_comm_realm_msg_d *msg) {
     ush_u32_t  prio = 255; // lowest
 
     // prepare the sz and prio
+    // TODO: use the lookup-table if 'switch-statement' becomes too big
     if (USH_COMM_REALM_MSG_CATALOG_CMD == msg->catalog) {
         sz = ush_comm_realm_cmd_sizeof();
         prio = USH_COMM_REALM_SEND_PRIO_CMD;
