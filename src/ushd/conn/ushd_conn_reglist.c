@@ -51,6 +51,7 @@ ushd_conn_reglist_set_rcv(ush_connidx_t idx,ush_sigid_t sigid,ush_pvoid_t rcv) {
     return USH_RET_OK;
 }
 
+// Since the same signal data comes from the same thread, no lock needed.
 ush_ret_t
 ushd_conn_reglist_cas(ush_sigid_t sigid, ush_sig_val_t val) {
     if (!ush_sigid_check(sigid)) {
@@ -106,8 +107,6 @@ ushd_conn_reglist_notify(ush_sigid_t   sigid,
             func(idx, sigid, val, nodes[idx].rcv, version);
         }
     }
-
-
 
     return USH_RET_OK;
 }

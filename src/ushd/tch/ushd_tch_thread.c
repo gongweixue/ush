@@ -10,21 +10,21 @@
 #include "ushd_tch_thread.h"
 #include "ushd_tch.h"
 
-typedef struct ushd_tch_thread_s {
+typedef struct ushd_tch_record_s {
     pthread_t        tid;    // thread id for the listener
     ushd_tch_t       touch;  // mq handle
-} * ushd_tch_thread_t;
+} * ushd_tch_record_t;
 
 
-static ushd_tch_thread_t thread = NULL;
+static ushd_tch_record_t record = NULL;
 
-static ushd_tch_thread_t
+static ushd_tch_record_t
 tch_thread_create(void) {
-    ushd_tch_thread_t newMem =
-        (ushd_tch_thread_t)malloc(sizeof(struct ushd_tch_thread_s));
+    ushd_tch_record_t newMem =
+        (ushd_tch_record_t)malloc(sizeof(struct ushd_tch_record_s));
 
     if (!newMem) {
-        ushd_log(LOG_LVL_FATAL, "create ushd_tch_thread_s failed");
+        ushd_log(LOG_LVL_FATAL, "create ushd_tch_record_s failed");
         return NULL;
     } else {
         if (USH_RET_OK !=  ushd_tch_create(&(newMem->touch))) {
@@ -45,19 +45,19 @@ static void *
 ushd_tch_thread_entry(void *arg) {
     (void)arg;
     ushd_log(LOG_LVL_INFO, "starting the touch thread entry");
-    thread = tch_thread_create();
-    if (!thread) {
+    record = tch_thread_create();
+    if (!record) {
         ushd_log(LOG_LVL_FATAL, "singleton touch thread NULL");
         pthread_exit(NULL);
         goto TERMINATE;
     }
 
-    thread->tid = pthread_self();
+    record->tid = pthread_self();
 
-    if (USH_RET_OK != ushd_tch_open(thread->touch)) {
+    if (USH_RET_OK != ushd_tch_open(record->touch)) {
         goto TERMINATE;
     }
-    ushd_log(LOG_LVL_INFO, "touch been opened %p", thread->touch);
+    ushd_log(LOG_LVL_INFO, "touch been opened %p", record->touch);
 
     while (1) {
         ushd_log(LOG_LVL_INFO, "touch forward to receiving new msg...");
@@ -66,7 +66,7 @@ ushd_tch_thread_entry(void *arg) {
 
         ushd_log(LOG_LVL_INFO, "receive from touch...");
         ush_ret_t res = USH_RET_OK;
-        res = ushd_tch_receive(thread->touch, buf, sizeof(buf));
+        res = ushd_tch_receive(record->touch, buf, sizeof(buf));
         if (USH_RET_OK != res) {
             ushd_log(LOG_LVL_ERROR, "touch %p receive msg failed", buf);
             continue;
@@ -101,7 +101,7 @@ ushd_tch_thread_start(void) {
         return USH_RET_FAILED;
     }
 
-    ushd_log(LOG_LVL_INFO, "ushd_tch_thread_s starts");
+    ushd_log(LOG_LVL_INFO, "ushd tch thread starts");
 
     if (0 != pthread_detach(tid)) {
         ushd_log(LOG_LVL_ERROR, "detach touch daemon thread: failed.");
