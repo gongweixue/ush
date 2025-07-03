@@ -13,7 +13,7 @@ static int sig_counter = 0;
 static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, const ush_sigid_t *ids, const ush_bool_t *succ) {
     assert(pp == sPipe);
     assert(USH_SIG_ID_TEST_10_U16 == ids[0]);
-    assert(USH_TRUE == succ[0]);
+    assert(USH_FALSE != succ[0]);
 
     printf("USH_SIG_ID_TEST_10_U16 registered successful.\n");
 
@@ -23,7 +23,7 @@ static ush_ret_t reg_cb_10_u16(ush_pipe_t pp, const ush_sigid_t *ids, const ush_
 static ush_ret_t reg_cb_10_u16_del(ush_pipe_t pp, const ush_sigid_t *ids, const ush_bool_t *succ) {
     assert(pp == sPipe);
     assert(USH_SIG_ID_TEST_10_U16 == ids[0]);
-    assert(USH_TRUE == succ[0]);
+    assert(USH_FALSE != succ[0]);
 
     printf("delete pipe\n");
     ush_pipe_delete(sPipe);

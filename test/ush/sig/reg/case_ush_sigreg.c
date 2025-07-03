@@ -16,7 +16,7 @@ static ush_ret_t onReg_normal(ush_pipe_t pp,
                               const ush_bool_t *succ) {
     ush_assert(pp == pp);
     ush_assert(USH_SIG_ID_ABC_abc_FP32 == id[0]);
-    ush_assert(USH_TRUE == succ[0]);
+    ush_assert(USH_FALSE != succ[0]);
 
     pthread_mutex_lock(&mutex);
 

@@ -8,7 +8,7 @@ ush_lstnr_proc_hay(const ush_comm_lstnr_hay_t msg) {
         if (!msg) {
             return;
         }
-        if (USH_TRUE == ush_comm_lstnr_hay_outofdate(msg)) {
+        if (USH_FALSE != ush_comm_lstnr_hay_outofdate(msg)) {
             ush_log(LOG_LVL_ERROR, "hay arrived out of data");
             return;
         }
