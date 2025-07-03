@@ -76,7 +76,7 @@ typedef union ush_sig_val_t {
     S64     dataS64;
     FP32    dataFP32;
     FP64    dataFP64;
-    U64     dataMAX; // big data for union copy(syntax suggar)
+    U64     dataBits; // bits to copy and equal-test(syntax suggar)
 } ush_sig_val_t;
 
 #ifdef __cplusplus

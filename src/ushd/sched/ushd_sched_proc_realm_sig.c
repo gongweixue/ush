@@ -103,11 +103,11 @@ static void notify_handle(ush_connidx_t connidx,
     }
 
     dist_fifo_msg_sig_upd msg;
-    msg.desc.type   = USHD_DIST_FIFO_MSG_TYPE_SIG_UPD;
-    msg.sigid       = sigid;
-    msg.val.dataMAX = val.dataMAX;
-    msg.rcv         = rcv;
-    msg.ver         = version;
+    msg.desc.type    = USHD_DIST_FIFO_MSG_TYPE_SIG_UPD;
+    msg.sigid        = sigid;
+    msg.val.dataBits = val.dataBits;
+    msg.rcv          = rcv;
+    msg.ver          = version;
 
     ushd_dist_thread_t dist = ushd_conn_tbl_get_dist(connidx);
     if (!dist) {

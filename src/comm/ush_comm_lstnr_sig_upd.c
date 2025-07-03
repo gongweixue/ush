@@ -29,7 +29,7 @@ ush_comm_lstnr_sig_upd_create(ush_sigid_t   sigid,
     ret->desc.desc.port = USH_COMM_PORT_LSTNR;
     ret->desc.catalog   = USH_COMM_LSTNR_MSG_CATALOG_SIG_UPD;
     ret->sigid          = sigid;
-    ret->val.dataMAX    = val.dataMAX;
+    ret->val.dataBits   = val.dataBits;
     ret->rcv            = rcv;
     ret->ver            = ver;
 
@@ -56,7 +56,7 @@ ush_comm_lstnr_sig_value_of(const ush_comm_lstnr_sig_upd_t msg) {
     if (!msg) {
         ush_log(LOG_LVL_ERROR, "msg ptr null");
         ush_sig_val_t ret;
-        ret.dataMAX = 0;
+        ret.dataBits = 0;
         return ret;
     }
 

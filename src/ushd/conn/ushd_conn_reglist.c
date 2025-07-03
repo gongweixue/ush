@@ -12,12 +12,12 @@
 //////////////////////////////////////////////////////////////////////
 
 typedef struct ush_reglist_sig_node_s {
-    ush_pvoid_t    rcv;
+    ush_pvoid_t    rcv; // callback func when receive sig data
 } ush_reglist_sig_node_t;
 
 
 typedef struct ush_reglist_sig_s {
-    ush_reglist_sig_node_t  nodes[USH_CONN_IDX_MAX];
+    ush_reglist_sig_node_t  nodes[USH_CONN_IDX_MAX]; // idx is connidx
     ush_sig_val_t           value; // current value of the signal
     ush_u32_t               version; // increse by 1 each time
 } ush_reglist_sig_ty;
@@ -59,9 +59,9 @@ ushd_conn_reglist_cas(ush_sigid_t sigid, ush_sig_val_t val) {
     }
 
     ush_ret_t ret = USH_RET_FAILED;
-    if (val.dataMAX != reglist.signals[sigid].value.dataMAX ||
+    if (val.dataBits != reglist.signals[sigid].value.dataBits ||
         0 == reglist.signals[sigid].version) { // new-value/first-assign
-        reglist.signals[sigid].value.dataMAX = val.dataMAX;
+        reglist.signals[sigid].value.dataBits = val.dataBits;
         reglist.signals[sigid].version      += 1;
         ret = USH_RET_OK;
     } else {

@@ -49,7 +49,7 @@ ush_comm_realm_sigset_create(ush_comm_realm_sigset_t  *pMsg,
     tmp->desc.connidx        = connidx;
     tmp->desc.cert           = cert;
     tmp->desc.sigid          = sigid;
-    tmp->val.dataMAX         = val.dataMAX;
+    tmp->val.dataBits        = val.dataBits;
 
     *pMsg = tmp;
 
